@@ -9,38 +9,34 @@ op <- options(width = 100, digits = 4)
 ## ----load-pkg-data, eval=TRUE---------------------------------------------------------------------
 library("fddm")
 data(med_dec, package = "fddm")
-med_dec <- med_dec[which(med_dec$rt >= 0), ]
+med_dec <- med_dec[which(med_dec[["rt"]] >= 0), ]
 
 ## ----log-likelihood, eval=TRUE--------------------------------------------------------------------
-ll_fun <- function(pars, rt, resp, truth) {
-  rtu <- rt[truth == "upper"]
-  rtl <- rt[truth == "lower"]
-  respu <- resp[truth == "upper"]
-  respl <- resp[truth == "lower"]
+ll_fun <- function(pars, rt, resp, truth, err_tol) {
+  v <- numeric(length(rt))
 
   # the truth is "upper" so use vu
-  densu <- dfddm(rt = rtu, response = respu, a = pars[[3]], v = pars[[1]],
-                 t0 = pars[[4]], w = pars[[5]], sv = pars[[6]], log = TRUE)
+  v[truth == "upper"] <- pars[[1]]
   # the truth is "lower" so use vl
-  densl <- dfddm(rt = rtl, response = respl, a = pars[[3]], v = pars[[2]],
-                 t0 = pars[[4]], w = pars[[5]], sv = pars[[6]], log = TRUE)
+  v[truth == "lower"] <- pars[[2]]
 
-  densities <- c(densu, densl)
-  if (any(!is.finite(densities))) return(1e6)
-  return(-sum(densities))
+  dens <- dfddm(rt = rt, response = resp, a = pars[[3]], v = v, t0 = pars[[4]],
+                w = pars[[5]], sv = pars[[6]], log = TRUE, err_tol = 1e-6)
+
+  return( ifelse(any(!is.finite(dens)), 1e6, -sum(dens)) )
 }
 
 ## ----prep-simp-data, eval=TRUE--------------------------------------------------------------------
-onep <- med_dec[ med_dec$id == "2" & med_dec$group == "experienced", ]
-onep$resp <- ifelse(onep$response == "blast", "upper", "lower")
-onep$truth <- ifelse(onep$classification == "blast", "upper", "lower")
+onep <- med_dec[ med_dec[["id"]] == "2" & med_dec[["group"]] == "experienced", ]
+onep[["resp"]] <- ifelse(onep[["response"]] == "blast", "upper", "lower")
+onep[["truth"]] <- ifelse(onep[["classification"]] == "blast", "upper", "lower")
 str(onep)
 
-## ----show-simp-fit, eval=TRUE---------------------------------------------------------------------
-fit <- nlminb(c(0, 0, 1, 0, 0.5, 0), objective = ll_fun, 
-              rt = onep$rt, resp = onep$resp, truth = onep$truth, 
+## ----show-simp-fit, eval=TRUE, warning=FALSE------------------------------------------------------
+fit <- nlminb(c(0, 0, 1, 0, 0.5, 0), objective = ll_fun,
+              rt = onep[["rt"]], resp = onep[["resp"]], truth = onep[["truth"]],
               # limits:   vu,   vl,   a,  t0, w,  sv
-              lower = c(-Inf, -Inf,   0,   0, 0,   0),
+              lower = c(-Inf, -Inf, .01,   0, 0,   0),
               upper = c( Inf,  Inf, Inf, Inf, 1, Inf))
 fit
 
@@ -71,23 +67,24 @@ rt_fit <- function(data, id_idx = NULL, rt_idx = NULL, response_idx = NULL,
       for (i in 1:length(id_idx)) {
         idi <- unique(data[,id_idx[i]])
         for (j in 1:length(idi)) {
-          df$id[data[,id_idx[i]] == idi[j]] <- paste(df$id[data[,id_idx[i]] == idi[j]], idi[j], sep = " ")
+          df[["id"]][data[,id_idx[i]] == idi[j]] <- paste(
+            df[["id"]][data[,id_idx[i]] == idi[j]], idi[j], sep = " ")
         }
       }
-      df$id <- trimws(df$id, which = "left")
+      df[["id"]] <- trimws(df[["id"]], which = "left")
     }
 
-    df$rt <- as.double(data[,rt_idx])
+    df[["rt"]] <- as.double(data[,rt_idx])
 
-    df$response <- "lower"
-    df$response[data[,response_idx] == response_upper] <- "upper"
+    df[["response"]] <- "lower"
+    df[["response"]][data[,response_idx] == response_upper] <- "upper"
 
-    df$truth <- "lower"
-    df$truth[data[,truth_idx] == response_upper] <- "upper"
+    df[["truth"]] <- "lower"
+    df[["truth"]][data[,truth_idx] == response_upper] <- "upper"
   }
 
   # Preliminaries
-  ids <- unique(df$id)
+  ids <- unique(df[["id"]])
   nids <- max(length(ids), 1) # if inds is null, there is only one individual
   ninit_vals <- 5
 
@@ -101,13 +98,13 @@ rt_fit <- function(data, id_idx = NULL, rt_idx = NULL, response_idx = NULL,
 
   # Loop through each individual and starting values
   for (i in 1:nids) {
-    out$ID[i] <- ids[i]
+    out[["ID"]][i] <- ids[i]
 
     # extract data for id i
-    dfi <- df[df$id == ids[i],]
-    rti <- dfi$rt
-    respi <- dfi$response
-    truthi <- dfi$truth
+    dfi <- df[df[["id"]] == ids[i],]
+    rti <- dfi[["rt"]]
+    respi <- dfi[["response"]]
+    truthi <- dfi[["truh"]]
 
     # starting value for t0 must be smaller than the smallest rt
     min_rti <- min(rti)
@@ -125,23 +122,23 @@ rt_fit <- function(data, id_idx = NULL, rt_idx = NULL, response_idx = NULL,
       mres <- nlminb(init_vals[j,], ll_fun,
                      rt = rti, resp = respi, truth = truthi,
                      # limits:   vu,   vl,   a,  t0, w,  sv
-                     lower = c(-Inf, -Inf,   0,   0, 0,   0),
+                     lower = c(-Inf, -Inf, .01,   0, 0,   0),
                      upper = c( Inf,  Inf, Inf, Inf, 1, Inf))
-      temp$Convergence[j] <- mres$convergence
-      temp$Objective[j] <- mres$objective
-      temp[j, -c(1, 2)] <- mres$par
+      temp[["Convergence"]][j] <- mres[["convergence"]]
+      temp[["Objective"]][j] <- mres[["objective"]]
+      temp[j, -c(1, 2)] <- mres[["par"]]
     }
 
     # determine best fit for the individual
-    min_idx <- which.min(temp$Objective)
+    min_idx <- which.min(temp[["Objective"]])
     out[i, -1] <- temp[min_idx,]
   }
   return(out)
 }
 
-## ----fitting-run, eval=TRUE-----------------------------------------------------------------------
+## ----fitting-run, eval=TRUE, warning=FALSE--------------------------------------------------------
 data(med_dec, package = "fddm")
-med_dec <- med_dec[which(med_dec$rt >= 0),]
+med_dec <- med_dec[which(med_dec[["rt"]] >= 0),]
 fit <- rt_fit(med_dec, id_idx = c(2,1), rt_idx = 8, response_idx = 7,
               truth_idx = 5, response_upper = "blast")
 fit
@@ -153,14 +150,14 @@ library("ggplot2")
 fitp <- data.frame(fit[, c(1, 4, 5)]) # make a copy to manipulate for plotting
 colnames(fitp)[-1] <- c("vu", "vl")
 
-for (i in 1:length(unique(fitp$ID))) {
-  first <- substr(fitp$ID[i], 1, 1)
+for (i in 1:length(unique(fitp[["ID"]]))) {
+  first <- substr(fitp[["ID"]][i], 1, 1)
   if (first == "n") {
-    fitp$ID[i] <- "novice"
+    fitp[["ID"]][i] <- "novice"
   } else if (first == "i") {
-    fitp$ID[i] <- "inexperienced"
+    fitp[["ID"]][i] <- "inexperienced"
   } else {
-    fitp$ID[i] <- "experienced"
+    fitp[["ID"]][i] <- "experienced"
   }
 }
 

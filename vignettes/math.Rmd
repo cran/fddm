@@ -29,14 +29,14 @@ MathJax.Hub.Config({
 
 <div id="TOC">
 <ul>
-<li><a href="#background">Mathematical Background</a></li>
-<li><a href="#dens">The Density Functions</a>
-<ul>
-<li><a href="#dens-lt">Large Time</a></li>
-<li><a href="#dens-st">Small Time</a></li>
-<li><a href="#dens-bt">Combining Large and Small Time</a></li>
-</ul></li>
-<li><a href="#references">References</a></li>
+  <li><a href="#background">Mathematical Background</a></li>
+  <li><a href="#dens">The Density Functions</a>
+  <ul>
+    <li><a href="#dens-lt">Large-Time</a></li>
+    <li><a href="#dens-st">Small-Time</a></li>
+    <li><a href="#dens-bt">Combining Large-Time and Small-Time</a></li>
+  </ul></li>
+  <li><a href="#references">References</a></li>
 </ul>
 </div>
 
@@ -57,11 +57,11 @@ Our implementation of the DDM has the following parameters: $a \in (0, \infty)$ 
 # Mathematical Background {#background}
 <hr class="sec1">
 
-There are several different methods for approximating the PDF of the DDM, and there are three optional parameters in `dfddm` that can be used to indicate which method should be in the function call: `scale`, `n_terms_small`, and `summation_small`. For each method we describe, we include the parameter settings for the function call to `dfddm` so that it uses the desired method. As these parameters are optional, leaving them blank results in the [default method](#default-method)  that is indicated later in this vignette. For general purpose use, we recommend ignoring these optional parameters so that the default settings are used as this will be the fastest algorithm. Note that precedence for the optional parameters is first given to checking if the [default method](#default-method) is selected. If not, precedence is then given to the `scale` parameter value; for example, `scale = "large"` will ignore the `summation_small` input value.
+There are several different methods for approximating the PDF of the DDM, and there are three optional parameters in `dfddm` that can be used to indicate which method should be in the function call: `scale`, `n_terms_small`, and `summation_small`. For each method we describe, we include the parameter settings for the function call to `dfddm` so that it uses the desired method. As these parameters are optional, leaving them blank results in the [default method](#default-method)  that is indicated later in this vignette. For general purpose use, we recommend ignoring these optional parameters so that the default settings are used as this will be the fastest and most stable algorithm. Note that precedence for the optional parameters is first given to checking if the [default method](#default-method) is selected. If not, precedence is then given to the `scale` parameter value; for example, `scale = "large"` will ignore the `summation_small` input value.
 
 Since the DDM is widely used in parameter estimation usually involving numerical optimization, significant effort has been put into making the evaluation of its density as fast as possible. However, the density function for the DDM is notorious for containing an unavoidable infinite sum; hence, the literature has produced a few different methods of approximating the density. This vignette details the various methods used in the literature to approximate the infinite sum in the density function for the DDM.
 
-In the seminal book where the density function originates, @feller1968introduction explains the derivation from first principles. In this derivation there is a step that requires taking a limit, and @feller1968introduction provides two different &ndash; but equivalent &ndash; limiting processes that yield two different &ndash; but equal &ndash; forms of the density function. Both of these forms contain an infinite sum, and they are known as the large-time approximation and the small-time approximation because the former is on average faster when calculating the density for large response times and the latter is on average faster when calculating the density for small response times.
+The author of the seminal book where the density function originates, @feller1968introduction explains the derivation from first principles. In this derivation there is a step that requires taking a limit, and @feller1968introduction provides two different &ndash; but equivalent &ndash; limiting processes that yield two different &ndash; but equal &ndash; forms of the density function. Each of these forms contains an infinite sum and are known individually as the large-time approximation and the small-time approximation because the former is on average faster when calculating the density for large response times and the latter is on average faster when calculating the density for small response times.
 
 When the drift rate is held constant (i.e. $sv = 0$), the density function for the DDM is often written in a factorized form [@navarro2009fast]:
 \begin{equation}
@@ -96,7 +96,7 @@ f_s(t | v, \eta^2, a, w) &= \frac{a}{\sqrt{2 \pi t^3 \left( 1 + \eta^2 t \right)
 											 		 	\sum_{j = -\infty}^{\infty} (w + 2j) \exp{ \left( -\frac{a^2}{2t} \left( w + 2j \right)^2 \right)}. \label{eq:var-s}
 \end{align}
 
-Immediately of note is that the infinite summation for each time scale is the same regardless of the inclusion of variability in the drift rate. It then follows that there exists a term $M$ such that the density function for the constant drift rate multiplied by $M$ yields the density function for the variable drift rate. That is, $M \cdot f(t | v, a, w) = f(t | v, a, w, \eta^2)$ from the above equations; this $M$ works for converting both the large-time and small-time constant drift rate densities to variable drift rate densities. Although we do not use this term, it may be useful in adapting current algorithms to easily outputting the density with variable drift rate. Note that there are some issues with simply scaling the constant drift rate density, so please see the [Validity Vignette](#validity.html) for more information about the potential problems with this conversion. The multiplicative term $M$ is given below:
+Immediately of note is that the infinite summation for each time scale is the same regardless of the inclusion of variability in the drift rate. It then follows that there exists a term $M$ such that the density function for the constant drift rate multiplied by $M$ yields the density function for the variable drift rate. That is, $M \cdot f(t | v, a, w) = f(t | v, a, w, \eta^2)$ from the above equations; this value $M$ works for converting both the large-time and small-time constant drift rate densities to variable drift rate densities. Although we do not use this term, it may be useful in adapting current algorithms to easily outputting the density with variable drift rate. Note that there are some issues with simply scaling the constant drift rate density, so please see the [Validity Vignette](#validity.html) for more information about the potential problems with this conversion. The multiplicative term $M$ is given below:
 \begin{equation}
   M = \frac{1}{\sqrt{1 + \eta^2 t}} \exp \left( vaw + \frac{v^2 t}{2} + \frac{\eta^2 a^2 w^2 -2vaw -v^2 t}{2 (1 + \eta^2 t)} \right). \nonumber
 \end{equation}
@@ -110,13 +110,13 @@ Immediately of note is that the infinite summation for each time scale is the sa
 
 The main issue of these families of density functions is that they all contain an infinite sum that must be approximated. Since there is no closed form analytical solution to this infinite sum, we instead calculate only a partial sum by truncating the sequence of terms after a certain point. We cannot actually calculate the true value of the density function, but we can mathematically prove that we can get arbitrarily close to the true value; the proof of this fact is provided in the paper accompanying the `fddm` package. The nature of this truncation has been the topic of many papers in the literature, but the underlying idea supporting all of the methods is the same: the user specifies an allowable error tolerance, and the algorithm calculates terms of the infinite sum until the result is within the allowed error tolerance of the true value.
 
-The methods in the literature pre-calculate the number of terms required for the infinite sum to converge within the allowed error tolerance, and this number of terms is referred to as $k_\ell$ and $k_s$ for the large-time and small-time infinite sums, respectively. @navarro2009fast include a method for calculating $k_b$, the number of required terms for the infinite sum when combining the density functions of the two time scales. In addition to these existing methods, we add a new combination of large-time and small-time density functions and also provide a novel method that does not perform this pre-calculation. Note that in each method that pre-calculates the number of terms, the response time $t$ is scaled inversely by $a^2$, that is $t' := \tfrac{t}{a^2}$. Also note that for the rest of this vignette, the ceiling function will be denoted by $\lceil \cdot \rceil$.
+The methods in the literature pre-calculate the number of terms required for the infinite sum to converge within the allowed error tolerance, and this number of terms is referred to as $k_\ell$ and $k_s$ for the large-time and small-time infinite sums, respectively. @navarro2009fast include a method for calculating $k_b$, the number of required terms for the infinite sum when combining the density functions of the two time scales. In addition to these existing methods, we add a novel method that does not perform this pre-calculation, and we also provide two new combinations of the large-time and small-time density functions. Note that in each method that pre-calculates the number of terms, the response time $t$ is scaled inversely by $a^2$, that is $t' := \tfrac{t}{a^2}$. Also note that for the rest of this vignette, the ceiling function will be denoted by $\lceil \cdot \rceil$.
 
 
 
 
 <div class="indent2">
-## Large Time {#dens-lt}
+## Large-Time {#dens-lt}
 
 The large-time density functions, Equations <span class="math inline eqref">\(\eqref{eq:con-l}\)</span> and <span class="math inline eqref">\(\eqref{eq:var-l}\)</span>, have an infinite sum that runs for all of the positive integers. For a given error tolerance $\epsilon$, @navarro2009fast provide an expression for $k_\ell$, the number of terms required for the large-time infinite sum to be within $\epsilon$ of the true value of the density function. Thus the infinite sum becomes finite:
 \begin{equation} \label{eq:kl}
@@ -130,15 +130,15 @@ It remains to find the value of $k_\ell^\text{Nav}$ that ensures the truncated s
 \end{equation}
 
 <p class="method">
-This method is often viewed as the most inefficient of the available options in the literature; however, this method proves to be extremely efficient in particular areas of the parameter space (typically for a large $t'$). The argument used to implement this method in `dfddm` is to set the parameter `scale = "large"` in the function call. In this case the other parameters, `n_terms_small` and `summation_small`, are ignored to avoid any potential clashes with overridden options.
+This method is often viewed as the most inefficient of the available options in the literature; however, this method proves to be extremely efficient in particular areas of the parameter space (typically for large $t'$). The argument used to implement this method in `dfddm` is to set the parameter `scale = "large"` in the function call. In this case the other parameters, `n_terms_small` and `summation_small`, must be set to any string that does not start with `S` or `s` to avoid any potential clashes with overridden options.
 </p>
 
 
 
 
-## Small Time {#dens-st}
+## Small-Time {#dens-st}
 
-The small-time approximations, Equations <span class="math inline eqref">\(\eqref{eq:con-s}\)</span> and <span class="math inline eqref">\(\eqref{eq:var-s}\)</span>, also have an infinite sum, but this one runs over all of the integers &ndash; from negative infinity to positive infinity. Given this infinite nature in both directions, it is impossible to rigorously define the number of terms required to achieve the $\epsilon$-accuracy because we don't know where to start counting the terms. To solve this issue, we rearrange the terms in the sum into the sequence $\left\{ b_0, b_{-1}, b_1, \dots, b_{-j}, b_j, b_{-(j+1)}, b_{j+1}, \dots \right\}$; this allows us not only to count the terms in a sensible manner but also to define $k_s$ as the index of the sequence where the truncation should occur. Then we can write the truncated version of the sum:
+The small-time approximations, Equations <span class="math inline eqref">\(\eqref{eq:con-s}\)</span> and <span class="math inline eqref">\(\eqref{eq:var-s}\)</span>, also contain an infinite sum, but this sum runs over all of the integers &ndash; from negative infinity to positive infinity. Given this infinite nature in both directions, it is impossible to rigorously define the number of terms required to achieve the $\epsilon$-accuracy because we don't know where to start counting the terms. To solve this issue, we rearrange the terms in the sum into the sequence $\left\{ b_0, b_{-1}, b_1, \dots, b_{-j}, b_j, b_{-(j+1)}, b_{j+1}, \dots \right\}$; this allows us not only to count the terms in a sensible manner but also to define $k_s$ as the index of the sequence where the truncation should occur. Then we can write the truncated version of the sum:
 \begin{equation} \label{eq:ks}
   \sum_{j = -k_s}^{k_s} (w + 2j) \exp{ \left( -\frac{a^2}{2t} \left( w + 2j \right)^2 \right)}. \nonumber
 \end{equation}
@@ -189,11 +189,11 @@ To use this method, set `n_terms_small = "SWSE"` and keep `scale = "small"` in t
 
 
 
-## Combining Large and Small Time {#dens-bt}
+## Combining Large-Time and Small-Time {#dens-bt}
 
-A sensible next approach to approximating the density of the DDM is to use some combination of the large-time and small-time density functions. As their names suggest, each density function approximation has a section of the parameter space where it outperforms the other one. Essentially these methods involve calculating the number of terms required for both the large-time and small-time density functions, then using whichever approximation requires fewer terms. The goal is to use each approximation where it is efficient and avoid the areas of the parameter space where it is horribly inefficient.
+A sensible next approach to approximating the density of the DDM is to use some combination of the large-time and small-time density functions. As their names suggest, each density function approximation has a section of the parameter space where it outperforms the other one. Essentially these methods involve calculating the number of terms required for both the large-time and small-time density functions, then using whichever approximation requires fewer terms. The goal is to use each approximation where it is efficient and avoid the areas of the parameter space where the approximations perform poorly.
 
-To use this method of evaluating the PDF, set the optional parameter `scale = "both"` in the function call. These methods include similar options to the small-time approximations from the previous section, and thus it is possible to set the optional parameters in a similar fashion to above. The value of `summation_small` triggers the same effect as above since it only affects the small-time approximation to the PDF; we recommend ignoring this parameter so it assumes its default value of "2017" that evaluates slightly faster than its counterpart. The final parameter, `n_terms_small`, will be discussed in the following two subsections. Note that there is no "SWSE" option for `scale = "both"`, and setting `n_terms_small = "SWSE"` will override the `scale = "both"` setting. As there is only one option for the large time approximation, there are no optional parameters to set for this part of the combined time scale approximation.
+To use this method of evaluating the PDF, set the optional parameter `scale = "both"` in the function call. These methods include similar options to the small-time approximations from the previous section, and thus it is possible to set the optional parameters in a similar fashion to above. The value of `summation_small` triggers the same effect as above since it only affects the small-time approximation to the PDF; we recommend ignoring this parameter so it assumes its default value of "2017" that evaluates slightly faster than its counterpart. The final parameter, `n_terms_small`, will be discussed in the following three subsections. As there is only one option for the large-time approximation, there are no optional parameters to set for this part of the combined time scale approximation.
 
 
 
@@ -211,8 +211,6 @@ To use this method, set `n_terms_small = "Navarro"` and keep `scale = "both"` in
 </p>
 
 
-<a id="default-method"></a>
-
 ### Gondan Small & Navarro Large {#dens-bt-gon}
 
 This combination of methods has not been explored in the literature before, but it works very similarly to the combination above. The only difference is that we use the @gondan2014even approximation for the small-time instead of the one provided by @navarro2009fast. Since $k_s^\text{Gon} \leq k_s^\text{Nav}$, this method will give approximations at least as fast as the above combination.
@@ -223,6 +221,17 @@ This combination of methods has not been explored in the literature before, but 
 
 <p class="method">
 To use this method, set `n_terms_small = "Gondan"` and keep `scale = "both"` in the function call. The parameter `summation_small` should be ignored so that it retains its default value to obtain the best performance.
+</p>
+
+
+<a id="default-method"></a>
+
+### Stop When Small Enough (SWSE) Small & Navarro Large {#dens-bt-swse}
+
+This method uses the novel SWSE approximation to the small-time density function in conjunction with the Navarro large-time approximation to achieve consistent performance across the parameter space. Since the SWSE approximation to the small-time density function does not explicitly calculate $k_s$, we only calculate $k_\ell^{\text{Nav}}$ and compare it to the new optional parameter `max_terms_large`. If $k_\ell^{\text{Nav}}$ $\le$ `max_terms_large`, then the Navarro large-time approximation is used. On the other hand, if $k_\ell^{\text{Nav}}$ $>$ `max_terms_large`, then the SWSE small-time approximation is used. The user can set the optional parameter `max_terms_large` to any non-negative integer to alter the behavior of this method; the default value for this parameter is $4$. Again, the validity of this method is proven in the paper that accompanies the `fddm` package.
+
+<p class="method">
+Since this is the default method, all three of the optional parameters (`n_terms_small`, `scale`, and `summation_small`) can be ignored. For completeness, set `n_terms_small = "SWSE"` and keep `scale = "both"` in the function call. The parameter `summation_small` should be ignored so that it retains its default value to obtain the best performance. This method uses a fourth optional parameter, `max_terms_large`, and we recommend ignoring this parameter so that it retains its default value.
 </p>
 </div>
 

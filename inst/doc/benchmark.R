@@ -15,9 +15,9 @@ library("microbenchmark")
 rt_benchmark_vec <- function(RT, resp, V, A, t0 = 1e-4, W = 0.5, SV = 0.0,
                              err_tol = 1e-6, times = 100, unit = "ns") {
 
-  fnames <- c("fs_SWSE_17", "fs_SWSE_14",
-              "fs_Gon_17", "fs_Gon_14", "fs_Nav_17", "fs_Nav_14",
-              "fb_Gon_17", "fb_Gon_14", "fb_Nav_17", "fb_Nav_14",
+  fnames <- c("fs_SWSE_17", "fs_SWSE_14", "fb_SWSE_17", "fb_SWSE_14",
+              "fs_Gon_17", "fs_Gon_14", "fb_Gon_17", "fb_Gon_14",
+              "fs_Nav_17", "fs_Nav_14", "fb_Nav_17", "fb_Nav_14",
               "fl_Nav_09", "RWiener", "Gondan", "rtdists")
   nf <- length(fnames) # number of functions being benchmarked
   nV <- length(V)
@@ -43,9 +43,19 @@ rt_benchmark_vec <- function(RT, resp, V, A, t0 = 1e-4, W = 0.5, SV = 0.0,
                              summation_small = "2017", scale = "small",
                              err_tol = err_tol),
           fs_SWSE_14 = dfddm(rt = RT, response = resp, a = A[a],
-                            v = V[v], t0 = t0, w = W[w],
+                             v = V[v], t0 = t0, w = W[w],
                              log = FALSE, n_terms_small = "SWSE",
                              summation_small = "2014", scale = "small",
+                             err_tol = err_tol),
+          fb_SWSE_17 = dfddm(rt = RT, response = resp, a = A[a],
+                             v = V[v], t0 = t0, w = W[w],
+                             log = FALSE, n_terms_small = "SWSE",
+                             summation_small = "2017", scale = "both",
+                             err_tol = err_tol),
+          fb_SWSE_14 = dfddm(rt = RT, response = resp, a = A[a],
+                             v = V[v], t0 = t0, w = W[w],
+                             log = FALSE, n_terms_small = "SWSE",
+                             summation_small = "2014", scale = "both",
                              err_tol = err_tol),
           fs_Gon_17 = dfddm(rt = RT, response = resp, a = A[a],
                             v = V[v], t0 = t0, w = W[w],
@@ -57,16 +67,6 @@ rt_benchmark_vec <- function(RT, resp, V, A, t0 = 1e-4, W = 0.5, SV = 0.0,
                             log = FALSE, n_terms_small = "Gondan",
                             summation_small = "2014", scale = "small",
                             err_tol = err_tol),
-          fs_Nav_17 = dfddm(rt = RT, response = resp, a = A[a],
-                            v = V[v], t0 = t0, w = W[w],
-                            log = FALSE, n_terms_small = "Navarro",
-                            summation_small = "2017", scale = "small",
-                            err_tol = err_tol),
-          fs_Nav_14 = dfddm(rt = RT, response = resp, a = A[a],
-                            v = V[v], t0 = t0, w = W[w],
-                            log = FALSE, n_terms_small = "Navarro",
-                            summation_small = "2014", scale = "small",
-                            err_tol = err_tol),
           fb_Gon_17 = dfddm(rt = RT, response = resp, a = A[a],
                             v = V[v], t0 = t0, w = W[w],
                             log = FALSE, n_terms_small = "Gondan",
@@ -76,6 +76,16 @@ rt_benchmark_vec <- function(RT, resp, V, A, t0 = 1e-4, W = 0.5, SV = 0.0,
                             v = V[v], t0 = t0, w = W[w],
                             log = FALSE, n_terms_small = "Gondan",
                             summation_small = "2014", scale = "both",
+                            err_tol = err_tol),
+          fs_Nav_17 = dfddm(rt = RT, response = resp, a = A[a],
+                            v = V[v], t0 = t0, w = W[w],
+                            log = FALSE, n_terms_small = "Navarro",
+                            summation_small = "2017", scale = "small",
+                            err_tol = err_tol),
+          fs_Nav_14 = dfddm(rt = RT, response = resp, a = A[a],
+                            v = V[v], t0 = t0, w = W[w],
+                            log = FALSE, n_terms_small = "Navarro",
+                            summation_small = "2014", scale = "small",
                             err_tol = err_tol),
           fb_Nav_17 = dfddm(rt = RT, response = resp, a = A[a],
                             v = V[v], t0 = t0, w = W[w],
@@ -89,9 +99,8 @@ rt_benchmark_vec <- function(RT, resp, V, A, t0 = 1e-4, W = 0.5, SV = 0.0,
                             err_tol = err_tol),
           fl_Nav_09 = dfddm(rt = RT, response = resp, a = A[a],
                             v = V[v], t0 = t0, w = W[w],
-                            log = FALSE, n_terms_small = "",
-                            summation_small = "", scale = "large",
-                            err_tol = err_tol),
+                            log = FALSE, n_terms_small = "Navarro",
+                            scale = "large", err_tol = err_tol),
           RWiener = dwiener(RT, resp = resp, alpha = A[a],
                             delta = V[v], tau = t0, beta = W[w],
                             give_log = FALSE),
@@ -120,10 +129,9 @@ rt_benchmark_vec <- function(RT, resp, V, A, t0 = 1e-4, W = 0.5, SV = 0.0,
 
 rt_benchmark_ind <- function(RT, resp, V, A, t0 = 1e-4, W = 0.5, SV = 0.0,
                              err_tol = 1e-6, times = 100, unit = "ns") {
-
-  fnames <- c("fs_SWSE_17", "fs_SWSE_14",
-              "fs_Gon_17", "fs_Gon_14", "fs_Nav_17", "fs_Nav_14",
-              "fb_Gon_17", "fb_Gon_14", "fb_Nav_17", "fb_Nav_14",
+  fnames <- c("fs_SWSE_17", "fs_SWSE_14", "fb_SWSE_17", "fb_SWSE_14",
+              "fs_Gon_17", "fs_Gon_14", "fb_Gon_17", "fb_Gon_14",
+              "fs_Nav_17", "fs_Nav_14", "fb_Nav_17", "fb_Nav_14",
               "fl_Nav_09", "RWiener", "Gondan", "rtdists")
   nf <- length(fnames) # number of functions being benchmarked
   nRT <- length(RT)
@@ -154,6 +162,16 @@ rt_benchmark_ind <- function(RT, resp, V, A, t0 = 1e-4, W = 0.5, SV = 0.0,
                               log = FALSE, n_terms_small = "SWSE",
                               summation_small = "2014", scale = "small",
                               err_tol = err_tol),
+            fb_SWSE_17 = dfddm(rt = RT[rt], response = resp, a = A[a],
+                              v = V[v], t0 = t0, w = W[w],
+                              log = FALSE, n_terms_small = "SWSE",
+                              summation_small = "2017", scale = "both",
+                              err_tol = err_tol),
+            fb_SWSE_14 = dfddm(rt = RT[rt], response = resp, a = A[a],
+                              v = V[v], t0 = t0, w = W[w],
+                              log = FALSE, n_terms_small = "SWSE",
+                              summation_small = "2014", scale = "both",
+                              err_tol = err_tol),
             fs_Gon_17 = dfddm(rt = RT[rt], response = resp, a = A[a],
                               v = V[v], t0 = t0, w = W[w],
                               log = FALSE, n_terms_small = "Gondan",
@@ -162,16 +180,6 @@ rt_benchmark_ind <- function(RT, resp, V, A, t0 = 1e-4, W = 0.5, SV = 0.0,
             fs_Gon_14 = dfddm(rt = RT[rt], response = resp, a = A[a],
                               v = V[v], t0 = t0, w = W[w],
                               log = FALSE, n_terms_small = "Gondan",
-                              summation_small = "2014", scale = "small",
-                              err_tol = err_tol),
-            fs_Nav_17 = dfddm(rt = RT[rt], response = resp, a = A[a],
-                              v = V[v], t0 = t0, w = W[w],
-                              log = FALSE, n_terms_small = "Navarro",
-                              summation_small = "2017", scale = "small",
-                              err_tol = err_tol),
-            fs_Nav_14 = dfddm(rt = RT[rt], response = resp, a = A[a],
-                              v = V[v], t0 = t0, w = W[w],
-                              log = FALSE, n_terms_small = "Navarro",
                               summation_small = "2014", scale = "small",
                               err_tol = err_tol),
             fb_Gon_17 = dfddm(rt = RT[rt], response = resp, a = A[a],
@@ -183,6 +191,16 @@ rt_benchmark_ind <- function(RT, resp, V, A, t0 = 1e-4, W = 0.5, SV = 0.0,
                               v = V[v], t0 = t0, w = W[w],
                               log = FALSE, n_terms_small = "Gondan",
                               summation_small = "2014", scale = "both",
+                              err_tol = err_tol),
+            fs_Nav_17 = dfddm(rt = RT[rt], response = resp, a = A[a],
+                              v = V[v], t0 = t0, w = W[w],
+                              log = FALSE, n_terms_small = "Navarro",
+                              summation_small = "2017", scale = "small",
+                              err_tol = err_tol),
+            fs_Nav_14 = dfddm(rt = RT[rt], response = resp, a = A[a],
+                              v = V[v], t0 = t0, w = W[w],
+                              log = FALSE, n_terms_small = "Navarro",
+                              summation_small = "2014", scale = "small",
                               err_tol = err_tol),
             fb_Nav_17 = dfddm(rt = RT[rt], response = resp, a = A[a],
                               v = V[v], t0 = t0, w = W[w],
@@ -196,9 +214,8 @@ rt_benchmark_ind <- function(RT, resp, V, A, t0 = 1e-4, W = 0.5, SV = 0.0,
                               err_tol = err_tol),
             fl_Nav_09 = dfddm(rt = RT[rt], response = resp, a = A[a],
                               v = V[v], t0 = t0, w = W[w],
-                              log = FALSE, n_terms_small = "",
-                              summation_small = "", scale = "large",
-                              err_tol = err_tol),
+                              log = FALSE, n_terms_small = "Navarro",
+                              scale = "large", err_tol = err_tol),
             RWiener = dwiener(RT[rt], resp = resp, alpha = A[a],
                               delta = V[v], tau = t0, beta = W[w],
                               give_log = FALSE),
@@ -227,24 +244,23 @@ rt_benchmark_ind <- function(RT, resp, V, A, t0 = 1e-4, W = 0.5, SV = 0.0,
   return(mbm_res)
 }
 
-## ----bm-run, eval=TRUE--------------------------------------------------------
-# Define parameter space
-RT <- c(0.001, 0.1, 1, 2, 3, 4, 5, 10, 30)
-A <- c(0.25, 0.5, 1, 2.5, 5)
-V <- c(-5, -2, 0, 2, 5)
-t0 <- 1e-4 # must be nonzero for RWiener
-W <- c(0.2, 0.5, 0.8)
-SV <- c(0, 0.5, 1, 1.5)
-err_tol <- 1e-6 # this is the setting from rtdists
-
-# Run benchmark tests
-bm_vec <- rt_benchmark_vec(RT = RT, resp = "lower", V = V, A = A, t0 = t0,
-                           W = W, SV = SV, err_tol = err_tol,
-                           times = 100, unit = "ns")
-## results of rt_benchmark_ind are pre-loaded and not run here:
-# bm_ind <- rt_benchmark_ind(RT = RT, resp = "lower", V = V, A = A, t0 = t0,
-#                            W = W, SV = SV, err_tol = err_tol,
-#                            times = 100, unit = "ns")
+## ----bm-run, eval=FALSE-------------------------------------------------------
+#  # Define parameter space
+#  RT <- c(0.001, 0.1, 1, 2, 3, 4, 5, 10, 30)
+#  A <- c(0.25, 0.5, 1, 2.5, 5)
+#  V <- c(-5, -2, 0, 2, 5)
+#  t0 <- 1e-4 # must be nonzero for RWiener
+#  W <- c(0.2, 0.5, 0.8)
+#  SV <- c(0, 0.5, 1, 1.5)
+#  err_tol <- 1e-6 # this is the setting from rtdists
+#  
+#  # Run benchmark tests
+#  bm_vec <- rt_benchmark_vec(RT = RT, resp = "lower", V = V, A = A, t0 = t0,
+#                             W = W, SV = SV, err_tol = err_tol,
+#                             times = 1000, unit = "ns")
+#  bm_ind <- rt_benchmark_ind(RT = RT, resp = "lower", V = V, A = A, t0 = t0,
+#                             W = W, SV = SV, err_tol = err_tol,
+#                             times = 100, unit = "ns")
 
 ## ----bm-run-and-save, eval=FALSE, include=FALSE-------------------------------
 #  # Define parameter space
@@ -259,42 +275,47 @@ bm_vec <- rt_benchmark_vec(RT = RT, resp = "lower", V = V, A = A, t0 = t0,
 #  # Run benchmark tests
 #  bm_vec <- rt_benchmark_vec(RT = RT, resp = "lower", V = V, A = A, t0 = t0,
 #                             W = W, SV = SV, err_tol = err_tol,
-#                             times = 100, unit = "ns")
-#  save(bm_vec, file = "inst/extdata/bm_vec.Rds", compress = "xz")
+#                             times = 1000, unit = "ns")
+#  save(bm_vec, compress = "xz", compression_level = 9,
+#       file = "inst/extdata/bm_vec.Rds")
 #  # load(system.file("extdata", "bm_vec.Rds", package = "fddm", mustWork = TRUE))
-#  # results of rt_benchmark_ind are pre-loaded nad not run here:
 #  bm_ind <- rt_benchmark_ind(RT = RT, resp = "lower", V = V, A = A, t0 = t0,
 #                             W = W, SV = SV, err_tol = err_tol,
 #                             times = 100, unit = "ns")
-#  save(bm_ind, file = "inst/extdata/bm_ind.Rds", compress = "xz")
+#  save(bm_ind, compress = "xz", compression_level = 9,
+#       file = "inst/extdata/bm_ind.Rds")
+#  # load(system.file("extdata", "bm_ind.Rds", package = "fddm", mustWork = TRUE))
 
 ## ----bm-violin, eval=TRUE, fig.height=5---------------------------------------
 library("reshape2")
 library("ggplot2")
+
+# load data, will be in the variable 'bm_vec'
+load(system.file("extdata", "bm_vec.Rds", package = "fddm", mustWork = TRUE))
 
 t_idx <- match("SV", colnames(bm_vec))
 bm_vec[, -seq_len(t_idx)] <- bm_vec[, -seq_len(t_idx)]/1000 # convert to microseconds
 mbm_vec <- melt(bm_vec, measure.vars = -seq_len(t_idx),
                 variable.name = "FuncName", value.name = "time")
 
-Names_vec <- c("fs_SWSE_17", "fs_SWSE_14",
+Names_vec <- c("fb_SWSE_17", "fb_SWSE_14", "fb_Gon_17", "fb_Gon_14",
+               "fb_Nav_17", "fb_Nav_14", "fs_SWSE_17", "fs_SWSE_14",
                "fs_Gon_17", "fs_Gon_14", "fs_Nav_17", "fs_Nav_14",
-               "fb_Gon_17", "fb_Gon_14", "fb_Nav_17", "fb_Nav_14",
                "fl_Nav_09", "RWiener", "Gondan", "rtdists")
-Color_vec <- c("#9900cc", "#cc99ff",
-               "#006699", "#66ccff", "#336600", "#33cc33",
-               "#c2a500", "#d7db42", "#e68a00", "#ffb366",
+Color_vec <- c("#e000b4", "#ff99eb", "#e68a00", "#ffb366",
+               "#006699", "#66ccff", "#9900cc", "#cc99ff",
+               "#c2a500", "#d7db42", "#336600", "#33cc33",
                "#996633", "#ff9999", "#ff5050", "#990000")
 
 mi <- min(bm_vec[, -seq_len(t_idx)])
 ma <- max(bm_vec[, (t_idx+1):(ncol(bm_vec)-4)])
 
-ggplot(mbm_vec, aes(x = FuncName, y = time,
+ggplot(mbm_vec, aes(x = factor(FuncName, levels = Names_vec), y = time,
                     color = factor(FuncName, levels = Names_vec),
                     fill = factor(FuncName, levels = Names_vec))) +
        geom_violin(trim = TRUE, alpha = 0.5) +
-       scale_color_manual(values = Color_vec) +
-       scale_fill_manual(values = Color_vec) +
+       scale_color_manual(values = Color_vec, guide = FALSE) +
+       scale_fill_manual(values = Color_vec, guide = FALSE) +
        geom_boxplot(width = 0.15, fill = "white", alpha = 0.5) +
        stat_summary(fun = mean, geom = "errorbar",
                     aes(ymax = ..y.., ymin = ..y..),
@@ -318,7 +339,7 @@ ggplot(mbm_vec, aes(x = FuncName, y = time,
 ## ----bm-meq-prep, eval=TRUE---------------------------------------------------
 # load data, will be in the variable 'bm_ind'
 load(system.file("extdata", "bm_ind.Rds", package = "fddm", mustWork = TRUE))
-bm_ind$RTAA <- bm_ind$RT / bm_ind$A / bm_ind$A
+bm_ind[["RTAA"]] <- bm_ind[["RT"]] / bm_ind[["A"]] / bm_ind[["A"]]
 bm_ind <- bm_ind[, c(1, 2, ncol(bm_ind), 3:(ncol(bm_ind)-1)) ]
 
 t_idx <- match("SV", colnames(bm_ind))
@@ -326,11 +347,9 @@ bm_ind[,-seq_len(t_idx)] <- bm_ind[, -seq_len(t_idx)]/1000 # convert to microsec
 mbm_ind <- melt(bm_ind, measure.vars = -seq_len(t_idx),
                 variable.name = "FuncName", value.name = "time")
 
-Names_meq <- c("fs_SWSE_17", "fs_Gon_17", "fs_Nav_17",
-               "fl_Nav_09", "fb_Gon_17", "fb_Nav_17",
+Names_meq <- c("fb_SWSE_17", "fs_SWSE_14", "fl_Nav_09",
                "RWiener", "Gondan", "rtdists")
-Color_meq <- c("#9900cc", "#006699", "#336600",
-               "#996633", "#c2a500", "#e68a00",
+Color_meq <- c("#e000b4", "#cc99ff", "#996633",
                "#ff9999", "#ff5050", "#990000")
 mbm_meq <- subset(mbm_ind, FuncName %in% Names_meq)
 
@@ -348,7 +367,10 @@ ggplot(mbm_meq, aes(x = RTAA, y = time,
   scale_color_manual(values = Color_meq) +
   scale_fill_manual(values = Color_meq) +
   labs(title = "Means of the median microbenchmark results",
-       subtitle = "The shaded regions represent the 10% and 90% quantiles;\nThe lighter shaded regions represent the min and max times",
+       subtitle = paste(
+         "The shaded regions represent the 10% and 90% quantiles",
+         "The lighter shaded regions represent the min and max times",
+         sep = ";\n"),
        x = bquote(frac(rt, a^2) ~ ", effective response time, " ~ log[10]),
        y = "Time (microseconds)") +
   theme_bw() +
@@ -356,7 +378,7 @@ ggplot(mbm_meq, aes(x = RTAA, y = time,
         panel.border = element_blank(),
         plot.title = element_text(size = 20),
         plot.subtitle = element_text(size = 16,
-                                     margin = margin(5,5,15,5, "pt")),
+                                     margin = margin(5, 5, 15, 5, "pt")),
         axis.text.x = element_text(size = 16, angle = 90,
                                    vjust = 0.5, hjust = 1),
         axis.text.y = element_text(size = 16),
@@ -380,7 +402,10 @@ ggplot(mbm_meq, aes(x = W, y = time,
   scale_color_manual(values = Color_meq) +
   scale_fill_manual(values = Color_meq) +
   labs(title = "Means of the median microbenchmark results",
-       subtitle = "The shaded regions represent the 10% and 90% quantiles;\nThe lighter shaded regions represent the min and max times",
+       subtitle = paste(
+         "The shaded regions represent the 10% and 90% quantiles",
+         "The lighter shaded regions represent the min and max times",
+         sep = ";\n"),
        x = "w, relative starting point (a priori bias)",
        y = "Time (microseconds)") +
   theme_bw() +
@@ -388,7 +413,7 @@ ggplot(mbm_meq, aes(x = W, y = time,
         panel.border = element_blank(),
         plot.title = element_text(size = 20),
         plot.subtitle = element_text(size = 16,
-                                     margin = margin(5,5,15,5, "pt")),
+                                     margin = margin(5, 5, 15, 5, "pt")),
         axis.text.x = element_text(size = 16, angle = 90,
                                    vjust = 0.5, hjust = 1),
         axis.text.y = element_text(size = 16),
@@ -412,7 +437,10 @@ ggplot(mbm_meq, aes(x = V, y = time,
   scale_color_manual(values = Color_meq) +
   scale_fill_manual(values = Color_meq) +
   labs(title = "Means of the median microbenchmark results",
-       subtitle = "The shaded regions represent the 10% and 90% quantiles;\nThe lighter shaded regions represent the min and max times",
+       subtitle = paste(
+         "The shaded regions represent the 10% and 90% quantiles",
+         "The lighter shaded regions represent the min and max times",
+         sep = ";\n"),
        x = "v, drift rate",
        y = "Time (microseconds)") +
   theme_bw() +
@@ -420,7 +448,7 @@ ggplot(mbm_meq, aes(x = V, y = time,
         panel.border = element_blank(),
         plot.title = element_text(size = 20),
         plot.subtitle = element_text(size = 16,
-                                     margin = margin(5,5,15,5, "pt")),
+                                     margin = margin(5, 5, 15, 5, "pt")),
         axis.text.x = element_text(size = 16, angle = 90,
                                    vjust = 0.5, hjust = 1),
         axis.text.y = element_text(size = 16),
@@ -444,7 +472,10 @@ ggplot(mbm_meq, aes(x = SV, y = time,
   scale_color_manual(values = Color_meq) +
   scale_fill_manual(values = Color_meq) +
   labs(title = "Means of the median microbenchmark results",
-       subtitle = "The shaded regions represent the 10% and 90% quantiles;\nThe lighter shaded regions represent the min and max times",
+       subtitle = paste(
+         "The shaded regions represent the 10% and 90% quantiles",
+         "The lighter shaded regions represent the min and max times",
+         sep = ";\n"),
        x = "sv, inter-trial variability in the drift rate",
        y = "Time (microseconds)") +
   theme_bw() +
@@ -452,7 +483,7 @@ ggplot(mbm_meq, aes(x = SV, y = time,
         panel.border = element_blank(),
         plot.title = element_text(size = 20),
         plot.subtitle = element_text(size = 16,
-                                     margin = margin(5,5,15,5, "pt")),
+                                     margin = margin(5, 5, 15, 5, "pt")),
         axis.text.x = element_text(size = 16, angle = 90,
                                    vjust = 0.5, hjust = 1),
         axis.text.y = element_text(size = 16),
@@ -469,114 +500,58 @@ ggplot(mbm_meq, aes(x = SV, y = time,
 #  library("microbenchmark")
 
 ## ----fit-loglik-fun, eval=TRUE------------------------------------------------
-ll_fs_SWSE_17 <- function(pars, rt, resp, truth, err_tol) {
-  rtu <- rt[truth == "upper"]
-  rtl <- rt[truth == "lower"]
-  respu <- resp[truth == "upper"]
-  respl <- resp[truth == "lower"]
-
-  # the truth is "upper" so use vu
-  densu <- dfddm(rt = rtu, response = respu, a = pars[[3]], v = pars[[1]],
-                 t0 = pars[[4]], w = pars[[5]], sv = pars[[6]], log = TRUE,
-                 n_terms_small = "SWSE", summation_small = "2017",
-                 scale = "small", err_tol = err_tol)
-  # the truth is "lower" so use vl
-  densl <- dfddm(rt = rtl, response = respl, a = pars[[3]], v = pars[[2]],
-                 t0 = pars[[4]], w = pars[[5]], sv = pars[[6]], log = TRUE,
-                 n_terms_small = "SWSE", summation_small = "2017",
-                 scale = "small", err_tol = err_tol)
-
-  densities <- c(densu, densl)
-  if (any(!is.finite(densities))) return(1e6)
-  return(-sum(densities))
-}
-
-ll_fs_Gon_17 <- function(pars, rt, resp, truth, err_tol) {
-  rtu <- rt[truth == "upper"]
-  rtl <- rt[truth == "lower"]
-  respu <- resp[truth == "upper"]
-  respl <- resp[truth == "lower"]
-
-  # the truth is "upper" so use vu
-  densu <- dfddm(rt = rtu, response = respu, a = pars[[3]], v = pars[[1]],
-                 t0 = pars[[4]], w = pars[[5]], sv = pars[[6]], log = TRUE,
-                 n_terms_small = "Gondan", summation_small = "2017",
-                 scale = "small", err_tol = err_tol)
-  # the truth is "lower" so use vl
-  densl <- dfddm(rt = rtl, response = respl, a = pars[[3]], v = pars[[2]],
-                 t0 = pars[[4]], w = pars[[5]], sv = pars[[6]], log = TRUE,
-                 n_terms_small = "Gondan", summation_small = "2017",
-                 scale = "small", err_tol = err_tol)
-
-  densities <- c(densu, densl)
-  if (any(!is.finite(densities))) return(1e6)
-  return(-sum(densities))
-}
-
-ll_fs_Nav_17 <- function(pars, rt, resp, truth, err_tol) {
-  rtu <- rt[truth == "upper"]
-  rtl <- rt[truth == "lower"]
-  respu <- resp[truth == "upper"]
-  respl <- resp[truth == "lower"]
-
-  # the truth is "upper" so use vu
-  densu <- dfddm(rt = rtu, response = respu, a = pars[[3]], v = pars[[1]],
-                 t0 = pars[[4]], w = pars[[5]], sv = pars[[6]], log = TRUE,
-                 n_terms_small = "Navarro", summation_small = "2017",
-                 scale = "small", err_tol = err_tol)
-  # the truth is "lower" so use vl
-  densl <- dfddm(rt = rtl, response = respl, a = pars[[3]], v = pars[[2]],
-                 t0 = pars[[4]], w = pars[[5]], sv = pars[[6]], log = TRUE,
-                 n_terms_small = "Navarro", summation_small = "2017",
-                 scale = "small", err_tol = err_tol)
-
-  densities <- c(densu, densl)
-  if (any(!is.finite(densities))) return(1e6)
-  return(-sum(densities))
+ll_fb_SWSE_17 <- function(pars, rt, resp, truth, err_tol) {
+  v <- numeric(length(rt))
+  v[truth == "upper"] <- pars[[1]]
+  v[truth == "lower"] <- pars[[2]]
+  dens <- dfddm(rt = rt, response = resp, a = pars[[3]], v = v,
+                t0 = pars[[4]], w = pars[[5]], sv = pars[[6]], log = TRUE,
+                n_terms_small = "SWSE", summation_small = "2017",
+                scale = "both", err_tol = err_tol)
+  return( ifelse(any(!is.finite(dens)), 1e6, -sum(dens)) )
 }
 
 ll_fb_Gon_17 <- function(pars, rt, resp, truth, err_tol) {
-  rtu <- rt[truth == "upper"]
-  rtl <- rt[truth == "lower"]
-  respu <- resp[truth == "upper"]
-  respl <- resp[truth == "lower"]
-
-  # the truth is "upper" so use vu
-  densu <- dfddm(rt = rtu, response = respu, a = pars[[3]], v = pars[[1]],
-                 t0 = pars[[4]], w = pars[[5]], sv = pars[[6]], log = TRUE,
-                 n_terms_small = "Gondan", summation_small = "2017",
-                 scale = "both", err_tol = err_tol)
-  # the truth is "lower" so use vl
-  densl <- dfddm(rt = rtl, response = respl, a = pars[[3]], v = pars[[2]],
-                 t0 = pars[[4]], w = pars[[5]], sv = pars[[6]], log = TRUE,
-                 n_terms_small = "Gondan", summation_small = "2017",
-                 scale = "both", err_tol = err_tol)
-
-  densities <- c(densu, densl)
-  if (any(!is.finite(densities))) return(1e6)
-  return(-sum(densities))
+  v <- numeric(length(rt))
+  v[truth == "upper"] <- pars[[1]]
+  v[truth == "lower"] <- pars[[2]]
+  dens <- dfddm(rt = rt, response = resp, a = pars[[3]], v = v,
+                t0 = pars[[4]], w = pars[[5]], sv = pars[[6]], log = TRUE,
+                n_terms_small = "Gondan", summation_small = "2017",
+                scale = "both", err_tol = err_tol)
+  return( ifelse(any(!is.finite(dens)), 1e6, -sum(dens)) )
 }
 
-ll_fb_Nav_17 <- function(pars, rt, resp, truth, err_tol) {
-  rtu <- rt[truth == "upper"]
-  rtl <- rt[truth == "lower"]
-  respu <- resp[truth == "upper"]
-  respl <- resp[truth == "lower"]
+ll_fs_SWSE_14 <- function(pars, rt, resp, truth, err_tol) {
+  v <- numeric(length(rt))
+  v[truth == "upper"] <- pars[[1]]
+  v[truth == "lower"] <- pars[[2]]
+  dens <- dfddm(rt = rt, response = resp, a = pars[[3]], v = v,
+                t0 = pars[[4]], w = pars[[5]], sv = pars[[6]], log = TRUE,
+                n_terms_small = "SWSE", summation_small = "2014",
+                scale = "small", err_tol = err_tol)
+  return( ifelse(any(!is.finite(dens)), 1e6, -sum(dens)) )
+}
 
-  # the truth is "upper" so use vu
-  densu <- dfddm(rt = rtu, response = respu, a = pars[[3]], v = pars[[1]],
-                 t0 = pars[[4]], w = pars[[5]], sv = pars[[6]], log = TRUE,
-                 n_terms_small = "Navarro", summation_small = "2017",
-                 scale = "both", err_tol = err_tol)
-  # the truth is "lower" so use vl
-  densl <- dfddm(rt = rtl, response = respl, a = pars[[3]], v = pars[[2]],
-                 t0 = pars[[4]], w = pars[[5]], sv = pars[[6]], log = TRUE,
-                 n_terms_small = "Navarro", summation_small = "2017",
-                 scale = "both", err_tol = err_tol)
+ll_fs_Gon_17 <- function(pars, rt, resp, truth, err_tol) {
+  v <- numeric(length(rt))
+  v[truth == "upper"] <- pars[[1]]
+  v[truth == "lower"] <- pars[[2]]
+  dens <- dfddm(rt = rt, response = resp, a = pars[[3]], v = v,
+                t0 = pars[[4]], w = pars[[5]], sv = pars[[6]], log = TRUE,
+                n_terms_small = "Gondan", summation_small = "2017",
+                scale = "small", err_tol = err_tol)
+  return( ifelse(any(!is.finite(dens)), 1e6, -sum(dens)) )
+}
 
-  densities <- c(densu, densl)
-  if (any(!is.finite(densities))) return(1e6)
-  return(-sum(densities))
+ll_fl_Nav_09 <- function(pars, rt, resp, truth, err_tol) {
+  v <- numeric(length(rt))
+  v[truth == "upper"] <- pars[[1]]
+  v[truth == "lower"] <- pars[[2]]
+  dens <- dfddm(rt = rt, response = resp, a = pars[[3]], v = v,
+                t0 = pars[[4]], w = pars[[5]], sv = pars[[6]], log = TRUE,
+                n_terms_small = "Navarro", scale = "large", err_tol = err_tol)
+  return( ifelse(any(!is.finite(dens)), 1e6, -sum(dens)) )
 }
 
 ll_RTDists <- function(pars, rt, resp, truth) {
@@ -585,10 +560,8 @@ ll_RTDists <- function(pars, rt, resp, truth) {
   respu <- resp[truth == "upper"]
   respl <- resp[truth == "lower"]
 
-  # the truth is "upper" so use vu
   densu <- ddiffusion(rtu, respu, a = pars[[3]], v = pars[[1]],
                       z = pars[[5]]*pars[[3]], t0 = pars[[4]], sv = pars[[6]])
-  # the truth is "lower" so use vl
   densl <- ddiffusion(rtl, respl, a = pars[[3]], v = pars[[2]],
                       z = pars[[5]]*pars[[3]], t0 = pars[[4]], sv = pars[[6]])
 
@@ -625,23 +598,24 @@ rt_fit <- function(data, id_idx = NULL, rt_idx = NULL, response_idx = NULL,
       for (i in 1:length(id_idx)) {
         idi <- unique(data[,id_idx[i]])
         for (j in 1:length(idi)) {
-          df$id[data[,id_idx[i]] == idi[j]] <- paste(df$id[data[,id_idx[i]] == idi[j]], idi[j], sep = " ")
+          df[["id"]][data[,id_idx[i]] == idi[j]] <- paste(
+            df[["id"]][data[,id_idx[i]] == idi[j]], idi[j], sep = " ")
         }
       }
-      df$id <- trimws(df$id, which = "left")
+      df[["id"]] <- trimws(df[["id"]], which = "left")
     }
 
-    df$rt <- as.double(data[,rt_idx])
+    df[["rt"]] <- as.double(data[,rt_idx])
 
-    df$response <- "lower"
-    df$response[data[,response_idx] == response_upper] <- "upper"
+    df[["response"]] <- "lower"
+    df[["response"]][data[,response_idx] == response_upper] <- "upper"
 
-    df$truth <- "lower"
-    df$truth[data[,truth_idx] == response_upper] <- "upper"
+    df[["truth"]] <- "lower"
+    df[["truth"]][data[,truth_idx] == response_upper] <- "upper"
   }
 
   # Preliminaries
-  ids <- unique(df$id)
+  ids <- unique(df[["id"]])
   nids <- max(length(ids), 1) # if inds is null, there is only one individual
 
   init_vals <- data.frame(v1 = c( 0,  10, -.5,  0,  0,  0,  0,  0,  0,   0,  0),
@@ -652,8 +626,8 @@ rt_fit <- function(data, id_idx = NULL, rt_idx = NULL, response_idx = NULL,
                           sv = c( 1,   1,   1,  1,  1,  1,  1,  1,  1, .05,  5))
   ninit_vals <- nrow(init_vals)
 
-  algo_names <- c("fs_SWSE_17", "fs_Gon_17", "fs_Nav_17",
-                  "fb_Gon_17", "fb_Nav_17","rtdists")
+  algo_names <- c("fb_SWSE_17", "fb_Gon_17", "fs_SWSE_14",
+                  "fs_Gon_17", "fl_Nav_09", "rtdists")
   nalgos <- length(algo_names)
   ni <- nalgos*ninit_vals
 
@@ -664,128 +638,124 @@ rt_fit <- function(data, id_idx = NULL, rt_idx = NULL, response_idx = NULL,
   colnames(res) <- cnames
 
   # label the result dataframe
-  algo_col <- c()
-  for (n in 1:nalgos) {
-    algo_col <- c(algo_col, rep(algo_names[n], ninit_vals))
-  }
-  res$Algorithm <- algo_col # label algorithms
+  res[["ID"]] <- rep(ids, each = ni) # label individuals
+  res[["Algorithm"]] <- rep(algo_names, each = ninit_vals) # label algorithms
 
   # Loop through each individual
   for (i in 1:nids) {
     # extract data for id i
-    dfi <- df[df$id == ids[i],]
-    rti <- dfi$rt
-    respi <- dfi$response
-    truthi <- dfi$truth
+    dfi <- df[df[["id"]] == ids[i], ]
+    rti <- dfi[["rt"]]
+    respi <- dfi[["response"]]
+    truthi <- dfi[["truth"]]
 
     # starting value for t0 must be smaller than the smallest rt
     min_rti <- min(rti)
     t0_lo <- 0.01*min_rti
     t0_me <- 0.50*min_rti
     t0_hi <- 0.99*min_rti
-
-    # label the result dataframe
-    res$ID[((i-1)*ni+1):(i*ni)] <- ids[i] # label individuals
+    init_vals[["t0"]] <- c(rep(t0_me, 5), t0_lo, t0_hi, rep(t0_me, 4))
 
     # loop through all of the starting values
     for (j in 1:ninit_vals) {
       # get number of evaluations
-      temp <- nlminb(init_vals[j,], ll_fs_SWSE_17, err_tol = err_tol,
-                     rt = rti, resp = respi, truth = truthi,
-                     # limits:   vu,   vl,   a,  t0, w,  sv
-                     lower = c(-Inf, -Inf, .05,   0, 0,   0),
-                     upper = c( Inf,  Inf, Inf, Inf, 1, Inf))
-      res$Convergence[(i-1)*ni+0*ninit_vals+j] <- temp$convergence
-      res$Objective[(i-1)*ni+0*ninit_vals+j] <- temp$objective
-      res$Iterations[(i-1)*ni+0*ninit_vals+j] <- temp$iterations
-      res$FuncEvals[(i-1)*ni+0*ninit_vals+j] <- temp$evaluations[[1]]
+      temp <- nlminb(init_vals[j, ], ll_fb_SWSE_17,
+                     rt = rti, resp = respi, truth = truthi, err_tol = err_tol,
+                     # limits:   vu,   vl,   a,      t0, w,  sv
+                     lower = c(-Inf, -Inf, .01,       0, 0,   0),
+                     upper = c( Inf,  Inf, Inf, min_rti, 1, Inf))
+      res[["Convergence"]][(i-1)*ni+0*ninit_vals+j] <- temp[["convergence"]]
+      res[["Objective"]][(i-1)*ni+0*ninit_vals+j] <- temp[["objective"]]
+      res[["Iterations"]][(i-1)*ni+0*ninit_vals+j] <- temp[["iterations"]]
+      res[["FuncEvals"]][(i-1)*ni+0*ninit_vals+j] <- temp[["evaluations"]][[1]]
 
-      temp <- nlminb(init_vals[j,], ll_fs_Gon_17, err_tol = err_tol,
-                     rt = rti, resp = respi, truth = truthi,
-                     # limits:   vu,   vl,   a,  t0, w,  sv
-                     lower = c(-Inf, -Inf, .05,   0, 0,   0),
-                     upper = c( Inf,  Inf, Inf, Inf, 1, Inf))
-      res$Convergence[(i-1)*ni+1*ninit_vals+j] <- temp$convergence
-      res$Objective[(i-1)*ni+1*ninit_vals+j] <- temp$objective
-      res$Iterations[(i-1)*ni+1*ninit_vals+j] <- temp$iterations
-      res$FuncEvals[(i-1)*ni+1*ninit_vals+j] <- temp$evaluations[[1]]
+      temp <- nlminb(init_vals[j, ], ll_fb_Gon_17,
+                     rt = rti, resp = respi, truth = truthi, err_tol = err_tol,
+                     # limits:   vu,   vl,   a,      t0, w,  sv
+                     lower = c(-Inf, -Inf, .01,       0, 0,   0),
+                     upper = c( Inf,  Inf, Inf, min_rti, 1, Inf))
+      res[["Convergence"]][(i-1)*ni+1*ninit_vals+j] <- temp[["convergence"]]
+      res[["Objective"]][(i-1)*ni+1*ninit_vals+j] <- temp[["objective"]]
+      res[["Iterations"]][(i-1)*ni+1*ninit_vals+j] <- temp[["iterations"]]
+      res[["FuncEvals"]][(i-1)*ni+1*ninit_vals+j] <- temp[["evaluations"]][[1]]
 
-      temp <- nlminb(init_vals[j,], ll_fs_Nav_17, err_tol = err_tol,
-                     rt = rti, resp = respi, truth = truthi,
-                     # limits:   vu,   vl,   a,  t0, w,  sv
-                     lower = c(-Inf, -Inf, .05,   0, 0,   0),
-                     upper = c( Inf,  Inf, Inf, Inf, 1, Inf))
-      res$Convergence[(i-1)*ni+2*ninit_vals+j] <- temp$convergence
-      res$Objective[(i-1)*ni+2*ninit_vals+j] <- temp$objective
-      res$Iterations[(i-1)*ni+2*ninit_vals+j] <- temp$iterations
-      res$FuncEvals[(i-1)*ni+2*ninit_vals+j] <- temp$evaluations[[1]]
+      temp <- nlminb(init_vals[j, ], ll_fs_SWSE_14,
+                     rt = rti, resp = respi, truth = truthi, err_tol = err_tol,
+                     # limits:   vu,   vl,   a,      t0, w,  sv
+                     lower = c(-Inf, -Inf, .01,       0, 0,   0),
+                     upper = c( Inf,  Inf, Inf, min_rti, 1, Inf))
+      res[["Convergence"]][(i-1)*ni+2*ninit_vals+j] <- temp[["convergence"]]
+      res[["Objective"]][(i-1)*ni+2*ninit_vals+j] <- temp[["objective"]]
+      res[["Iterations"]][(i-1)*ni+2*ninit_vals+j] <- temp[["iterations"]]
+      res[["FuncEvals"]][(i-1)*ni+2*ninit_vals+j] <- temp[["evaluations"]][[1]]
 
-      temp <- nlminb(init_vals[j,], ll_fb_Gon_17, err_tol = err_tol,
-                     rt = rti, resp = respi, truth = truthi,
-                     # limits:   vu,   vl,   a,  t0, w,  sv
-                     lower = c(-Inf, -Inf, .05,   0, 0,   0),
-                     upper = c( Inf,  Inf, Inf, Inf, 1, Inf))
-      res$Convergence[(i-1)*ni+3*ninit_vals+j] <- temp$convergence
-      res$Objective[(i-1)*ni+3*ninit_vals+j] <- temp$objective
-      res$Iterations[(i-1)*ni+3*ninit_vals+j] <- temp$iterations
-      res$FuncEvals[(i-1)*ni+3*ninit_vals+j] <- temp$evaluations[[1]]
+      temp <- nlminb(init_vals[j, ], ll_fs_Gon_17,
+                     rt = rti, resp = respi, truth = truthi, err_tol = err_tol,
+                     # limits:   vu,   vl,   a,      t0, w,  sv
+                     lower = c(-Inf, -Inf, .01,       0, 0,   0),
+                     upper = c( Inf,  Inf, Inf, min_rti, 1, Inf))
+      res[["Convergence"]][(i-1)*ni+3*ninit_vals+j] <- temp[["convergence"]]
+      res[["Objective"]][(i-1)*ni+3*ninit_vals+j] <- temp[["objective"]]
+      res[["Iterations"]][(i-1)*ni+3*ninit_vals+j] <- temp[["iterations"]]
+      res[["FuncEvals"]][(i-1)*ni+3*ninit_vals+j] <- temp[["evaluations"]][[1]]
 
-      temp <- nlminb(init_vals[j,], ll_fb_Nav_17, err_tol = err_tol,
-                     rt = rti, resp = respi, truth = truthi,
-                     # limits:   vu,   vl,   a,  t0, w,  sv
-                     lower = c(-Inf, -Inf, .05,   0, 0,   0),
-                     upper = c( Inf,  Inf, Inf, Inf, 1, Inf))
-      res$Convergence[(i-1)*ni+4*ninit_vals+j] <- temp$convergence
-      res$Objective[(i-1)*ni+4*ninit_vals+j] <- temp$objective
-      res$Iterations[(i-1)*ni+4*ninit_vals+j] <- temp$iterations
-      res$FuncEvals[(i-1)*ni+4*ninit_vals+j] <- temp$evaluations[[1]]
+      temp <- nlminb(init_vals[j, ], ll_fl_Nav_09,
+                     rt = rti, resp = respi, truth = truthi, err_tol = err_tol,
+                     # limits:   vu,   vl,   a,      t0, w,  sv
+                     lower = c(-Inf, -Inf, .01,       0, 0,   0),
+                     upper = c( Inf,  Inf, Inf, min_rti, 1, Inf))
+      res[["Convergence"]][(i-1)*ni+4*ninit_vals+j] <- temp[["convergence"]]
+      res[["Objective"]][(i-1)*ni+4*ninit_vals+j] <- temp[["objective"]]
+      res[["Iterations"]][(i-1)*ni+4*ninit_vals+j] <- temp[["iterations"]]
+      res[["FuncEvals"]][(i-1)*ni+4*ninit_vals+j] <- temp[["evaluations"]][[1]]
 
-      temp <- nlminb(init_vals[j,], ll_RTDists,
+      temp <- nlminb(init_vals[j, ], ll_RTDists,
                      rt = rti, resp = respi, truth = truthi,
-                     # limits:   vu,   vl,   a,  t0, w,  sv
-                     lower = c(-Inf, -Inf, .05,   0, 0,   0),
-                     upper = c( Inf,  Inf, Inf, Inf, 1, Inf))
-      res$Convergence[(i-1)*ni+5*ninit_vals+j] <- temp$convergence
-      res$Objective[(i-1)*ni+5*ninit_vals+j] <- temp$objective
-      res$Iterations[(i-1)*ni+5*ninit_vals+j] <- temp$iterations
-      res$FuncEvals[(i-1)*ni+5*ninit_vals+j] <- temp$evaluations[[1]]
+                     # limits:   vu,   vl,   a,      t0, w,  sv
+                     lower = c(-Inf, -Inf, .01,       0, 0,   0),
+                     upper = c( Inf,  Inf, Inf, min_rti, 1, Inf))
+      res[["Convergence"]][(i-1)*ni+5*ninit_vals+j] <- temp[["convergence"]]
+      res[["Objective"]][(i-1)*ni+5*ninit_vals+j] <- temp[["objective"]]
+      res[["Iterations"]][(i-1)*ni+5*ninit_vals+j] <- temp[["iterations"]]
+      res[["FuncEvals"]][(i-1)*ni+5*ninit_vals+j] <- temp[["evaluations"]][[1]]
 
       # microbenchmark
       mbm <- microbenchmark(
-        fs_SWSE_17 = nlminb(init_vals[j,], ll_fs_SWSE_17, err_tol = err_tol,
+        fb_SWSE_17 = nlminb(init_vals[j,], ll_fb_SWSE_17, err_tol = err_tol,
                             rt = rti, resp = respi, truth = truthi,
-                            # limits:   vu,   vl,   a,  t0, w,  sv
-                            lower = c(-Inf, -Inf, .05,   0, 0,   0),
-                            upper = c( Inf,  Inf, Inf, Inf, 1, Inf)),
-        fs_Gon_17 = nlminb(init_vals[j,], ll_fs_Gon_17, err_tol = err_tol,
-                           rt = rti, resp = respi, truth = truthi,
-                           # limits:   vu,   vl,   a,  t0, w,  sv
-                           lower = c(-Inf, -Inf, .05,   0, 0,   0),
-                           upper = c( Inf,  Inf, Inf, Inf, 1, Inf)),
-        fs_Nav_17 = nlminb(init_vals[j,], ll_fs_Nav_17, err_tol = err_tol,
-                           rt = rti, resp = respi, truth = truthi,
-                           # limits:   vu,   vl,   a,  t0, w,  sv
-                           lower = c(-Inf, -Inf, .05,   0, 0,   0),
-                           upper = c( Inf,  Inf, Inf, Inf, 1, Inf)),
+                            # limits:   vu,   vl,   a,      t0, w,  sv
+                            lower = c(-Inf, -Inf, .01,       0, 0,   0),
+                            upper = c( Inf,  Inf, Inf, min_rti, 1, Inf)),
         fb_Gon_17 = nlminb(init_vals[j,], ll_fb_Gon_17, err_tol = err_tol,
                            rt = rti, resp = respi, truth = truthi,
-                           # limits:   vu,   vl,   a,  t0, w,  sv
-                           lower = c(-Inf, -Inf, .05,   0, 0,   0),
-                           upper = c( Inf,  Inf, Inf, Inf, 1, Inf)),
-        fb_Nav_17 = nlminb(init_vals[j,], ll_fs_Nav_17, err_tol = err_tol,
+                           # limits:   vu,   vl,   a,      t0, w,  sv
+                           lower = c(-Inf, -Inf, .01,       0, 0,   0),
+                           upper = c( Inf,  Inf, Inf, min_rti, 1, Inf)),
+        fs_SWSE_14 = nlminb(init_vals[j,], ll_fs_SWSE_14, err_tol = err_tol,
+                            rt = rti, resp = respi, truth = truthi,
+                            # limits:   vu,   vl,   a,      t0, w,  sv
+                            lower = c(-Inf, -Inf, .01,       0, 0,   0),
+                            upper = c( Inf,  Inf, Inf, min_rti, 1, Inf)),
+        fs_Gon_17 = nlminb(init_vals[j,], ll_fs_Gon_17, err_tol = err_tol,
                            rt = rti, resp = respi, truth = truthi,
-                           # limits:   vu,   vl,   a,  t0, w,  sv
-                           lower = c(-Inf, -Inf, .05,   0, 0,   0),
-                           upper = c( Inf,  Inf, Inf, Inf, 1, Inf)),
+                           # limits:   vu,   vl,   a,      t0, w,  sv
+                           lower = c(-Inf, -Inf, .01,       0, 0,   0),
+                           upper = c( Inf,  Inf, Inf, min_rti, 1, Inf)),
+        fl_Nav_09 = nlminb(init_vals[j,], ll_fl_Nav_09, err_tol = err_tol,
+                           rt = rti, resp = respi, truth = truthi,
+                           # limits:   vu,   vl,   a,      t0, w,  sv
+                           lower = c(-Inf, -Inf, .01,       0, 0,   0),
+                           upper = c( Inf,  Inf, Inf, min_rti, 1, Inf)),
         rtdists = nlminb(init_vals[j,], ll_RTDists,
                          rt = rti, resp = respi, truth = truthi,
-                         # limits:   vu,   vl,   a,  t0, w,  sv
-                         lower = c(-Inf, -Inf, .05,   0, 0,   0),
-                         upper = c( Inf,  Inf, Inf, Inf, 1, Inf)),
+                         # limits:   vu,   vl,   a,      t0, w,  sv
+                         lower = c(-Inf, -Inf, .01,       0, 0,   0),
+                         upper = c( Inf,  Inf, Inf, min_rti, 1, Inf)),
         times = times, unit = unit
       )
       for (k in 1:nalgos) {
-        res$BmTime[(i-1)*ni+(k-1)*ninit_vals+j] <- median(mbm[mbm$expr == algo_names[k], 2])
+        res[["BmTime"]][(i-1)*ni+(k-1)*ninit_vals+j] <- median(
+          mbm[mbm[["expr"]] == algo_names[k], 2])
       }
     }
   }
@@ -794,49 +764,44 @@ rt_fit <- function(data, id_idx = NULL, rt_idx = NULL, response_idx = NULL,
 
 ## ----fit-run, eval=FALSE------------------------------------------------------
 #  data(med_dec, package = "fddm")
-#  med_dec <- med_dec[which(med_dec$rt >= 0),]
+#  med_dec <- med_dec[which(med_dec[["rt"]] >= 0), ]
 #  fit <- rt_fit(med_dec, id_idx = c(2,1), rt_idx = 8, response_idx = 7,
 #                truth_idx = 5, response_upper = "blast", err_tol = 1e-6,
-#                times = 6, unit = "ns")
+#                times = 25, unit = "ns")
 
 ## ----fit-run-save, eval=FALSE, include=FALSE----------------------------------
-#  save(fit, file = "inst/extdata/bm_fit.Rds", compress = "bzip2")
+#  save(fit, compress = "xz", compression_level = 9,
+#       file = "inst/extdata/bm_fit.Rds")
 
 ## ----fit-packages, eval=TRUE--------------------------------------------------
 library("reshape2")
 library("ggplot2")
 
 ## ----fitting-prep, eval=TRUE--------------------------------------------------
-fit_prep <- function(fit) {
+fit_prep <- function(fit, eps = 1e-4) {
   nr <- nrow(fit)
-  fit$Obj_diff <- rep(0, nr)
+  fit[["Obj_diff"]] <- rep(0, nr)
 
-  ids <- unique(fit$ID)
+  ids <- unique(fit[["ID"]])
   nids <- length(ids)
-  algos <- unique(fit$Algorithm)
+  algos <- unique(fit[["Algorithm"]])
   nalgos <- length(algos)
 
-  ninit <- nrow(subset(fit, ID == ids[1] & Algorithm == algos[1]))
+  ninit <- nrow(fit[fit[["ID"]] == ids[1] & fit[["Algorithm"]] == algos[1], ])
   for (i in 1:nids) {
     for (j in 1:ninit) {
-      min_obj <- min(fit[seq((i-1)*ninit*nalgos+j, i*ninit*nalgos, by = ninit), 4])
-      for (k in 0:(nalgos-1)) {
-        fit[(i-1)*(ninit*nalgos) + k*ninit + j, 8] <-
-          fit[(i-1)*(ninit*nalgos) + k*ninit + j, 4] - min_obj
-
-      }
+      idx <- which(fit[["ID"]] == ids[i])[ninit*(0:(nalgos-1)) + j]
+      objs <- fit[idx, "Objective"]
+      min_obj <- min(objs)
+      abs_min_obj <- abs(min_obj)
+      obj_diffs <- objs - min(objs)
+      fit[idx, "Obj_diff"] <- ifelse(obj_diffs <= eps*abs_min_obj, 0,
+        ifelse(obj_diffs > eps*abs_min_obj & obj_diffs <= 2*abs_min_obj, 1, 3))
     }
   }
 
-  fit$BmTime <- fit$BmTime/1e6 # convert to milliseconds
-
-  eps <- 1e-4
-  
-  fit[fit$Obj_diff < eps, "Obj_diff"] <- 0
-  fit[(fit$Obj_diff >= eps & fit$Obj_diff <= 2), "Obj_diff"] <- 1
-  fit[fit$Obj_diff > 2, "Obj_diff"] <- 3
-  
-  fit$Convergence <- ifelse(fit$Convergence < 1, 0, 1)
+  fit[["BmTime"]] <- fit[["BmTime"]]*1e-6 # convert to milliseconds
+  fit[["Convergence"]] <- ifelse(fit[["Convergence"]] < 1, 0, 1)
 
   return(fit)
 }
@@ -845,10 +810,10 @@ fit_prep <- function(fit) {
 load(system.file("extdata", "bm_fit.Rds", package = "fddm", mustWork = TRUE))
 fit <- fit_prep(fit)
 
-Names <- c("fs_SWSE_17", "fs_Gon_17", "fs_Nav_17",
-           "fb_Gon_17", "fb_Nav_17", "rtdists")
-Color <- c("#9900cc", "#006699", "#336600",
-           "#c2a500", "#e68a00", "#990000")
+Names <- c("fb_SWSE_17", "fb_Gon_17", "fs_SWSE_14",
+           "fs_Gon_17", "fl_Nav_09", "rtdists")
+Color <- c("#e000b4", "#e68a00", "#cc99ff",
+          "#c2a500", "#996633", "#990000")
 Shape <- c(21, 25)
 Sizes <- c(0, 3, 3)
 Stroke <- c(0, 1, 1)
@@ -857,7 +822,9 @@ Fills <- c("#ffffff00", "#ffffff00", "#80808099")
 ## ----fit-mbm, eval=TRUE, fig.height=6-----------------------------------------
 fit_mbm <- melt(fit, id.vars = c("Algorithm", "Convergence", "Obj_diff"),
                 measure.vars = "BmTime", value.name = "BmTime")[,-4]
-ma <- max(fit_mbm[fit_mbm$Algorithm != "fs_SWSE_17", "BmTime"]) # weird point
+
+mibm <- min(fit[fit[["Algorithm"]] != "rtdists", "BmTime"])
+mabm <- max(fit[fit[["Algorithm"]] != "rtdists", "BmTime"])
 
 ggplot(fit_mbm, aes(x = factor(Algorithm, levels = Names),
                     y = BmTime)) +
@@ -889,11 +856,12 @@ ggplot(fit_mbm, aes(x = factor(Algorithm, levels = Names),
                  size = factor(Obj_diff, levels = c(0, 1, 3)),
                  stroke = factor(Obj_diff, levels = c(0, 1, 3)),
                  fill = factor(Obj_diff, levels = c(0, 1, 3)))) +
-  coord_cartesian(ylim = c(0, ma)) +
+  coord_cartesian(ylim = c(mibm, mabm)) +
   labs(title = "Median microbenchmark times for data fitting",
-       subtitle = paste("Dashed lines represent mean benchmark times;",
-                        "Visible points have an objective difference greater than 1e-4",
-                        sep = "\n"),
+       subtitle = paste(
+         "Dashed lines represent mean benchmark times",
+         "Visible points have an objective difference greater than 1e-4",
+         sep = ";\n"),
        x = "Method", y = "Time (milliseconds)") +
   guides(shape = guide_legend(order = 1,
                               override.aes = list(size = Sizes[c(2, 3)])),
@@ -922,6 +890,9 @@ ggplot(fit_mbm, aes(x = factor(Algorithm, levels = Names),
 ## ----fit-fev, eval=TRUE, fig.height=6-----------------------------------------
 fit_fev <- melt(fit, id.vars = c("Algorithm", "Convergence", "Obj_diff"),
                 measure.vars = "FuncEvals", value.name = "FuncEvals")[,-4]
+
+mife <- min(fit[fit[["Algorithm"]] != "rtdists", "FuncEvals"])
+mafe <- max(fit[fit[["Algorithm"]] != "rtdists", "FuncEvals"])
 
 ggplot(fit_fev, aes(x = factor(Algorithm, levels = Names),
                     y = FuncEvals)) +
@@ -953,11 +924,12 @@ ggplot(fit_fev, aes(x = factor(Algorithm, levels = Names),
                  size = factor(Obj_diff, levels = c(0, 1, 3)),
                  stroke = factor(Obj_diff, levels = c(0, 1, 3)),
                  fill = factor(Obj_diff, levels = c(0, 1, 3)))) +
-  coord_cartesian(ylim = c(0, ma)) +
+  coord_cartesian(ylim = c(mife, mafe)) +
   labs(title = "Function evaluations for data fitting",
-       subtitle = paste("Dashed lines represent mean benchmark times;",
-                        "Visible points have an objective difference greater than 1e-4",
-                        sep = "\n"),
+       subtitle = paste(
+         "Dashed lines represent mean benchmark times",
+         "Visible points have an objective difference greater than 1e-4",
+         sep = ";\n"),
        x = "Method", y = "Number of function evaluations") +
   guides(shape = guide_legend(order = 1,
                               override.aes = list(size = Sizes[c(2, 3)])),
