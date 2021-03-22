@@ -1,3 +1,21 @@
+# fddm v0.3-1 (Release date: 2021-3-21)
+
+## New Features
+* Added new parameter `sigma` to denote the diffusion coefficient of the Wiener process that underlies the DDM.
+
+## Bug Fixes
+* Corrected the required number of terms in the small-time approximation methods.
+* `k` now consistently refers to the number of _individual_ terms instead of sometimes the number of _pairs_ of terms.
+
+## Other Changes
+* Changed default value of `max_terms_large` to 1. This affects the default method (`n_terms_small = "SWSE", scale = "both"`).
+* Revamped the error handling to make it less intrusive.
+* Removed function call in `R`; now directly calls `C++`.
+* Updated vignettes.
+
+
+
+
 # fddm v0.2-2 (Release date: 2020-11-03)
 
 ## Other Changes

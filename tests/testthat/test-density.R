@@ -6,9 +6,48 @@ library("RWiener")
 source(system.file("extdata", "Gondan_et_al_density.R", package = "fddm", mustWork = TRUE))
 
 
+### Input checking
+test_that("Input checking", {
+  expect_warning(expect_equal(
+    dfddm(rt = 1, response = c(3, -1, NA, NaN), a = 1, v = -1, t0 = 0, w = 0.5,
+          sv = 0, sigma = 1, log = 0, err_tol = 1e-6),
+    c(0, 0, 0, 0) ))
+
+  expect_true(all(is.nan(
+    dfddm(rt = 1, response = 1, a = c(-0.4, 0, NA, NaN), v = -1, t0 = 0,
+          w = 0.5, sv = 0, sigma = 1, log = 0, err_tol = 1e-6) )))
+
+  expect_true(all(is.nan(
+    dfddm(rt = 1, response = 1, a = 1, v = -1, t0 = c(-0.25, NA, NaN),
+          w = 0.5, sv = 0, sigma = 1, log = 0, err_tol = 1e-6) )))
+
+  expect_true(all(is.nan(
+    dfddm(rt = 1, response = 1, a = 1, v = -1, t0 = 0,
+          w = c(-0.5, 1.5, 0, 1, NA, NaN), sv = 0, sigma = 1, log = 0,
+          err_tol = 1e-6) )))
+
+  expect_true(all(is.nan(
+    dfddm(rt = 1, response = 1, a = 1, v = -1, t0 = 0, w = 0.5,
+          sv = c(-1, NA, NaN), sigma = 1, log = 0, err_tol = 1e-6) )))
+
+  expect_true(all(is.nan(
+    dfddm(rt = 1, response = 1, a = 1, v = -1, t0 = 0, w = 0.5,
+          sv = 0, sigma = c(-1, 0, NA, NaN), log = 0, err_tol = 1e-6) )))
+
+  expect_error(
+      dfddm(rt = 1, response = 1, a = 1, v = -1, t0 = 0, w = 0.5,
+            sv = 0, sigma = 1, log = 0, err_tol = c(-1e-6, 0, NA, NaN)))
+
+})
+
+
+
 ### Evaluate densities for checking later ##
 # Define different parameter spaces
 if (identical(Sys.getenv("NOT_CRAN"), "true")) { # not on CRAN
+  # These take a while to run
+  #RT <- c(0.001, 0.01, seq(0.1, 10, by = 0.1), seq(15, 30, by = 5))
+  #A <- c(0.25, seq(0.5, 5, by = 0.5))
   RT <- c(0.001, 0.1, 1, 2, 3, 4, 5, 10, 30)
   A <- c(0.25, 0.5, 1, 2.5, 5)
   V <- c(-5, -2, 0, 2, 5)
@@ -290,25 +329,26 @@ test_that("Consistency among internal methods", {
   expect_true(all(Navarro_s[["dif"]] < 2*eps))
   expect_true(all(Navarro_b[["dif"]] < 2*eps))
   testthat::skip_on_os("solaris")
-  testthat::skip_if(dfddm(rt = 0.001, response = "lower", 
-                          a = 5, v = -5, t0 = 1e-4, w = 0.8, sv = 1.5, 
+  testthat::skip_if(dfddm(rt = 0.001, response = "lower",
+                          a = 5, v = -5, t0 = 1e-4, w = 0.8, sv = 1.5,
                           log = FALSE, n_terms_small = "Navarro",
                           scale = "large", err_tol = 1e-6) > 1e-6)
-  expect_true(all(Navarro_l[["dif"]] < 2*eps))
+  expect_true(all(Navarro_l[Navarro_l[["rt"]]/Navarro_l[["a"]]/Navarro_l[["a"]]
+                            >= 0.009, "dif"] < 2*eps)) # see KE 1
 })
 
 test_that("Accuracy relative to established packages", {
-  expect_true(all(RWiener[RWiener[["sv"]] < SV_THRESH, "dif"] < 2*eps)) # see KE 1
+  expect_true(all(RWiener[RWiener[["sv"]] < SV_THRESH, "dif"] < 2*eps)) # see KE 2
   expect_true(all(rtdists[["dif"]] < 2*eps))
   testthat::skip_on_os("solaris")
-  testthat::skip_if(dfddm(rt = 0.001, response = "lower", 
-                          a = 5, v = -5, t0 = 1e-4, w = 0.8, sv = 1.5, 
+  testthat::skip_if(dfddm(rt = 0.001, response = "lower",
+                          a = 5, v = -5, t0 = 1e-4, w = 0.8, sv = 1.5,
                           log = FALSE, n_terms_small = "Navarro",
                           scale = "large", err_tol = 1e-6) > 1e-6)
-  expect_true(all(Gondan_R[Gondan_R[["sv"]] < SV_THRESH, "dif"] < 2*eps)) # see KE 1
+  expect_true(all(Gondan_R[Gondan_R[["sv"]] < SV_THRESH, "dif"] < 2*eps)) # see KE 2
 })
 
-# Test consistency in log vs non-log (see KE 2)
+# Test consistency in log vs non-log (see KE 3)
 test_that("Log-Consistency among internal methods", {
   expect_equal(SWSE_s[SWSE_s[["res"]] > eps*eps, "log_res"],
                log(SWSE_s[SWSE_s[["res"]] > eps*eps, "res"]))
@@ -340,7 +380,10 @@ test_that("Log-Consistency of established packages", {
 
 ### Known Errors (KE) ###
 #
-# 1) Both RWiener and Gondan_R divide the error tolerance by the multiplicative
+# 1) The "large-time" variant is unstable for small effective response times
+#    ( (rt - t0) / (a*a) < 0.009 ) and produces inaccurate densities.
+#
+# 2) Both RWiener and Gondan_R divide the error tolerance by the multiplicative
 #    term outside of the summation. Since the outside term is different when
 #    $sv > 0$, the approximations use the incorrect error tolerance for
 #    $sv > 0$. This affects the number of terms required in the summation to
@@ -362,7 +405,7 @@ test_that("Log-Consistency of established packages", {
 # ks(t/(a*a), w, eps/sv0) # = 2; the summation will only calculate 2 terms
 # ks(t/(a*a), w, eps/sv0_9) # = 5; but the summation actually needs 5 terms
 #
-# 2) When calculating the log of the density, it is better to use the built-in
+# 3) When calculating the log of the density, it is better to use the built-in
 #    log option. For very small densities, simply calculating the density can
 #    cause rounding issues that result in a density of zero (thus the log of the
 #    density becomes -Inf). Using the built-in log option avoids some of these
