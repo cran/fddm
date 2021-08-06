@@ -1,3 +1,12 @@
+## ----echo=FALSE---------------------------------------------------------------
+req_suggested_packages <- c("rtdists", "RWiener","testthat")
+pcheck <- lapply(req_suggested_packages, requireNamespace, 
+                 quietly = TRUE)
+if (any(!unlist(pcheck))) {
+   message("Required package(s) for this vignette are not available/installed and code will not be executed.")
+   knitr::opts_chunk$set(eval = FALSE)
+}
+
 ## ----setup, include=FALSE-------------------------------------------------------------------------
 op <- options(width = 100)
 knitr::opts_chunk$set(
@@ -618,7 +627,7 @@ fit_prep <- function(fit) {
 
 ## ----fit-load, eval=TRUE--------------------------------------------------------------------------
 # load data, will be in the variable 'fit'
-load(system.file("extdata", "valid_fit.Rds", package = "fddm", mustWork = TRUE))
+load(system.file("extdata", "dfddm_density", "valid_fit.Rds", package = "fddm", mustWork = TRUE))
 fit <- fit_prep(fit)
 
 cat("Results for ID = experienced 2")

@@ -1,3 +1,13 @@
+## ----echo=FALSE---------------------------------------------------------------
+req_suggested_packages <- c("rtdists", "RWiener","microbenchmark", 
+                            "reshape2", "ggplot2", "ggforce")
+pcheck <- lapply(req_suggested_packages, requireNamespace, 
+                 quietly = TRUE)
+if (any(!unlist(pcheck))) {
+   message("Required package(s) for this vignette are not available/installed and code will not be executed.")
+   knitr::opts_chunk$set(eval = FALSE)
+}
+
 ## ----setup, include=FALSE-----------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -5,11 +15,12 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 
-## ----bm-fun, eval=TRUE--------------------------------------------------------
+## ----bm-fun-------------------------------------------------------------------
 library("fddm")
 library("rtdists")
 library("RWiener")
-source(system.file("extdata", "Gondan_et_al_density.R", package = "fddm", mustWork = TRUE))
+source(system.file("extdata", "Gondan_et_al_density.R",
+                   package = "fddm", mustWork = TRUE))
 library("microbenchmark")
 
 rt_benchmark_vec <- function(RT, resp, V, A, t0 = 1e-4, W = 0.5, SV = 0.0,
@@ -278,21 +289,24 @@ rt_benchmark_ind <- function(RT, resp, V, A, t0 = 1e-4, W = 0.5, SV = 0.0,
 #                             times = 1000, unit = "ns")
 #  save(bm_vec, compress = "xz", compression_level = 9,
 #       file = "inst/extdata/bm_vec_0-2.Rds")
-#  # load(system.file("extdata", "bm_vec_0-2.Rds", package = "fddm", mustWork = TRUE))
+#  # load(system.file("extdata", "dfddm_density", "bm_vec_0-2.Rds",
+#  #                  package = "fddm", mustWork = TRUE))
 #  bm_ind <- rt_benchmark_ind(RT = RT, resp = "lower", V = V, A = A, t0 = t0,
 #                             W = W, SV = SV, err_tol = err_tol,
 #                             times = 100, unit = "ns")
 #  save(bm_ind, compress = "xz", compression_level = 9,
 #       file = "inst/extdata/bm_ind_0-2.Rds")
-#  # load(system.file("extdata", "bm_ind_0-2.Rds", package = "fddm", mustWork = TRUE))
+#  # load(system.file("extdata", "dfddm_density", "bm_ind_0-2.Rds",
+#  #                  package = "fddm", mustWork = TRUE))
 
-## ----bm-violin, eval=TRUE, fig.height=5---------------------------------------
+## ----bm-violin, fig.height=5--------------------------------------------------
 library("reshape2")
 library("ggplot2")
 library("ggforce")
 
 # load data, will be in the variable 'bm_vec'
-load(system.file("extdata", "bm_vec_0-2.Rds", package = "fddm", mustWork = TRUE))
+load(system.file("extdata", "dfddm_density", "bm_vec_0-2.Rds",
+                 package = "fddm", mustWork = TRUE))
 
 t_idx <- match("SV", colnames(bm_vec))
 bm_vec[, -seq_len(t_idx)] <- bm_vec[, -seq_len(t_idx)]/1000 # convert to microseconds
@@ -346,9 +360,10 @@ ggplot(mbm_vec, aes(x = factor(FuncName, levels = Names_vec), y = time,
                                     margin = margin(0, 10, 0, 0)),
         legend.position = "none")
 
-## ----bm-meq-prep, eval=TRUE---------------------------------------------------
+## ----bm-meq-prep--------------------------------------------------------------
 # load data, will be in the variable 'bm_ind'
-load(system.file("extdata", "bm_ind_0-2.Rds", package = "fddm", mustWork = TRUE))
+load(system.file("extdata", "dfddm_density", "bm_ind_0-2.Rds",
+                 package = "fddm", mustWork = TRUE))
 bm_ind[["RTAA"]] <- bm_ind[["RT"]] / bm_ind[["A"]] / bm_ind[["A"]]
 bm_ind <- bm_ind[, c(1, 2, ncol(bm_ind), 3:(ncol(bm_ind)-1)) ]
 
@@ -414,7 +429,7 @@ ggplot(mbm_meq, aes(x = RTAA, y = time,
 #  library("rtdists")
 #  library("microbenchmark")
 
-## ----fit-loglik-fun, eval=TRUE------------------------------------------------
+## ----fit-loglik-fun-----------------------------------------------------------
 ll_fb_SWSE_17 <- function(pars, rt, resp, truth, err_tol) {
   v <- numeric(length(rt))
   v[truth == "upper"] <- pars[[1]]
@@ -573,7 +588,7 @@ ll_RTDists <- function(pars, rt, resp, truth) {
   return(-sum(log(densities)))
 }
 
-## ----fit-fun, eval=TRUE-------------------------------------------------------
+## ----fit-fun------------------------------------------------------------------
 rt_fit <- function(data, id_idx = NULL, rt_idx = NULL, response_idx = NULL,
                    truth_idx = NULL, response_upper = NULL, err_tol = 1e-6,
                    times = 100, unit = "ns") {
@@ -898,11 +913,11 @@ rt_fit <- function(data, id_idx = NULL, rt_idx = NULL, response_idx = NULL,
 #  save(fit, compress = "xz", compression_level = 9,
 #       file = "inst/extdata/bm_fit.Rds")
 
-## ----fit-packages, eval=TRUE--------------------------------------------------
+## ----fit-packages-------------------------------------------------------------
 library("reshape2")
 library("ggplot2")
 
-## ----fitting-prep, eval=TRUE--------------------------------------------------
+## ----fitting-prep-------------------------------------------------------------
 fit_prep <- function(fit, eps = 1e-4) {
   nr <- nrow(fit)
   fit[["Obj_diff"]] <- rep(0, nr)
@@ -961,10 +976,11 @@ Stroke <- c(0, 1, 1)
 Fills <- c("#ffffff00", "#ffffff00", "#80808099")
 
 # load data, will be in the variable 'fit'
-load(system.file("extdata", "bm_fit.Rds", package = "fddm", mustWork = TRUE))
+load(system.file("extdata", "dfddm_density", "bm_fit.Rds",
+                 package = "fddm", mustWork = TRUE))
 fit <- fit_prep(fit)
 
-## ----fit-mbm, eval=TRUE, fig.height=6-----------------------------------------
+## ----fit-mbm, fig.height=6----------------------------------------------------
 fit_mbm <- melt(fit, id.vars = c("Algorithm", "Convergence", "Obj_diff"),
                 measure.vars = "BmTime", value.name = "BmTime")[,-4]
 
@@ -1040,7 +1056,7 @@ ggplot(fit_mbm, aes(x = factor(Algorithm, levels = Names),
         legend.title = element_text(size = 14),
         legend.text = element_text(size = 13))
 
-## ----fit-fev, eval=TRUE, fig.height=6-----------------------------------------
+## ----fit-fev, fig.height=6----------------------------------------------------
 fit_fev <- melt(fit, id.vars = c("Algorithm", "Convergence", "Obj_diff"),
                 measure.vars = "FuncEvals", value.name = "FuncEvals")[,-4]
 

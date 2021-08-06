@@ -1,3 +1,12 @@
+## ----echo=FALSE---------------------------------------------------------------
+req_suggested_packages <- c("reshape2", "ggplot2")
+pcheck <- lapply(req_suggested_packages, requireNamespace, 
+                 quietly = TRUE)
+if (any(!unlist(pcheck))) {
+   message("Required package(s) for this vignette are not available/installed and code will not be executed.")
+   knitr::opts_chunk$set(eval = FALSE)
+}
+
 ## ----setup, include=FALSE-------------------------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,

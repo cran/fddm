@@ -12,7 +12,7 @@
 
 <meta name="author" content="Kendal Foster and Henrik Singmann" />
 
-<meta name="date" content="2021-04-04" />
+<meta name="date" content="2021-08-05" />
 
 <title>Mathematical Description of Methods</title>
 
@@ -40,6 +40,7 @@
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
@@ -162,7 +163,7 @@ div.csl-indent {
 
 <h1 class="title toc-ignore">Mathematical Description of Methods</h1>
 <h4 class="author">Kendal Foster and Henrik Singmann</h4>
-<h4 class="date">April 04, 2021</h4>
+<h4 class="date">August 05, 2021</h4>
 
 
 
@@ -201,6 +202,7 @@ MathJax.Hub.Config({
 <h1>Mathematical Background</h1>
 <hr class="sec1">
 <p>There are several different methods for approximating the PDF of the DDM, and there are three optional parameters in <code>dfddm</code> that can be used to indicate which method should be in the function call: <code>scale</code>, <code>n_terms_small</code>, and <code>summation_small</code>. For each method we describe, we include the parameter settings for the function call to <code>dfddm</code> so that it uses the desired method. As these parameters are optional, leaving them blank results in the <a href="#default-implementation">default implementation</a> that is indicated later in this vignette. For general purpose use, we recommend ignoring these optional parameters so that the default settings are used as this will be the fastest and most stable algorithm. Note that precedence for the optional parameters is first given to checking if the <a href="#default-implementation">default implementation</a> is selected. If not, precedence is then given to the <code>scale</code> parameter value; for example, <code>scale = &quot;large&quot;</code> will ignore the <code>summation_small</code> input value.</p>
+<p>Note that there are actually two probability density functions of the DDM: the PDF with respect to the upper boundary, and the PDF with respect to the lower boundary. Following the precedent set by the literature, we use the general terminology “PDF” or “density function” to mean the probability density function with respect to the lower boundary. Should the probability density function with respect to the upper boundary be required, it may be calculated using the simple transformation <span class="math inline">\(f_\text{upper}(t ~|~ v, \eta, a, w) = f_\text{lower}(t ~|~ -v, \eta, a, 1-w)\)</span>.</p>
 <p>Since the DDM is widely used in parameter estimation usually involving numerical optimization, significant effort has been put into making the evaluation of its density as fast as possible. However, the density function for the DDM is notorious for containing an unavoidable infinite sum; hence, the literature has produced a few different methods of approximating the density. This vignette details the various methods used in the literature to approximate the infinite sum in the density function for the DDM.</p>
 <p>The author of the seminal book where the density function originates, <span class="citation">Feller (1968)</span> explains the derivation from first principles. In this derivation there is a step that requires taking a limit, and <span class="citation">Feller (1968)</span> provides two different – but equivalent – limiting processes that yield two different – but equal – forms of the density function. Each of these forms contains an infinite sum, and they are known individually as the large-time approximation and the small-time approximation because the former is on average faster when calculating the density for large response times and the latter is on average faster when calculating the density for small response times.</p>
 <p>When the drift rate is held constant (i.e. <span class="math inline">\(\eta = 0\)</span>), the density function for the DDM is often written in a factorized form <span class="citation">(Navarro and Fuss 2009)</span>: <span class="math display">\[\begin{equation}
@@ -332,9 +334,9 @@ Since this is the default implementation, all three of the optional parameters (
 <div id="r-session-info" class="section level4 unlisted unnumbered">
 <h4 class="unlisted unnumbered">R Session Info</h4>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; R version 4.0.4 (2021-02-15)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; R version 4.1.0 (2021-05-18)</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Platform: x86_64-w64-mingw32/x64 (64-bit)</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Running under: Windows 10 x64 (build 19042)</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Running under: Windows 10 x64 (build 19043)</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Matrix products: default</span></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
@@ -349,26 +351,26 @@ Since this is the default implementation, all three of the optional parameters (
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; other attached packages:</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] ggforce_0.3.3        ggplot2_3.3.3        reshape2_1.4.4      </span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] ggforce_0.3.3        ggplot2_3.3.5        reshape2_1.4.4      </span></span>
 <span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4] microbenchmark_1.4-7 RWiener_1.3-3        rtdists_0.11-2      </span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [7] fddm_0.3-3          </span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [7] fddm_0.4-0          </span></span>
 <span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] tidyselect_1.1.0  xfun_0.22         bslib_0.2.4       purrr_0.3.4      </span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [5] splines_4.0.4     lattice_0.20-41   colorspace_2.0-0  vctrs_0.3.6      </span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] tidyselect_1.1.1  xfun_0.24         bslib_0.2.5.1     purrr_0.3.4      </span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [5] splines_4.1.0     lattice_0.20-44   colorspace_2.0-2  vctrs_0.3.8      </span></span>
 <span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [9] generics_0.1.0    expm_0.999-6      htmltools_0.5.1.1 yaml_2.2.1       </span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [13] utf8_1.1.4        survival_3.2-9    rlang_0.4.10      jquerylib_0.1.3  </span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [17] pillar_1.5.1      glue_1.4.2        withr_2.4.1       DBI_1.1.1        </span></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [21] tweenr_1.0.1      lifecycle_1.0.0   plyr_1.8.6        stringr_1.4.0    </span></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [25] munsell_0.5.0     gtable_0.3.0      mvtnorm_1.1-1     evaluate_0.14    </span></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [29] labeling_0.4.2    knitr_1.31        fansi_0.4.2       evd_2.3-3        </span></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [33] highr_0.8         Rcpp_1.0.6        scales_1.1.1      jsonlite_1.7.2   </span></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [37] farver_2.1.0      digest_0.6.27     stringi_1.5.3     msm_1.6.8        </span></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [41] dplyr_1.0.5       polyclip_1.10-0   gsl_2.1-6         grid_4.0.4       </span></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [45] tools_4.0.4       magrittr_2.0.1    sass_0.3.1        tibble_3.1.0     </span></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [49] crayon_1.4.1      pkgconfig_2.0.3   MASS_7.3-53.1     ellipsis_0.3.1   </span></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [53] Matrix_1.3-2      ggnewscale_0.4.5  assertthat_0.2.1  rmarkdown_2.7    </span></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [57] R6_2.5.0          compiler_4.0.4</span></span></code></pre></div>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [13] utf8_1.2.1        survival_3.2-11   rlang_0.4.11      jquerylib_0.1.4  </span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [17] pillar_1.6.1      withr_2.4.2       glue_1.4.2        DBI_1.1.1        </span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [21] tweenr_1.0.2      lifecycle_1.0.0   plyr_1.8.6        stringr_1.4.0    </span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [25] munsell_0.5.0     gtable_0.3.0      mvtnorm_1.1-2     evaluate_0.14    </span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [29] labeling_0.4.2    knitr_1.33        fansi_0.5.0       evd_2.3-3        </span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [33] highr_0.9         Rcpp_1.0.6        scales_1.1.1      jsonlite_1.7.2   </span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [37] farver_2.1.0      digest_0.6.27     stringi_1.6.2     msm_1.6.8        </span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [41] dplyr_1.0.7       polyclip_1.10-0   gsl_2.1-6         grid_4.1.0       </span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [45] tools_4.1.0       magrittr_2.0.1    sass_0.4.0        tibble_3.1.2     </span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [49] crayon_1.4.1      pkgconfig_2.0.3   MASS_7.3-54       ellipsis_0.3.2   </span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [53] Matrix_1.3-4      ggnewscale_0.4.5  assertthat_0.2.1  rmarkdown_2.9    </span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [57] R6_2.5.0          compiler_4.1.0</span></span></code></pre></div>
 </div>
 </div>
 <div id="references" class="section level1 unnumbered">

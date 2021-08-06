@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Kendal Foster and Henrik Singmann" />
+
+<meta name="date" content="2021-08-05" />
+
+<title>Description of Methods in pfddm()</title>
+
+<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">
+/* for pandoc --citeproc since 2.11 */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+<link rel="stylesheet" href="data:text/css,body%20%7Bbackground%2Dcolor%3A%20%23ffffff%3Bmax%2Dwidth%3A%20800px%3Bmargin%2Dleft%3A%20auto%3Bmargin%2Dright%3A%20auto%3Bmargin%2Dtop%3A%200px%3Bmargin%2Dbottom%3A%200px%3Bpadding%2Dleft%3A%205%25%3Bpadding%2Dright%3A%204%25%3Bpadding%2Dtop%3A%2010px%3Bpadding%2Dbottom%3A%2030px%3Boverflow%3A%20visible%3Bfont%2Dfamily%3A%20Verdana%3Bfont%2Dsize%3A%2014px%3Bline%2Dheight%3A%201%2E35%3B%7D%23TOC%20%7Bclear%3A%20both%3Bmargin%3A%200%200%2010px%2010px%3Bpadding%3A%204px%3Bmax%2Dwidth%3A%20400px%3Bborder%3A%201px%20solid%20%23CCCCCC%3Bborder%2Dradius%3A%205px%3Bbackground%2Dcolor%3A%20%23f6f6f6%3Bfont%2Dsize%3A%2013px%3Bline%2Dheight%3A%201%2E3%3B%7D%23TOC%20%2Etoctitle%20%7Bfont%2Dweight%3A%20bold%3Bfont%2Dsize%3A%2015px%3Bmargin%2Dleft%3A%205px%3B%7D%23TOC%20ul%20%7Bpadding%2Dleft%3A%2040px%3Bmargin%2Dleft%3A%20%2D1%2E5em%3Bmargin%2Dtop%3A%20%2E25em%3Bmargin%2Dbottom%3A%20%2E25em%3B%7D%23TOC%20ul%20ul%20%7Bmargin%2Dleft%3A%20%2D2em%3Bmargin%2Dtop%3A%200px%3Bmargin%2Dbottom%3A%206px%3B%7D%23TOC%20li%20%7Blist%2Dstyle%3A%20disk%20outside%3Bline%2Dheight%3A%201%2E4%3Bmargin%2Dbottom%3A%205px%3B%7D%23TOC%20li%20li%20%7Blist%2Dstyle%3A%20circle%20outside%3Bline%2Dheight%3A%201%2E2%3Bmargin%2Dbottom%3A%200px%3B%7Dtable%20%7Bmargin%3A%201em%20auto%3Bborder%2Dwidth%3A%201px%3Bborder%2Dcolor%3A%20%23DDDDDD%3Bborder%2Dstyle%3A%20outset%3Bborder%2Dcollapse%3A%20collapse%3B%7Dtable%20th%20%7Bborder%2Dwidth%3A%202px%3Bpadding%3A%205px%3Bborder%2Dstyle%3A%20inset%3B%7Dtable%20td%20%7Bborder%2Dwidth%3A%201px%3Bborder%2Dstyle%3A%20inset%3Bline%2Dheight%3A%2018px%3Bpadding%3A%205px%205px%3B%7Dtable%2C%20table%20th%2C%20table%20td%20%7Bborder%2Dleft%2Dstyle%3A%20none%3Bborder%2Dright%2Dstyle%3A%20none%3B%7Dtable%20thead%2C%20table%20tr%2Eeven%20%7Bbackground%2Dcolor%3A%20%23f7f7f7%3B%7Dp%20%7Bmargin%3A%200%2E5em%200%3B%7Dp%2Emethod%20%7Bbackground%2Dcolor%3A%20%23fcfcfc%3Bmargin%2Dleft%3A%202em%3Bmargin%2Dright%3A%202em%3Bborder%2Dstyle%3A%20double%3Bborder%2Dwidth%3A%204px%3Bborder%2Dcolor%3A%20%23b3fffa%3Bborder%2Dradius%3A%205px%3Bpadding%3A%200%2E25em%200%2E75em%200%2E25em%201em%3B%7Dspan%2Emath%20%7Bfont%2Dsize%3A%201em%3B%7Dspan%2Eeqref%7Bfont%2Dsize%3A%200%2E75em%3B%7Dblockquote%20%7Bbackground%2Dcolor%3A%20%23f6f6f6%3Bpadding%3A%200%2E25em%200%2E75em%3B%7Dhr%20%7Bborder%2Dstyle%3A%20solid%3Bborder%3A%20none%3Bborder%2Dtop%3A%201px%20solid%20%23777%3Bmargin%3A%2028px%200%3B%7Dhr%2Esec1%20%7Bmargin%2Dtop%3A%20%2D1%2E5em%3Bborder%2Dwidth%3A%202px%3Bborder%2Dcolor%3A%20%23aaaaaa%3B%7Ddl%20%7Bmargin%2Dleft%3A%200%3B%7Ddl%20dd%20%7Bmargin%2Dbottom%3A%2013px%3Bmargin%2Dleft%3A%2013px%3B%7Ddl%20dt%20%7Bfont%2Dweight%3A%20bold%3B%7Dul%20%7Bmargin%2Dtop%3A%200%3B%7Dul%20li%20%7Blist%2Dstyle%3A%20disk%20outside%3B%7Dul%20ul%20%7Bmargin%2Dbottom%3A%200%3B%7Dul%20ul%20li%20%7Blist%2Dstyle%3A%20circle%20outside%3B%7Dpre%2C%20code%20%7Bbackground%2Dcolor%3A%20%23f0f0f0%3Bborder%2Dradius%3A%203px%3Bcolor%3A%20%23333%3Bwhite%2Dspace%3A%20pre%2Dwrap%3B%20%7Dpre%20%7Bborder%2Dradius%3A%203px%3Bmargin%3A%205px%200px%2010px%200px%3Bpadding%3A%2010px%3B%7Dpre%3Anot%28%5Bclass%5D%29%20%7Bbackground%2Dcolor%3A%20%23f7f7f7%3B%7Dcode%20%7Bfont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3Bfont%2Dsize%3A%2095%25%3B%7Dp%20%3E%20code%2C%20li%20%3E%20code%20%7Bpadding%3A%202px%200px%3B%7Ddiv%2Eindent2%20%7Bmargin%2Dleft%3A%202%25%3B%7Ddiv%2Eindent3%20%7Bmargin%2Dleft%3A%203%25%3B%7Ddiv%2Efigure%20%7Btext%2Dalign%3A%20center%3B%7Dimg%20%7Bbackground%2Dcolor%3A%20%23FFFFFF%3Bpadding%3A%202px%3Bborder%3A%201px%20solid%20%23DDDDDD%3Bborder%2Dradius%3A%203px%3Bborder%3A%201px%20solid%20%23CCCCCC%3Bmargin%3A%200%205px%3B%7Dh1%20%7Bmargin%2Dtop%3A%200%3Bpadding%2Dtop%3A%2015px%3Bfont%2Dsize%3A%20175%25%3Bline%2Dheight%3A%2040px%3B%7Dh2%20%7Bborder%2Dbottom%3A%204px%20solid%20%23dbdbdb%3Bpadding%2Dtop%3A%2010px%3Bpadding%2Dbottom%3A%202px%3Bfont%2Dsize%3A%20145%25%3B%7Dh3%20%7Bborder%2Dbottom%3A%202px%20solid%20%23e8e8e8%3Bpadding%2Dtop%3A%2010px%3Bfont%2Dsize%3A%20120%25%3B%7Dh4%20%7Bborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3Bmargin%2Dleft%3A%208px%3Bfont%2Dsize%3A%20105%25%3B%7Dh5%2C%20h6%20%7Bborder%2Dbottom%3A%201px%20solid%20%23ccc%3Bfont%2Dsize%3A%20105%25%3B%7Da%20%7Bcolor%3A%20%230033dd%3Btext%2Ddecoration%3A%20none%3B%7Da%3Ahover%20%7Bcolor%3A%20%236666ff%3B%20%7Da%3Avisited%20%7Bcolor%3A%20%23800080%3B%20%7Da%3Avisited%3Ahover%20%7Bcolor%3A%20%23BB00BB%3B%20%7Da%5Bhref%5E%3D%22http%3A%22%5D%20%7Btext%2Ddecoration%3A%20underline%3B%20%7Da%5Bhref%5E%3D%22https%3A%22%5D%20%7Btext%2Ddecoration%3A%20underline%3B%20%7Dcode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20code%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20code%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20code%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20code%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20code%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20code%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20code%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20code%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20code%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20code%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20" type="text/css" />
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Description of Methods in <code>pfddm()</code></h1>
+<h4 class="author">Kendal Foster and Henrik Singmann</h4>
+<h4 class="date">August 05, 2021</h4>
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
+<div id="TOC">
+<ul>
+<li>
+<a href="#background">Mathematical Background</a>
+</li>
+<li>
+<a href="#dist">The Distribution Function Approximations</a>
+<ul>
+<li>
+<a href="#dist-inf">Infinite Sum Method</a>
+</li>
+<li>
+<a href="#dist-pde">PDE Method</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#ben">Benchmarking the Distribution Function Approximations</a>
+<ul>
+<li>
+<a href="#ben-vec">Vectorized Benchmark Data and Results</a>
+</li>
+<li>
+<a href="#ben-ind">Non-vectorized Benchmark Data and Results</a>
+</li>
+</ul>
+</li>
+<li>
+<a href="#references">References</a>
+</li>
+</ul>
+</div>
+<p>Function <code>pfddm</code> evaluates the distribution function (or cumulative distribution function, CDF) for the Ratcliff diffusion decision model (DDM) using different methods for approximating the full CDF, which contains an infinite sum. This vignette provides an overview of the mathematical details of the different approximations implemented in <code>pfddm</code> as well as another approximation that is not included in <code>pfddm</code>. At the end of this vignette are timing benchmarks for the present approximation methods and comparison with existing approximation methods.</p>
+<p>Our implementation of the DDM has the following parameters: <span class="math inline">\(a \in (0, \infty)\)</span> (threshold separation), <span class="math inline">\(v \in (-\infty, \infty)\)</span> (drift rate), <span class="math inline">\(t_0 \in [0, \infty)\)</span> (non-decision time/response time constant), <span class="math inline">\(w \in (0, 1)\)</span> (relative starting point), <span class="math inline">\(sv \in (0, \infty)\)</span> (inter-trial-variability of drift), and <span class="math inline">\(\sigma \in (0, \infty)\)</span> (diffusion coefficient of the underlying Wiener Process). Please note that for only this vignette, we will refer to the inter-trial variability of drift as <span class="math inline">\(\eta\)</span> instead of <span class="math inline">\(sv\)</span> to make the notation in the equations less confusing. <br><br></p>
+<div id="background" class="section level1">
+<h1>Mathematical Background</h1>
+<hr class="sec1">
+<p>There is one optional parameter in <code>pfddm</code> that can be used to indicate which method should be used in the function call: <code>method</code>. For each approximation method we describe, we include the parameter settings for the function call to <code>pfddm</code> so that it uses the desired method. As this parameter is optional, leaving it blank results in the <a href="#default-method">default method</a> that is indicated later in this vignette. For general purpose use, we recommend ignoring this optional parameter so that the default settings are used as this will be the fastest and most stable algorithm for calculating the CDF.</p>
+<p>Note that there are actually two cumulative distribution functions of the DDM: the CDF with respect to the upper boundary, and the CDF with respect to the lower boundary. Importantly, only the combined CDF of upper and lower boundary is a <em>proper</em> CDF in the sense that it reaches 1 at <span class="math inline">\(t = \infty\)</span>. Following the precedent set by the literature, we use the general terminology “CDF” or “distribution function” to mean the <em>defective</em> cumulative distribution function with respect to the lower boundary (defective in the sense that it does not reach 1). Should the cumulative distribution function with respect to the upper boundary be required, it may be calculated using the simple transformation <span class="math inline">\(F_\text{upper}(t ~|~ v, \eta, a, w) = F_\text{lower}(t ~|~ -v, \eta, a, 1-w)\)</span>.</p>
+<p>Since the CDF of the DDM is widely used in parameter estimation usually involving numerical optimization (e.g., <span class="math inline">\(\chi^2\)</span> and Kolmogorov-Smirnov stastics), significant effort has been put into making its evaluation as fast as possible. However, the options for calculating the CDF are limited; one can either approximate an infinite sum or numerically solve a partial differential equation (PDE). The <code>pfddm</code> function uses the infinte sum method but not the PDE method. This vignette details these choices and demonstrates why the infinite sum method is preferable over the PDE method.</p>
+</div>
+<div id="dist" class="section level1">
+<h1>The Distribution Function Approximations</h1>
+<hr class="sec1">
+<p>There are two main ways of calculating the CDF of the DDM: approximating the analytic form of CDF itself <span class="citation">(Blurton, Kesselmeier, and Gondan 2017)</span>, and numerically solving a partial differential equation (PDE) whose solution is the CDF <span class="citation">(Voss and Voss 2008)</span>. Like the probability density function (PDF) of the DDM, the analytic form of the CDF also contains an infinite sum (see the <a href="math.html">Math Vignette</a> for more information on the PDF). We include the infinite sum method in <code>pfddm</code> but not the PDE method, and these reasons will be discussed in the following sections.</p>
+<p>Both approximation methods inherently introduce error into the calculation (i.e., difference between the result of the approximated CDF and the “true” value of the CDF). Understanding this approximation error is important to minimizing the uncertainty in DDM parameter estimation (and other uses) that depend on calculating the CDF.</p>
+<div id="dist-inf" class="section level2 indent2">
+<h2>Infinite Sum Methods</h2>
+<p>Similarly to the density function of the DDM, there is a large-time variant and a small-time variant of the CDF for a constant drift rate (i.e., <span class="math inline">\(\eta = 0\)</span>) (see <span class="citation">Blurton, Kesselmeier, and Gondan (2012)</span> for details). There is no analytic large-time variant for <span class="math inline">\(\eta &gt; 0\)</span> because the resulting integral is incalculable (see <span class="citation">Tuerlinckx (2004)</span> for more details). However, <span class="citation">Blurton, Kesselmeier, and Gondan (2017)</span> provide the small-time variant of the CDF for <span class="math inline">\(\eta &gt; 0\)</span>; this variant contains an infinite sum that must be approximated. <span class="citation">Blurton, Kesselmeier, and Gondan (2017)</span> even provide two different forms of the small-time variant of the CDF: one that uses the standard normal CDF in each term of the infinite sum, and one that instead utilizes Mills ratio in each term of the infinite sum.</p>
+<p>Similarly to the small-time variant of the PDF, the small-time variant of the CDF contains an infinite sum whose terms alternate and decay to zero. Like in the SWSE method of <code>dfddm</code>, we can exploit these mathematical properties and bound the approximation error. In this case, the approximation error, <span class="math inline">\(\epsilon\)</span>, is bounded above by the absolute value of the next term in the sum. For example, if the sum includes <span class="math inline">\(k\)</span> terms (<span class="math inline">\(b_1 + b_2 + \dots + b_k\)</span>), then the approximation error is at most the absolute value of the <span class="math inline">\(k+1\)</span><sup>th</sup> term (<span class="math inline">\(\epsilon \leq \left\lvert b_{k+1} \right\rvert\)</span>). These mathematical properties allow us to explicitly pre-define and control the precision of the calculation before actually doing it.</p>
+<p>Moreover, in the <a href="#bechmarks">Benchmark Results below</a>, it is shown that this class of approximation methods is quite fast. The combination of directly controlled precision and fast calculation times are why <code>pfddm</code> uses the infinite sum methods instead of the PDE method for approximating the CDF of the DDM.</p>
+<p>The following two subsections detail the two slightly different variations on the small-time CDF provided by <span class="citation">Blurton, Kesselmeier, and Gondan (2017)</span>.</p>
+<div id="dist-inf-ncdf" class="section level3">
+<h3>Normal CDF</h3>
+<p>When <span class="citation">Blurton, Kesselmeier, and Gondan (2017)</span> derived the the small-time CDF with inter-trial variability in the drift rate (i.e., <span class="math inline">\(\eta &gt; 0\)</span>), they first arrived at the following equation for the distribution function<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>:</p>
+<p><span class="math display">\[\begin{align} \label{eq:cdf_ncdf}
+  F(t ~|~ v, \eta, a, w) = &amp;\exp{\left( \frac{1}{2} \eta^2 a^2 w^2 - v a w \right)} \times\\
+                           &amp;\sum_{j = 0}^{\infty} (-1)^j \exp{\left( \frac{1}{2} \eta^2 r_j^2 \right)}
+                           \Bigg(
+                             \exp{(-\gamma r_j)} \Phi \left(\frac{\gamma t - \lambda r_j}{\rho} \right) +
+                             \exp{(\gamma r_j)} \Phi \left(\frac{-\gamma t - \lambda r_j}{\rho} \right)
+                           \Bigg)\nonumber
+\end{align}\]</span></p>
+<p>where</p>
+<p><span class="math display">\[\begin{align*}
+r_j     &amp;= \begin{cases}
+             a \big( j + w \big) &amp; \text{if } j \text{ is even,}\\
+             a \big( j + (1-w) \big) &amp; \text{if } j \text{ is odd,}
+           \end{cases}\\[0.5ex]
+\gamma  &amp;= v - \eta^2 a w,\\[0.1ex]
+\lambda &amp;= 1 + \eta^2 t,\\[0.1ex]
+\rho    &amp;= \sqrt{\lambda t},
+\nonumber
+\end{align*}\]</span></p>
+<p>and <span class="math inline">\(\Phi(x)\)</span> is the standard normal CDF evaluated at <span class="math inline">\(x\)</span>.</p>
+<p>One important note is that the <span class="math inline">\(\exp{\left( \frac{1}{2} \eta^2 r_j^2 \right)}\)</span> expression in each term of the infinite sum tends to infinity as <span class="math inline">\(j \to \infty\)</span>. This is balanced by the terms inside the parentheses decaying to <span class="math inline">\(0\)</span> quickly, yet it is still cause for concern from a computational perspective. If the growing exponential overflows to positive infinity before the sum is truncated, then the approximation is no longer useful<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>.</p>
+<p class="method">
+To use this method, set <code>method = &quot;NCDF&quot;</code> in the function call to <code>pfddm()</code>. We caution use of this approximation method, as the <a href="#default-method">default-method</a> (using Mills ratio) is both faster and more stable.
+</p>
+</div>
+</div>
+<div class="indent3">
+<p><a id="default-method"></a></p>
+<div id="dist-inf-mills" class="section level3">
+<h3>Mills Ratio</h3>
+<p>After deriving Equation <span class="math inline">\(\ref{eq:cdf_ncdf}\)</span>, <span class="citation">Blurton, Kesselmeier, and Gondan (2017)</span> manipulated their result to use the Mills ratio for its favorable numerical properties (see <span class="citation">Blurton, Kesselmeier, and Gondan (2012)</span> for more discussion on these properties of Mills ratio). The Mills ratio is defined as</p>
+<p><span class="math display">\[\begin{equation} \label{eq:mills}
+  M[x] = \frac{1 - \Phi(x)}{\phi(x)} = \frac{\Phi(-x)}{\phi(x)},
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\Phi(x)\)</span> is the standard normal CDF evaluated at <span class="math inline">\(x\)</span>, and <span class="math inline">\(\phi(x)\)</span> is the standard normal PDF evaluated at <span class="math inline">\(x\)</span>. Then the CDF of the DDM becomes</p>
+<p><span class="math display">\[\begin{align} \label{eq:cdf_mills}
+  F(t ~|~ v, \eta, a, w) = &amp;\exp{ \left( \frac{\eta^2 a^2 w^2 - 2 v a w - v^2 t}{2 \lambda} \right) } \times\\
+                           &amp;\sum_{j = 0}^{\infty} (-1)^j \phi \left( \frac{r_j}{\sqrt{t}} \right)
+                           \Bigg(
+                             M \left( \frac{\lambda r_j - \gamma t}{\rho} \right) +
+                             M \left( \frac{\lambda r_j + \gamma t}{\rho} \right)
+                           \Bigg)\nonumber
+\end{align}\]</span></p>
+<p>where again</p>
+<p><span class="math display">\[\begin{align*}
+r_j     &amp;= \begin{cases}
+             a \big( j + w \big) &amp; \text{if } j \text{ is even,}\\
+             a \big( j + (1-w) \big) &amp; \text{if } j \text{ is odd,}
+           \end{cases}\\[0.5ex]
+\gamma  &amp;= v - \eta^2 a w,\\[0.1ex]
+\lambda &amp;= 1 + \eta^2 t,\\[0.1ex]
+\rho    &amp;= \sqrt{\lambda t}.
+\nonumber
+\end{align*}\]</span></p>
+<p>Whereas this form does not have the issue of the exponential increasing to infinity, the Mills ratio does introduce a potential divide-by-zero error if one is not careful with handling large arguments in the PDF in the denominator of the Mills ratio<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>.</p>
+<p>Fortunately, there exists a useful approximation to the Mills ratio for large arguments. <span class="citation">Abramowitz and Stegun (1964)</span> provide an asymptotic expansion for the complementary CDF of the standard normal distribution in Expression 26.2.13 in their book; dividing this asymptotic expansion by the PDF of the standard normal distribution yields the Mills ratio. This approximation was found in the <code>zeta</code> function in the <code>sn</code> package <span class="citation">(Azzalini 2021)</span> for <code>R</code>, which in turn was recommended by <span class="citation">Gondan, Blurton, and Kesselmeier (2014)</span>. The <code>zeta</code> function actually calculates the inverse Mills ratio, so we use the reciprocal of the approximation used in the <code>zeta</code> function.</p>
+<p>By combining the standard Mills ratio with this approximation, we can achieve a robust algorithm that can be used to consistently calculate the CDF. Moreover, this approximation method is quite fast, as demonstrated in the <a href="#ben-res">Benchmark Results below</a>. The speed and stability of this algorithm earns our recommendation and is the default method in <code>pfddm</code>.</p>
+<p class="method">
+To use this method, the user can ignore the optional parameter as this is the default method (internally, it sets <code>method = &quot;Mills&quot;</code> in the function call to <code>pfddm()</code>). This is the default method, and we recommend using it for the fastest and most stable algorithm for calculating the CDF of the DDM.
+</p>
+</div>
+<div id="dist-pde" class="section level2">
+<h2>PDE Method</h2>
+<p>This section only provides a brief overview of the PDE method, highlighting how the PDE method may not be useful for our application; for more details on the PDE method, see <span class="citation">Voss and Voss (2008)</span>.</p>
+<p>Essentially, there exists a PDE whose solution is the CDF of the DDM; hence, solving the PDE allows one to calculate the CDF. The approximation error is controlled is via the step size in the numerical solution of the PDE. Compared to the infinite sum approach from <a href="#dist-inf">the previous section</a>, controlling the step size does not allow for directly bounding the approximation error. Whereas this method of controlling the approximation error may be suitable for some use cases, we suggest the infinite sum approach because it guarantees the precision of the result.</p>
+<p>In our testing with the implementation of the algorithm provided by <span class="citation">Voss and Voss (2008)</span> (using the function <code>pdiffusion()</code> from the <code>rtdists</code> package), we found it to be inaccurate relative to the infinite sum method quite often. Increasing the <code>precision</code> parameter usually increased the accuracy of the PDE method (by reducing the step size in the numerical solver), but that resulted in very slow calculation times.</p>
+<p>It should be noted, however, that the method proposed by <span class="citation">Voss and Voss (2008)</span> is not only applicable to the case of inter-trial variability in the drift rate (<span class="math inline">\(v\)</span>), but it can also be used in the cases of inter-trial variability in the starting point (<span class="math inline">\(w\)</span>) and non-decision time (<span class="math inline">\(t_0\)</span>).</p>
+<p class="method">
+This method is unavailable in <code>fddm</code>. Instead, we recommend using the <a href="#default-method">default method</a> (using Mills ratio) for calculating the CDF of the DDM by ignoring the optional parameter <code>method</code> in the function call to <code>pfddm()</code>. If the PDE method is desired, we recommend using the function <code>pdiffusion()</code> from the <code>rtdists</code> package, as this function uses the PDE method to calculate the CDF.
+</p>
+</div>
+</div>
+</div>
+<div id="ben" class="section level1">
+<h1>Benchmarking the Distribution Function Approximations</h1>
+<hr class="sec1">
+<p>We want to determine the performance of the two methods available in <code>pfddm</code> as well as comparing their performance to the implementations currently available in the literature: the <code>R</code> Code provided by <span class="citation">Blurton, Kesselmeier, and Gondan (2017)</span>, and the <code>pdiffusion</code> function from the <code>rtdists</code> package. Note that we only test implementations that include inter-trial variability in the drift rate (i.e., <code>sv &gt; 0</code> in <code>pfddm</code>).</p>
+<p>Testing each implementation across a wide parameter space (defined in <a href="#par-space">the code chunk below</a>) will not only show the algorithms’ overall viability for a practical set of parameters, but it will also allow for a more granular analysis of where each algorithm succeeds and struggles in the parameter space. To measure this viability, we will perform two benchmark tests: one where the response times are input as a vector to each function call, and one where the response times will be input individually to each function call.</p>
+<p><a id="par-space"></a></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define parameter space</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>RT <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="dv">2</span>, <span class="at">by =</span> <span class="fl">0.1</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.5</span>, <span class="fl">3.5</span>, <span class="at">by =</span> <span class="fl">0.5</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>V <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="sc">-</span><span class="dv">2</span>, <span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">5</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>t0 <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>W <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.3</span>, <span class="fl">0.7</span>, <span class="at">by =</span> <span class="fl">0.1</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>SV <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="fl">3.5</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>err_tol <span class="ot">&lt;-</span> <span class="fl">1e-6</span> <span class="co"># this is the setting from rtdists</span></span></code></pre></div>
+<p>Note that each function call will assume that the response corresponds to the lower boundary of the DDM, and thus these benchmark tests only assess the performance of the “lower” distribution function. It is redundant to benchmark the “upper” distribution function because it is identical to the “lower” distribution function with the following mappings: <span class="math inline">\(v \to -v\)</span> and <span class="math inline">\(w \to 1-w\)</span>; and these remapped values are already included in the parameter space (i.e., the values of <span class="math inline">\(v\)</span> are symmetric around <span class="math inline">\(0\)</span>, and the values of <span class="math inline">\(w\)</span> are symmetric around <span class="math inline">\(0.5\)</span>) .</p>
+<p>For each combination of parameters in the parameter space, we run the <code>microbenchmark</code> function from the package <a href="https://cran.r-project.org/package=microbenchmark"><code>microbenchmark</code></a> 1000 times for each implementation and only save the median benchmark time of these 1000. We will refer to these medians as simply the “benchmark times” for the remainder of this vignette. Running the benchmark tests this many times for each set of parameters generates a sufficient amount of benchmark data so that the median of these times is unlikely to be an outlier, either faster or slower than a typical run time.</p>
+<p>First, we load the required packages.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># packages for generating benchmark data</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;fddm&quot;</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;Blurton_et_al_distribution.R&quot;</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">package =</span> <span class="st">&quot;fddm&quot;</span>, <span class="at">mustWork =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;rtdists&quot;</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;microbenchmark&quot;</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># packages for plotting</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;reshape2&quot;</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;ggplot2&quot;</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">&quot;ggforce&quot;</span>)</span></code></pre></div>
+<div class="indent2">
+<div id="ben-vec" class="section level2">
+<h2>Vectorized Benchmark Data and Results</h2>
+<p>The first benchmark test will record the algorithms’ performances across the parameter space, with the response times input as a vector. Inputting the response times in this way is both more common (as it is typically easier to input a vector into a function as opposed to writing a loop) and beneficial for the <code>R</code>-based implementation from <span class="citation">Blurton, Kesselmeier, and Gondan (2017)</span> to exploit <code>R</code>’s vectorization (making this implementation as fast as possible).</p>
+<p>We write the function that we will use to systematically benchmark each implementation at each combination of parameters.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>rt_benchmark_vec <span class="ot">&lt;-</span> <span class="cf">function</span>(RT, resp, V, A, <span class="at">t0 =</span> <span class="fl">1e-4</span>, <span class="at">W =</span> <span class="fl">0.5</span>, <span class="at">SV =</span> <span class="fl">0.0</span>,</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                             <span class="at">err_tol =</span> <span class="fl">1e-6</span>, <span class="at">times =</span> <span class="dv">1000</span>) {</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  fnames <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Mills&quot;</span>, <span class="st">&quot;NCDF&quot;</span>, <span class="st">&quot;Blurton&quot;</span>, <span class="st">&quot;rtdists&quot;</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  nf <span class="ot">&lt;-</span> <span class="fu">length</span>(fnames) <span class="co"># number of functions being benchmarked</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  nV <span class="ot">&lt;-</span> <span class="fu">length</span>(V)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  nA <span class="ot">&lt;-</span> <span class="fu">length</span>(A)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  nW <span class="ot">&lt;-</span> <span class="fu">length</span>(W)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  nSV <span class="ot">&lt;-</span> <span class="fu">length</span>(SV)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  resp <span class="ot">&lt;-</span> <span class="fu">rep</span>(resp, <span class="fu">length</span>(RT)) <span class="co"># for RWiener</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Initialize the dataframe to contain the microbenchmark results</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  mbm_res <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">matrix</span>(<span class="at">ncol =</span> <span class="dv">4</span><span class="sc">+</span>nf, <span class="at">nrow =</span> nV<span class="sc">*</span>nA<span class="sc">*</span>nW<span class="sc">*</span>nSV))</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">colnames</span>(mbm_res) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;V&#39;</span>, <span class="st">&#39;A&#39;</span>, <span class="st">&#39;W&#39;</span>, <span class="st">&#39;SV&#39;</span>, fnames)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  row_idx <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Loop through each combination of parameters and record microbenchmark results</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (v <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nV) {</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (a <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nA) {</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>      <span class="cf">for</span> (w <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nW) {</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> (sv <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nSV) {</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>          mbm <span class="ot">&lt;-</span> <span class="fu">microbenchmark</span>(</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>          <span class="at">Mills =</span> <span class="fu">pfddm</span>(<span class="at">rt =</span> RT, <span class="at">response =</span> resp, <span class="at">a =</span> A[a], <span class="at">v =</span> V[v], <span class="at">t0 =</span> t0,</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>                        <span class="at">w =</span> W[w], <span class="at">sv =</span> SV[sv], <span class="at">log =</span> <span class="cn">FALSE</span>, <span class="at">method =</span> <span class="st">&quot;Mills&quot;</span>,</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>                        <span class="at">err_tol =</span> err_tol),</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>          <span class="at">NCDF =</span> <span class="fu">pfddm</span>(<span class="at">rt =</span> RT, <span class="at">response =</span> resp, <span class="at">a =</span> A[a], <span class="at">v =</span> V[v], <span class="at">t0 =</span> t0,</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>                       <span class="at">w =</span> W[w], <span class="at">sv =</span> SV[sv], <span class="at">log =</span> <span class="cn">FALSE</span>, <span class="at">method =</span> <span class="st">&quot;NCDF&quot;</span>,</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>                       <span class="at">err_tol =</span> err_tol),</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>          <span class="at">Blurton =</span> <span class="fu">G_0</span>(<span class="at">t =</span> RT<span class="sc">-</span>t0, <span class="at">a =</span> A[a], <span class="at">nu =</span> V[v], <span class="at">w =</span> W[w],</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>                        <span class="at">eta2 =</span> SV[sv]<span class="sc">*</span>SV[sv], <span class="at">sigma2 =</span> <span class="dv">1</span>, <span class="at">eps =</span> err_tol), <span class="co"># only &quot;lower&quot; resp</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>          <span class="at">rtdists =</span> <span class="fu">pdiffusion</span>(RT, resp, <span class="at">a =</span> A[a], <span class="at">v =</span> V[v], <span class="at">t0 =</span> t0,</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>                               <span class="at">z =</span> W[w]<span class="sc">*</span>A[a], <span class="at">sv =</span> SV[sv], <span class="at">precision =</span> <span class="dv">3</span>),</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>          <span class="at">times =</span> times)</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>        <span class="co"># add the v, a, and w values to the dataframe</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>        mbm_res[row_idx, <span class="dv">1</span>] <span class="ot">&lt;-</span> V[v]</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>        mbm_res[row_idx, <span class="dv">2</span>] <span class="ot">&lt;-</span> A[a]</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>        mbm_res[row_idx, <span class="dv">3</span>] <span class="ot">&lt;-</span> W[w]</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>        mbm_res[row_idx, <span class="dv">4</span>] <span class="ot">&lt;-</span> SV[sv]</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>        <span class="co"># add the median microbenchmark results to the dataframe</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nf) {</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>          mbm_res[row_idx, <span class="dv">4</span><span class="sc">+</span>i] <span class="ot">&lt;-</span> <span class="fu">median</span>(mbm[mbm[,<span class="dv">1</span>] <span class="sc">==</span> fnames[i],<span class="dv">2</span>])</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>        <span class="co"># iterate start value</span></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>        row_idx <span class="ot">=</span> row_idx <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(mbm_res)</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>We will not actually run the benchmark tests in this vignette as it can take a while to run, and instead we will load pre-run benchmark data before we plot the results.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>bm_vec <span class="ot">&lt;-</span> <span class="fu">rt_benchmark_vec</span>(<span class="at">RT =</span> RT, <span class="at">resp =</span> <span class="st">&quot;lower&quot;</span>, <span class="at">V =</span> V, <span class="at">A =</span> A, <span class="at">t0 =</span> t0,</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                           <span class="at">W =</span> W, <span class="at">SV =</span> SV, <span class="at">err_tol =</span> err_tol, <span class="at">times =</span> <span class="dv">1000</span>)</span></code></pre></div>
+<p>Here, we load the pre-run benchmark data and plot the results as side-by-side violin plots. The horizontal axis shows the implementation, and the vertical axis shows the benchmark time. Each individual violin plot shows a mirrored density estimate; overlaying the violin plot, the boxplot shows the median in addition to the first and third quartiles; the horizontal dashed line shows the mean.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load data, will be in the variable &#39;bm_vec&#39;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;pfddm_distribution&quot;</span>, <span class="st">&quot;bm_vec_0-2.Rds&quot;</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">package =</span> <span class="st">&quot;fddm&quot;</span>, <span class="at">mustWork =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>t_idx <span class="ot">&lt;-</span> <span class="fu">match</span>(<span class="st">&quot;SV&quot;</span>, <span class="fu">colnames</span>(bm_vec))</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>bm_vec[, <span class="sc">-</span><span class="fu">seq_len</span>(t_idx)] <span class="ot">&lt;-</span> bm_vec[, <span class="sc">-</span><span class="fu">seq_len</span>(t_idx)]<span class="sc">/</span><span class="dv">1000</span> <span class="co"># convert to microseconds</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>mbm_vec <span class="ot">&lt;-</span> <span class="fu">melt</span>(bm_vec, <span class="at">measure.vars =</span> <span class="sc">-</span><span class="fu">seq_len</span>(t_idx),</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">variable.name =</span> <span class="st">&quot;FuncName&quot;</span>, <span class="at">value.name =</span> <span class="st">&quot;time&quot;</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>Names_vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Mills&quot;</span>, <span class="st">&quot;NCDF&quot;</span>, <span class="st">&quot;Blurton&quot;</span>, <span class="st">&quot;rtdists&quot;</span>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>Color_vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;#b34d4d&quot;</span>, <span class="st">&quot;#4d80b3&quot;</span>, <span class="st">&quot;#c5a687&quot;</span>, <span class="st">&quot;#ac8053&quot;</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>Outline_vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;#b34d4d&quot;</span>, <span class="st">&quot;#4d80b3&quot;</span>, <span class="st">&quot;#c5a687&quot;</span>, <span class="st">&quot;#ac8053&quot;</span>)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>mi <span class="ot">&lt;-</span> <span class="fu">min</span>(bm_vec[, (t_idx<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>(<span class="fu">ncol</span>(bm_vec)<span class="sc">-</span><span class="dv">2</span>)])</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>ma <span class="ot">&lt;-</span> <span class="fu">max</span>(bm_vec[, (t_idx<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>(<span class="fu">ncol</span>(bm_vec)<span class="sc">-</span><span class="dv">2</span>)])</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mbm_vec, <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">factor</span>(FuncName, <span class="at">levels =</span> Names_vec), <span class="at">y =</span> time,</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>                    <span class="at">color =</span> <span class="fu">factor</span>(FuncName, <span class="at">levels =</span> Names_vec),</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>                    <span class="at">fill =</span> <span class="fu">factor</span>(FuncName, <span class="at">levels =</span> Names_vec))) <span class="sc">+</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_violin</span>(<span class="at">trim =</span> <span class="cn">TRUE</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> Outline_vec, <span class="at">guide =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> Color_vec, <span class="at">guide =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">width =</span> <span class="fl">0.15</span>, <span class="at">fill =</span> <span class="st">&quot;white&quot;</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">&quot;errorbar&quot;</span>,</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>               <span class="fu">aes</span>(<span class="at">ymax =</span> ..y.., <span class="at">ymin =</span> ..y..),</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>               <span class="at">width =</span> .<span class="dv">35</span>, <span class="at">linetype =</span> <span class="st">&quot;dashed&quot;</span>) <span class="sc">+</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bquote</span>(F[s] <span class="sc">~</span> Mills), <span class="fu">bquote</span>(F[s] <span class="sc">~</span> NCDF), <span class="st">&quot;Blurton (Mills)&quot;</span>, <span class="st">&quot;rtdists&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_zoom</span>(<span class="at">ylim =</span> <span class="fu">c</span>(mi, ma)) <span class="sc">+</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Implementation&quot;</span>, <span class="at">y =</span> <span class="st">&quot;Time (microseconds)&quot;</span>) <span class="sc">+</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.border =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">angle =</span> <span class="dv">90</span>,</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>),</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>,</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">margin =</span> <span class="fu">margin</span>(<span class="dv">10</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>)),</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>,</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">margin =</span> <span class="fu">margin</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">0</span>, <span class="dv">0</span>)),</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>Depending on your system, the results might differ from the ones shown here, but they should replicate the general pattern. The two implementations in <code>pfddm</code> are both on average faster than the pure <code>R</code> code implementation and the implementation in <code>rtdists</code>, but each implementation still has quite a long tail on its distribution of benchmark times. These inefficiencies will be explored in the next section, where we can isolate the response time inputs and determine in which parts of the parameter space these algorithms struggle. Of the two implementations in <code>pfddm</code>, the one utilizing the Mills ratio is on average faster than the one that just uses the standard normal CDF. Although the Mills ratio must calculate an additional standard normal PDF (i.e., the denominator of the Mills ratio), the useful approximation from <span class="citation">Abramowitz and Stegun (1964)</span> allows for a fast and accurate approximation to it.</p>
+</div>
+<div id="ben-ind" class="section level2">
+<h2>Non-vectorized Benchmark Data and Results</h2>
+<p>The second benchmark test will record the algorithms’ performances across the parameter space, with the response times input individuall (i.e., not as a vector). Inputting the response times in this way are both more common (as it is typically easier to input a vector into a function as opposed to writing a loop) and beneficial for the <code>R</code>-based implementation from <span class="citation">Blurton, Kesselmeier, and Gondan (2017)</span> to exploit <code>R</code>’s vectorization (making this implementation as fast as possible).</p>
+<p>We write the function that we will use to systematically benchmark each implementation at each combination of parameters.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>rt_benchmark_ind <span class="ot">&lt;-</span> <span class="cf">function</span>(RT, resp, V, A, <span class="at">t0 =</span> <span class="fl">1e-4</span>, <span class="at">W =</span> <span class="fl">0.5</span>, <span class="at">SV =</span> <span class="fl">0.0</span>,</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                             <span class="at">err_tol =</span> <span class="fl">1e-6</span>, <span class="at">times =</span> <span class="dv">100</span>) {</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  fnames <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Mills&quot;</span>, <span class="st">&quot;NCDF&quot;</span>, <span class="st">&quot;Blurton&quot;</span>, <span class="st">&quot;rtdists&quot;</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  nf <span class="ot">&lt;-</span> <span class="fu">length</span>(fnames) <span class="co"># number of functions being benchmarked</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  nRT <span class="ot">&lt;-</span> <span class="fu">length</span>(RT)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  nV <span class="ot">&lt;-</span> <span class="fu">length</span>(V)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  nA <span class="ot">&lt;-</span> <span class="fu">length</span>(A)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  nW <span class="ot">&lt;-</span> <span class="fu">length</span>(W)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  nSV <span class="ot">&lt;-</span> <span class="fu">length</span>(SV)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Initialize the dataframe to contain the microbenchmark results</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  mbm_res <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">matrix</span>(<span class="at">ncol =</span> <span class="dv">5</span><span class="sc">+</span>nf, <span class="at">nrow =</span> nRT<span class="sc">*</span>nV<span class="sc">*</span>nA<span class="sc">*</span>nW<span class="sc">*</span>nSV))</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">colnames</span>(mbm_res) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;RT&#39;</span>, <span class="st">&#39;V&#39;</span>, <span class="st">&#39;A&#39;</span>, <span class="st">&#39;W&#39;</span>, <span class="st">&#39;SV&#39;</span>, fnames)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  row_idx <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Loop through each combination of parameters and record microbenchmark results</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (rt <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nRT) {</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (v <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nV) {</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>      <span class="cf">for</span> (a <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nA) {</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> (w <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nW) {</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>          <span class="cf">for</span> (sv <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nSV) {</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>            mbm <span class="ot">&lt;-</span> <span class="fu">microbenchmark</span>(</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>            <span class="at">Mills =</span> <span class="fu">pfddm</span>(<span class="at">rt =</span> RT[rt], <span class="at">response =</span> resp, <span class="at">a =</span> A[a], <span class="at">v =</span> V[v],</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>                          <span class="at">t0 =</span> t0, <span class="at">w =</span> W[w], <span class="at">sv =</span> SV[sv], <span class="at">log =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>                          <span class="at">method =</span> <span class="st">&quot;Mills&quot;</span>, <span class="at">err_tol =</span> err_tol),</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>            <span class="at">NCDF =</span> <span class="fu">pfddm</span>(<span class="at">rt =</span> RT[rt], <span class="at">response =</span> resp, <span class="at">a =</span> A[a], <span class="at">v =</span> V[v],</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>                         <span class="at">t0 =</span> t0, <span class="at">w =</span> W[w], <span class="at">sv =</span> SV[sv], <span class="at">log =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>                         <span class="at">method =</span> <span class="st">&quot;NCDF&quot;</span>, <span class="at">err_tol =</span> err_tol),</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>            <span class="at">Blurton =</span> <span class="fu">G_0</span>(<span class="at">t =</span> RT[rt]<span class="sc">-</span>t0, <span class="at">a =</span> A[a], <span class="at">nu =</span> V[v], <span class="at">w =</span> W[w],</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>                          <span class="at">eta2 =</span> SV[sv]<span class="sc">*</span>SV[sv], <span class="at">sigma2 =</span> <span class="dv">1</span>, <span class="at">eps =</span> err_tol), <span class="co"># only &quot;lower&quot; resp</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>            <span class="at">rtdists =</span> <span class="fu">pdiffusion</span>(RT[rt], resp, <span class="at">a =</span> A[a], <span class="at">v =</span> V[v], <span class="at">t0 =</span> t0,</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>                                 <span class="at">z =</span> W[w]<span class="sc">*</span>A[a], <span class="at">sv =</span> SV[sv], <span class="at">precision =</span> <span class="dv">3</span>),</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>            <span class="at">times =</span> times)</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>          <span class="co"># add the v, a, and w values to the dataframe</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>          mbm_res[row_idx, <span class="dv">1</span>] <span class="ot">&lt;-</span> RT[rt]</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>          mbm_res[row_idx, <span class="dv">2</span>] <span class="ot">&lt;-</span> V[v]</span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>          mbm_res[row_idx, <span class="dv">3</span>] <span class="ot">&lt;-</span> A[a]</span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>          mbm_res[row_idx, <span class="dv">4</span>] <span class="ot">&lt;-</span> W[w]</span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>          mbm_res[row_idx, <span class="dv">5</span>] <span class="ot">&lt;-</span> SV[sv]</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>          <span class="co"># add the median microbenchmark results to the dataframe</span></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>          <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>nf) {</span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>            mbm_res[row_idx, <span class="dv">5</span><span class="sc">+</span>i] <span class="ot">&lt;-</span> <span class="fu">median</span>(mbm[mbm[,<span class="dv">1</span>] <span class="sc">==</span> fnames[i],<span class="dv">2</span>])</span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>          }</span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>          <span class="co"># iterate start value</span></span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>          row_idx <span class="ot">=</span> row_idx <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>          }</span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(mbm_res)</span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>We will not actually run the benchmark tests in this vignette as it can take a while to run, and instead we will load pre-run benchmark data before we plot the results.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>bm_ind <span class="ot">&lt;-</span> <span class="fu">rt_benchmark_ind</span>(<span class="at">RT =</span> RT, <span class="at">resp =</span> <span class="st">&quot;lower&quot;</span>, <span class="at">V =</span> V, <span class="at">A =</span> A, <span class="at">t0 =</span> t0,</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                           <span class="at">W =</span> W, <span class="at">SV =</span> SV, <span class="at">err_tol =</span> err_tol, <span class="at">times =</span> <span class="dv">1000</span>)</span></code></pre></div>
+<p>Here, we load the pre-run benchmark data and plot the results as a series of plots that show how the benchmark times change as a result of varying the response time input to the CDF approximation. On the horizontal axis is the response time (input to the CDF approximation), and the vertical axis displays the benchmark time; note that the vertical axis is not fixed across panels. The dark line in each panel indicates the mean benchmark time; the darker shaded region in each panel shows the 10% and 90&amp; quantiles; and the lightly shaded region shows the minimum and maximum benchmark times.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load data, will be in the variable &#39;bm_ind&#39;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;pfddm_distribution&quot;</span>, <span class="st">&quot;bm_ind_0-2.Rds&quot;</span>,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">package =</span> <span class="st">&quot;fddm&quot;</span>, <span class="at">mustWork =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>t_idx <span class="ot">&lt;-</span> <span class="fu">match</span>(<span class="st">&quot;SV&quot;</span>, <span class="fu">colnames</span>(bm_ind))</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>bm_ind[,<span class="sc">-</span><span class="fu">seq_len</span>(t_idx)] <span class="ot">&lt;-</span> bm_ind[, <span class="sc">-</span><span class="fu">seq_len</span>(t_idx)]<span class="sc">/</span><span class="dv">1000</span> <span class="co"># convert to microseconds</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>mbm_ind <span class="ot">&lt;-</span> <span class="fu">melt</span>(bm_ind, <span class="at">measure.vars =</span> <span class="sc">-</span><span class="fu">seq_len</span>(t_idx),</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">variable.name =</span> <span class="st">&quot;FuncName&quot;</span>, <span class="at">value.name =</span> <span class="st">&quot;time&quot;</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>Names_meq <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Mills&quot;</span>, <span class="st">&quot;NCDF&quot;</span>, <span class="st">&quot;Blurton&quot;</span>, <span class="st">&quot;rtdists&quot;</span>)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>Color_meq <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;#b34d4d&quot;</span>, <span class="st">&quot;#4d80b3&quot;</span>, <span class="st">&quot;#c5a687&quot;</span>, <span class="st">&quot;#ac8053&quot;</span>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>my_labeller <span class="ot">&lt;-</span> <span class="fu">as_labeller</span>(<span class="fu">c</span>(<span class="at">Mills =</span> <span class="st">&quot;F[s] ~ Mills&quot;</span>,</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>                             <span class="at">NCDF =</span> <span class="st">&quot;F[s] ~ NCDF&quot;</span>,</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>                             <span class="at">fl_Nav_09 =</span> <span class="st">&quot;f[l] ~ Nav&quot;</span>,</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>                             <span class="at">Blurton =</span> <span class="st">&quot;Blurton (Mills)&quot;</span>,</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>                             <span class="at">rtdists =</span> <span class="st">&quot;rtdists&quot;</span>),</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>                           <span class="at">default =</span> label_parsed)</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mbm_ind, <span class="fu">aes</span>(<span class="at">x =</span> RT, <span class="at">y =</span> time,</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>                    <span class="at">color =</span> <span class="fu">factor</span>(FuncName, <span class="at">levels =</span> Names_meq),</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>                    <span class="at">fill =</span> <span class="fu">factor</span>(FuncName, <span class="at">levels =</span> Names_meq))) <span class="sc">+</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun.min =</span> min, <span class="at">fun.max =</span> max,</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>               <span class="at">geom =</span> <span class="st">&quot;ribbon&quot;</span>, <span class="at">color =</span> <span class="cn">NA</span>, <span class="at">alpha =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun.min =</span> <span class="cf">function</span>(z) { <span class="fu">quantile</span>(z, <span class="fl">0.1</span>) },</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>               <span class="at">fun.max =</span> <span class="cf">function</span>(z) { <span class="fu">quantile</span>(z, <span class="fl">0.9</span>) },</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>               <span class="at">geom =</span> <span class="st">&quot;ribbon&quot;</span>, <span class="at">color =</span> <span class="cn">NA</span>, <span class="at">alpha =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_summary</span>(<span class="at">fun =</span> mean, <span class="at">geom =</span> <span class="st">&quot;line&quot;</span>) <span class="sc">+</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_log10</span>(<span class="at">breaks =</span> <span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">2</span>),</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>                <span class="at">labels =</span> <span class="fu">as.character</span>(<span class="fu">c</span>(<span class="fl">0.1</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">2</span>))) <span class="sc">+</span></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> Color_meq) <span class="sc">+</span></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> Color_meq) <span class="sc">+</span></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">subtitle =</span> <span class="fu">paste</span>(</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>         <span class="st">&quot;The darker shaded regions represent the 10% and 90% quantiles&quot;</span>,</span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>         <span class="st">&quot;The lighter shaded regions represent the min and max times&quot;</span>,</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>         <span class="at">sep =</span> <span class="st">&quot;;</span><span class="sc">\n</span><span class="st">&quot;</span>),</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="fu">bquote</span>(t <span class="sc">~</span> <span class="st">&quot;, response time&quot;</span>),</span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">&quot;Time (microseconds)&quot;</span>) <span class="sc">+</span></span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.border =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>        <span class="at">plot.subtitle =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>,</span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>                                     <span class="at">margin =</span> <span class="fu">margin</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">15</span>, <span class="dv">0</span>)),</span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>, <span class="at">angle =</span> <span class="dv">90</span>,</span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>                                   <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">hjust =</span> <span class="dv">1</span>),</span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>),</span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>,</span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">margin =</span> <span class="fu">margin</span>(<span class="dv">10</span>, <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span>)),</span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">20</span>,</span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">margin =</span> <span class="fu">margin</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="dv">0</span>, <span class="dv">0</span>)),</span>
+<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">16</span>),</span>
+<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a>        <span class="at">strip.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">&quot;white&quot;</span>),</span>
+<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="sc">+</span></span>
+<span id="cb8-54"><a href="#cb8-54" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> <span class="fu">factor</span>(FuncName, <span class="at">levels =</span> Names_meq), <span class="at">scales =</span> <span class="st">&quot;free_y&quot;</span>,</span>
+<span id="cb8-55"><a href="#cb8-55" aria-hidden="true" tabindex="-1"></a>             <span class="at">labeller =</span> my_labeller)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>This series of plots confirms that the inefficiencies of these algorithms occur when large response times are input, although the inefficiencies are not as dramatic as in <a href="benchmark.html#den-ana">the density function benchmark results</a>. As there is no analytic form for the large-time distribution function that includes inter-trial variability in the drift rate, we must make do with only the small-time distribution function or the PDE method. As we discussed <a href="#dist-inf">earlier in this vignette</a>, approximating the infinite sum in the small-time distribution function is preferable to using the PDE method because it allows us to directly control the approximation error. Moreover, the small-time implementations in <code>pfddm</code> are on average faster than the implementation of the PDE method in <code>rtdists</code>; they are also faster than the implementation in the pure <code>R</code> code from <span class="citation">Blurton, Kesselmeier, and Gondan (2017)</span>.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="section" class="section level1 unlisted unnumbered">
+<h1 class="unlisted unnumbered"></h1>
+<div id="r-session-info" class="section level4 unlisted unnumbered">
+<h4 class="unlisted unnumbered">R Session Info</h4>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; R version 4.1.0 (2021-05-18)</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Platform: x86_64-w64-mingw32/x64 (64-bit)</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Running under: Windows 10 x64 (build 19043)</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Matrix products: default</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; locale:</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] LC_COLLATE=C                           </span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [2] LC_CTYPE=English_United Kingdom.1252   </span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [3] LC_MONETARY=English_United Kingdom.1252</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4] LC_NUMERIC=C                           </span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [5] LC_TIME=English_United Kingdom.1252    </span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; attached base packages:</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; other attached packages:</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] ggforce_0.3.3        ggplot2_3.3.5        reshape2_1.4.4      </span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4] microbenchmark_1.4-7 RWiener_1.3-3        rtdists_0.11-2      </span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [7] fddm_0.4-0          </span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] tidyselect_1.1.1  xfun_0.24         bslib_0.2.5.1     purrr_0.3.4      </span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [5] splines_4.1.0     lattice_0.20-44   colorspace_2.0-2  vctrs_0.3.8      </span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [9] generics_0.1.0    expm_0.999-6      htmltools_0.5.1.1 yaml_2.2.1       </span></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [13] utf8_1.2.1        survival_3.2-11   rlang_0.4.11      jquerylib_0.1.4  </span></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [17] pillar_1.6.1      withr_2.4.2       glue_1.4.2        DBI_1.1.1        </span></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [21] tweenr_1.0.2      lifecycle_1.0.0   plyr_1.8.6        stringr_1.4.0    </span></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [25] munsell_0.5.0     gtable_0.3.0      mvtnorm_1.1-2     evaluate_0.14    </span></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [29] labeling_0.4.2    knitr_1.33        fansi_0.5.0       evd_2.3-3        </span></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [33] highr_0.9         Rcpp_1.0.6        scales_1.1.1      jsonlite_1.7.2   </span></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [37] farver_2.1.0      digest_0.6.27     stringi_1.6.2     msm_1.6.8        </span></span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [41] dplyr_1.0.7       polyclip_1.10-0   gsl_2.1-6         grid_4.1.0       </span></span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [45] tools_4.1.0       magrittr_2.0.1    sass_0.4.0        tibble_3.1.2     </span></span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [49] crayon_1.4.1      pkgconfig_2.0.3   MASS_7.3-54       ellipsis_0.3.2   </span></span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [53] Matrix_1.3-4      ggnewscale_0.4.5  assertthat_0.2.1  rmarkdown_2.9    </span></span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [57] R6_2.5.0          compiler_4.1.0</span></span></code></pre></div>
+</div>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1 class="unnumbered">References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-abramowitz1964handbook" class="csl-entry">
+Abramowitz, Milton, and Irene A Stegun. 1964. <em>Handbook of Mathematical Functions with Formulas, Graphs, and Mathematical Tables</em>. Vol. 55. US Government printing office.
+</div>
+<div id="ref-sn" class="csl-entry">
+Azzalini, A. 2021. <em>The <span>R</span> Package <code>sn</code>: The Skew-Normal and Related Distributions Such as the Skew-<span class="math inline">\(t\)</span> and the SUN (Version 2.0.0).</em> Università di Padova, Italia. <a href="http://azzalini.stat.unipd.it/SN/">http://azzalini.stat.unipd.it/SN/</a>.
+</div>
+<div id="ref-blurton2012fast" class="csl-entry">
+Blurton, Steven P, Miriam Kesselmeier, and Matthias Gondan. 2012. <span>“Fast and Accurate Calculations for Cumulative First-Passage Time Distributions in Wiener Diffusion Models.”</span> <em>Journal of Mathematical Psychology</em> 56 (6): 470–75.
+</div>
+<div id="ref-blurton2017first" class="csl-entry">
+———. 2017. <span>“The First-Passage Time Distribution for the Diffusion Model with Variable Drift.”</span> <em>Journal of Mathematical Psychology</em> 76: 7–12.
+</div>
+<div id="ref-gondan2014even" class="csl-entry">
+Gondan, Matthias, Steven P Blurton, and Miriam Kesselmeier. 2014. <span>“Even Faster and Even More Accurate First-Passage Time Densities and Distributions for the Wiener Diffusion Model.”</span> <em>Journal of Mathematical Psychology</em> 60: 20–22.
+</div>
+<div id="ref-tuerlinckx2004efficient" class="csl-entry">
+Tuerlinckx, Francis. 2004. <span>“The Efficient Computation of the Cumulative Distribution and Probability Density Functions in the Diffusion Model.”</span> <em>Behavior Research Methods, Instruments, &amp; Computers</em> 36 (4): 702–16.
+</div>
+<div id="ref-voss2008fast" class="csl-entry">
+Voss, Andreas, and Jochen Voss. 2008. <span>“A Fast Numerical Algorithm for the Estimation of Diffusion Model Parameters.”</span> <em>Journal of Mathematical Psychology</em> 52 (1): 1–9.
+</div>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>I think there may have been a sign error in the equation for <span class="math inline">\(g_j^+\)</span> on the top of the right column of page 9: I think the argument inside <span class="math inline">\(\Phi\)</span> should be negated. The corresponding argument in the Mills ratio further down the page appears to be correct.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>this can happen for the parameter values: <code>rt = 30, response = 1, a = 5, v = 0, t0 = 0, w = 0.5, sv = 1.5, err_tol = 1e-6, method = &quot;NCDF&quot;</code><a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p>Note that as <span class="math inline">\(x \to \infty\)</span>, <span class="math inline">\(1 - \Phi(x) = \Phi(-x) \to 0\)</span> and <span class="math inline">\(\phi(x) \to 0\)</span>; this results in <span class="math inline">\(M(x) = \frac{0}{0}\)</span>. Similarly for <span class="math inline">\(x \to -\infty\)</span>, <span class="math inline">\(1 - \Phi(x) = \Phi(-x) \to 1\)</span> and <span class="math inline">\(\phi(x) \to 0\)</span>; this results in <span class="math inline">\(M(x) = \frac{1}{0}\)</span>.<a href="#fnref3" class="footnote-back">↩︎</a></p></li>
+</ol>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
