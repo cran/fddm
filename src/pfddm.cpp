@@ -21,8 +21,7 @@
 //'
 //' @param rt A vector of response times (in seconds). If a response time is
 //'   non-positve, then its density will evaluate to \eqn{0} if log = FALSE and
-//'   \ifelse{html}{\out{-<font style="vertical-align: middle;"
-//'   size="5em">&#8734;</font>}}{\eqn{-\infty}} if log = TRUE.
+//'   \ifelse{html}{\out{-&#8734}}{\eqn{-\infty}} if log = TRUE.
 //'
 //' @param response Binary response(s) that correspond(s) to either the "lower"
 //'   or "upper" threshold. This model parameter can either be a singular value
@@ -80,7 +79,7 @@
 //'   \ifelse{html}{\out{&#8594;}}{\eqn{\to}} \code{a} \eqn{/} \code{sigma}
 //'   \item \code{v} \ifelse{html}{\out{&#8594;}}{\eqn{\to}} \code{v} \eqn{/}
 //'   \code{sigma} \item \code{sv} \ifelse{html}{\out{&#8594;}}{\eqn{\to}}
-//'   \code{sv} \eqn{/} \code{sigma} }
+//'   \code{sv} \eqn{/} \code{sigma} }.
 //'
 //' @param log Logical; if \code{TRUE}, probabilities \eqn{p} are given as
 //'   \eqn{log(p)}. Default is \code{FALSE}.
@@ -91,8 +90,9 @@
 //'
 //' @param err_tol Allowed error tolerance of the density function. Since the
 //'   density function contains an infinite sum, this parameter defines the
-//'   precision of the approximation to that infinite sum. Default is
-//'   \eqn{1e-6}.
+//'   precision of the approximation to that infinite sum. If the provided
+//'   error tolerance is less than \eqn{1e-300}, it is set to \eqn{1e-300}.
+//'   Default is \eqn{1e-6}.
 //'
 //'
 //'
@@ -146,11 +146,11 @@ NumericVector pfddm(const NumericVector& rt,
                     const NumericVector& v,
                     const NumericVector& t0,
                     const NumericVector& w = 0.5,
-                    const NumericVector& sv = 0,
-                    const NumericVector& sigma = 1,
-                    const bool& log = 0,
-                    const std::string& method = "1",
-                    const NumericVector& err_tol = 0.000001)
+                    const NumericVector& sv = 0.0,
+                    const NumericVector& sigma = 1.0,
+                    NumericVector err_tol = 0.000001,
+                    const bool& log = false,
+                    const std::string& method = "Mills")
 {
   // determine which method to use (also log or non-log)
   DisFunc disf;

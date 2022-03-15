@@ -1,3 +1,17 @@
+# fddm v0.5-1 (Release date: 2022-3-15)
+
+## New Features
+* Added new method to compute the PDF of the DDM
+
+## Bug Fixes
+* Fixed HTML deprecation in documentation
+
+# Other Changes
+* Changed the function parameters in `dfddm()` that determine how the method of calculation is chosen.
+
+
+
+
 # fddm v0.4-1 (Release date: 2021-12-10)
 
 ## Bug Fixes

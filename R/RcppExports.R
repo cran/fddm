@@ -13,8 +13,7 @@
 #'
 #' @param rt A vector of response times (in seconds). If a response time is
 #'   non-positve, then its density will evaluate to \eqn{0} if log = FALSE and
-#'   \ifelse{html}{\out{-<font style="vertical-align: middle;"
-#'   size="5em">&#8734;</font>}}{\eqn{-\infty}} if log = TRUE.
+#'   \ifelse{html}{\out{-&#8734;}}{\eqn{-\infty}} if log = TRUE.
 #'
 #' @param response Binary response(s) that correspond(s) to either the "lower"
 #'   or "upper" threshold. This model parameter can either be a singular value
@@ -72,43 +71,64 @@
 #'   \ifelse{html}{\out{&#8594;}}{\eqn{\to}} \code{a} \eqn{/} \code{sigma}
 #'   \item \code{v} \ifelse{html}{\out{&#8594;}}{\eqn{\to}} \code{v} \eqn{/}
 #'   \code{sigma} \item \code{sv} \ifelse{html}{\out{&#8594;}}{\eqn{\to}}
-#'   \code{sv} \eqn{/} \code{sigma} }
+#'   \code{sv} \eqn{/} \code{sigma} }.
+#'
+#' @param err_tol Allowed error tolerance of the density function. The density
+#'   function contains an infinite sum that must be approximated; this
+#'   parameter is the upper bound of the total error incurred from this
+#'   approximation (in absolute value). See Details for more information.
+#'   Default is \eqn{1e-6}.
 #'
 #' @param log Logical; if \code{TRUE}, probabilities \eqn{p} are given as
-#'   \eqn{log(p)}. Default is \code{FALSE}.
+#'   \eqn{log(p)}. Default is \code{FALSE}, which gives the density on the
+#'   probability scale.
 #'
-#' @param n_terms_small Which method for calculating number of terms used in
-#'   the approximation of the infinite sum in the small-time approximation of
-#'   the density function. Can be one of \{\code{"SWSE"}, \code{"Gondan"},
-#'   \code{"Navarro"}\}. Only applicable if \code{scale} is one of
-#'   \{\code{"small"}, \code{"both"}\}. See Details for more information.
-#'   Default is \code{"Gondan"}.
+#' @param switch_mech Which switching mechanism to use in the choice of the
+#'   "large-time" or "small-time" density function. Can be one of
+#'   \{\code{"eff_rt"}, \code{"terms_large"}, \code{"terms"}, \code{"small"},
+#'   \code{"large"}\}. Note that the large-time approximation is unstable for
+#'   small effective response times (\eqn{(}\code{rt}\eqn{-}\code{t0}\eqn{)}
+#'   \eqn{/(}\code{a}\eqn{*}\code{a}\eqn{) < 0.009}). See Details for more
+#'   information. Default is \code{"eff_rt"}.
+#'
+#' @param switch_thresh Threshold for determining whether the effective
+#'   response time (\eqn{(}\code{rt}\eqn{-}\code{t0}\eqn{)}
+#'   \eqn{/(}\code{a}\eqn{*}\code{a}\eqn{)}) is "large" or "small". This
+#'   parameter is only considered if \code{switch_mech = "eff_rt"} or
+#'   \code{switch_mech = "terms_large"}.
+#'   If \code{switch_mech = "eff_rt"}, an effective response time greater than
+#'   \code{switch_thresh} is considered "large", and the "large-time" variant
+#'   of the density function is used; otherwise, the "small-time" variant of
+#'   the density function is used. The default is \eqn{0.8}.
+#'   If \code{switch_mech = "terms_large"}, this parameter is treated as
+#'   \eqn{ceiling(}\code{switch_thresh}\eqn{)}; the smallest integer that is
+#'   not less than \code{switch_thresh}. In this case, the default is
+#'   \eqn{ceiling(0.8) = 1}. See the \code{switch_mech} section of Details for
+#'   more information.
+#'   Note that if \code{switch_thresh}\eqn{ \le 0}, then the effective response
+#'   time is always treated as "large"; contrarily, if \code{switch_thresh} =
+#'   \ifelse{html}{\out{&#8734}}{\eqn{-\infty}} then the effective response
+#'   time is always treated as "small". However, it is better to simply set
+#'   \code{switch_mech = "large"} or \code{switch_mech = "small"} to always use
+#'   the "large-time" or "small-time" variant, respectively.
+#'
+#' @param n_terms_small Which method to use for calculating the "small-time"
+#'   approximation to the density function. Only applicable if
+#'   \code{switch_mech = "terms"} or \code{switch_mech = "small"}; all other
+#'   values of \code{switch_mech} cause this parameter to be ignored. If
+#'   \code{switch_mech = "small"}, the allowed values are \code{"SWSE"},
+#'   \code{"Gondan"}, and \code{"Navarro"}. The default value is \code{"SWSE"}.
+#'   If \code{switch_mech = "terms"}, the allowed values are \code{"Gondan"}
+#'   and \code{"Navarro"}. Note that if the user inputs
+#'   \code{switch_mech = "terms"}, then the user must also explicitly input
+#'   either \code{n_terms_small = "Gondan"} or
+#'   \code{n_terms_small = "Navarro"}. See Details for more information.
 #'
 #' @param summation_small Which style of summation to use for the small-time
 #'   approximation to the infinite sum. Can be one of \{\code{"2017"},
-#'   \code{"2014"}\}. Only applicable if \code{scale} is one of
-#'   \{\code{"small"}, \code{"both"}\}. See Details for more information.
-#'   Default is \code{"2017"}.
-#'
-#' @param scale Which density function to use. Can be one of \{\code{"small"},
-#'   \code{"large"}, \code{"both"}\}. Note that the large-time approximation is
-#'   unstable for small effective response times (\code{rt}\eqn{/(}\code{a}
-#'   \eqn{*}\code{a}\eqn{) < 0.009}). See Details for more information. Default
-#'   is \code{"both"}.
-#'
-#' @param max_terms_large Maximum number of terms to use for the "large-time"
-#'   variant when \code{n_terms_small = "SWSE", scale = "both"}. Allowed values
-#'   are any non-negative integer. \code{max_terms_large = 0} indicates that
-#'   the "small-time" variant will always be used instead of the "large-time"
-#'   variant. The \code{fddm} GitHub has plots showing the relative
-#'   efficiencies of several options for the \code{max_terms_large} parameter
-#'   in the \code{paper_analysis/extra_analysis} folder. Default value is
-#'   \eqn{1}.
-#'
-#' @param err_tol Allowed error tolerance of the density function. Since the
-#'   density function contains an infinite sum, this parameter defines the
-#'   precision of the approximation to that infinite sum. Default is
-#'   \eqn{1e-6}.
+#'   \code{"2014"}\}. Only applicable if \code{switch_mech} is one of
+#'   \{\code{"eff_rt"}, \code{"terms_large"}, \code{"terms"}, \code{"small"}\}.
+#'   See Details for more information. Default is \code{"2017"}.
 #'
 #'
 #'
@@ -117,28 +137,13 @@
 #' All of the model inputs and parameters (\code{rt}, \code{response},
 #' \code{a}, \code{v}, \code{t0}, \code{w}, \code{sv}, \code{sigma}) can be
 #' input as a single value or as a vector of values. If input as a vector of
-#' values, then the standard \code{R} input wrapping will occur.
+#' values, then the standard \code{R} recycling rules apply to ensure all 
+#' inputs are of the same length.
 #'
-#' The default settings of \code{n_terms_small = "SWSE"}, \code{summation_small
-#' = "2017"}, \code{scale = "both"} produce the fastest and most accurate
+#' The default settings of \code{switch_mech = "eff_rt"},
+#' \code{switch_thresh = "0.8"}, \code{n_terms_small = "SWSE"},
+#' \code{summation_small = "2017"} produce the fastest and most accurate
 #' results, as shown in our associated paper.
-#'
-#' \code{scale} - The density function for the DDM has traditionally been
-#' written in two forms: a "large-time" variant, and a "small-time" variant.
-#' The parameter \code{scale} determines which of these variants will be used
-#' in the calculation; \code{scale = "large"} uses the "large-time" variant,
-#' and \code{scale = "small"} uses the "small-time" variant. The "large-time"
-#' variant is unstable for small effective response times (
-#' \eqn{(}\code{rt}\eqn{-}\code{t0}\eqn{)} \eqn{/
-#' (}\code{a}\eqn{*}\code{a}\eqn{) < 0.009} ) and produces inaccurate
-#' densities; thus we do not recommend using only the \code{scale = "large"}
-#' option if the inputs contain such small response times. To circumvent this
-#' issue, the \code{scale = "both"} option utilizes both the "small-time" and
-#' "large-time" variants by determining which variant is more computationally
-#' efficient before calculating the density. Even though the "large-time"
-#' density function is often significantly slower than the "small-time"
-#' variant, it is extremely efficient in some areas of the parameter space, and
-#' so the \code{scale = "both"} option is the fastest.
 #'
 #' \code{sv} - Both the "small-time" and "large-time" variants of the density
 #' function have two further variants: one with a constant drift rate \code{v}
@@ -156,21 +161,82 @@
 #' (see Ratcliff (1978), the fourth reference), so care must be taken when
 #' comparing the results of different formulations.
 #'
-#' \code{summation_small} - The "large-time" variant of the density function
-#' does not have any further variants, but the "small-time" has more options
-#' with respect to evaluating the infinite sum. There are two equivalent styles
-#' of summation, \code{summation_small = "2017"} and \code{summation_small =
-#' "2014"}, of which the \code{"2017"} version evaluates slightly faster and
-#' thus earns our recommendation. These different styles of summation are
-#' discussed in our associated paper.
+#' \code{err_tol} - The density function is composed of an infinite sum (that
+#' must be approximated) and a multiplicative term outside the infinite sum,
+#' \eqn{m}. The total error of the approximation is the error incurred from
+#' truncating the infinite sum multiplied by \eqn{m}. Thus, to ensure that the
+#' total error is bounded by the user-provided error tolerance, \code{err_tol},
+#' the approximation to the infinite sum uses a modified error tolerance
+#' (\code{err_tol}\eqn{ / m}). If the error tolerance is small and \eqn{m} is
+#' large, the modified error tolerance can underflow to \eqn{0}. To protect
+#' against this, we check that the modified error tolerance is at least
+#' \eqn{1e-300} (near the smallest value that is representable by a floating
+#' point number with double precision). If the modified error tolerance is
+#' smaller than this threshold, then we silently change it to \eqn{1e-300}.
+#' This case should only be encountered if extreme values of error tolerance
+#' are used (i.e., on the scale of \eqn{1e-300}).
 #'
-#' \code{n_terms_small} - The "small-time" variant also has three different
-#' methods for how to truncate the infinite sum in the density function. These
+#' \code{switch_mech} - The density function for the DDM has traditionally been
+#' written in two forms: a "large-time" variant, and a "small-time" variant
+#' (Navarro and Fuss, 2009). These two forms are more
+#' efficient at calculating the density for large and small response times,
+#' respectively. The parameter \code{switch_mech} determines how \code{dfddm}  
+#' decides which of these two variants is used. 
+#' \code{switch_mech = "small"} uses
+#' only the "small-time" variant, and \code{switch_mech = "large"} uses only
+#' the "large-time" variant. The "large-time" variant is unstable for small
+#' effective response times (\eqn{(}\code{rt}\eqn{-}\code{t0}\eqn{)} \eqn{/
+#' (}\code{a}\eqn{*}\code{a}\eqn{) < 0.009}) and may produce inaccurate
+#' densities; thus, we do not recommend using the \code{switch_mech = "large"}
+#' option if the inputs may contain such small effective response times. To
+#' circumvent this accuracy issue and resolve the differing efficiencies of the
+#' "large-time" and "small-time" variants, there are three switching mechanisms
+#' that can be used to determine which of the two variants is more efficient.
+#' First, \code{switch_mech = "terms"} is the traditional approach and
+#' pre-calculates the number of terms required for the "large-time" and
+#' "small-time" sums, and then uses whichever variant requires fewer terms.
+#' This is the mechanism used in the Navarro and Fuss (2009) and Gondan,
+#' Blurton, and Kesselmeier (2014) papers.
+#' Second, \code{switch_mech = "terms_large"} pre-calculates the number of
+#' terms only for the "large-time" variant, and compares that to the constant
+#' value of \eqn{ceil(}\code{switch_thresh}\eqn{)} (default value of
+#' \eqn{ceil(0.8) = 1}) to determine if the "large-time" variant is
+#' sufficiently efficient.
+#' Third, \code{switch_mech = "eff_rt"} determines whether a given effective
+#' response time (\eqn{(}\code{rt}\eqn{-}\code{t0}\eqn{)}
+#' \eqn{/(}\code{a}\eqn{*}\code{a}\eqn{)}) is considered "large" or "small" by
+#' comparing it to the value of the parameter \code{switch_thresh} (default
+#' value of \eqn{0.8}); it then uses the corresponding variant.
+#' Both \code{switch_mech = "terms_large"} and \code{switch_mech = "eff_rt"}
+#' only use the SWSE "small-time" approximation in the case that the
+#' "small-time" variant is more efficient. \code{switch_mech = "eff_rt"} is the
+#' most efficient method to determine which variant of the density function
+#' should be used.
+#'
+#' \code{switch_thresh} - This parameter determines what effective response
+#' times (\code{rt}\eqn{/(}\code{a} \eqn{*}\code{a}\eqn{)}) are "large" and
+#' "small". The \code{paper_analysis} folder in the \code{fddm} GitHub
+#' repository contains plots showing the relative efficiencies of a range of
+#' values for the \code{switch_thresh} parameter when used with
+#' \code{switch_mech = "eff_rt"} and also \code{switch_mech = "terms_large"}.
+#' Note that this parameter changed name and purpose with the release of
+#' \code{fddm} version 0.5-0.
+#'
+#' \code{n_terms_small} - The "small-time" variant has three different methods
+#' for how to truncate the infinite sum in the density function. These
 #' different methods are discussed extensively in our associated paper, but the
 #' key distinction is that \code{n_terms_small = "SWSE"} uses a new method of
 #' truncating the infinite sum. The \code{n_terms_small = "SWSE"} method is
-#' currently recommended because it is the fastest and most stable algorithm
-#' when used with \code{scale = "both"}.
+#' currently recommended (when possible) because it is the fastest and most
+#' stable algorithm when used with \code{switch_mech = "eff_rt"}.
+#'
+#' \code{summation_small} - The "large-time" variant of the density function
+#' does not have any further variants, but the "small-time" variant has more
+#' options with respect to evaluating the infinite sum. There are two
+#' equivalent styles of summation, \code{summation_small = "2017"} and
+#' \code{summation_small = "2014"}, of which the \code{"2017"} version
+#' evaluates slightly faster and thus earns our recommendation. These different
+#' styles of summation are discussed in our associated paper.
 #'
 #'
 #'
@@ -202,8 +268,8 @@
 #' @useDynLib fddm, .registration = TRUE
 #' @import Rcpp
 #' @export
-dfddm <- function(rt, response, a, v, t0, w = 0.5, sv = 0L, sigma = 1L, log = 0L, n_terms_small = "SWSE", summation_small = "2017", scale = "both", max_terms_large = 1L, err_tol = 0.000001) {
-    .Call(`_fddm_dfddm`, rt, response, a, v, t0, w, sv, sigma, log, n_terms_small, summation_small, scale, max_terms_large, err_tol)
+dfddm <- function(rt, response, a, v, t0, w = 0.5, sv = 0.0, sigma = 1.0, err_tol = 0.000001, log = FALSE, switch_mech = "eff_rt", switch_thresh = 0.8, n_terms_small = "SWSE", summation_small = "2017") {
+    .Call(`_fddm_dfddm`, rt, response, a, v, t0, w, sv, sigma, err_tol, log, switch_mech, switch_thresh, n_terms_small, summation_small)
 }
 
 #' Distribution of Ratcliff Diffusion Decision Model
@@ -218,8 +284,7 @@ dfddm <- function(rt, response, a, v, t0, w = 0.5, sv = 0L, sigma = 1L, log = 0L
 #'
 #' @param rt A vector of response times (in seconds). If a response time is
 #'   non-positve, then its density will evaluate to \eqn{0} if log = FALSE and
-#'   \ifelse{html}{\out{-<font style="vertical-align: middle;"
-#'   size="5em">&#8734;</font>}}{\eqn{-\infty}} if log = TRUE.
+#'   \ifelse{html}{\out{-&#8734}}{\eqn{-\infty}} if log = TRUE.
 #'
 #' @param response Binary response(s) that correspond(s) to either the "lower"
 #'   or "upper" threshold. This model parameter can either be a singular value
@@ -277,7 +342,7 @@ dfddm <- function(rt, response, a, v, t0, w = 0.5, sv = 0L, sigma = 1L, log = 0L
 #'   \ifelse{html}{\out{&#8594;}}{\eqn{\to}} \code{a} \eqn{/} \code{sigma}
 #'   \item \code{v} \ifelse{html}{\out{&#8594;}}{\eqn{\to}} \code{v} \eqn{/}
 #'   \code{sigma} \item \code{sv} \ifelse{html}{\out{&#8594;}}{\eqn{\to}}
-#'   \code{sv} \eqn{/} \code{sigma} }
+#'   \code{sv} \eqn{/} \code{sigma} }.
 #'
 #' @param log Logical; if \code{TRUE}, probabilities \eqn{p} are given as
 #'   \eqn{log(p)}. Default is \code{FALSE}.
@@ -288,8 +353,9 @@ dfddm <- function(rt, response, a, v, t0, w = 0.5, sv = 0L, sigma = 1L, log = 0L
 #'
 #' @param err_tol Allowed error tolerance of the density function. Since the
 #'   density function contains an infinite sum, this parameter defines the
-#'   precision of the approximation to that infinite sum. Default is
-#'   \eqn{1e-6}.
+#'   precision of the approximation to that infinite sum. If the provided
+#'   error tolerance is less than \eqn{1e-300}, it is set to \eqn{1e-300}.
+#'   Default is \eqn{1e-6}.
 #'
 #'
 #'
@@ -336,7 +402,7 @@ dfddm <- function(rt, response, a, v, t0, w = 0.5, sv = 0L, sigma = 1L, log = 0L
 #' @useDynLib fddm, .registration = TRUE
 #' @import Rcpp
 #' @export
-pfddm <- function(rt, response, a, v, t0, w = 0.5, sv = 0L, sigma = 1L, log = 0L, method = "1", err_tol = 0.000001) {
-    .Call(`_fddm_pfddm`, rt, response, a, v, t0, w, sv, sigma, log, method, err_tol)
+pfddm <- function(rt, response, a, v, t0, w = 0.5, sv = 0.0, sigma = 1.0, err_tol = 0.000001, log = FALSE, method = "Mills") {
+    .Call(`_fddm_pfddm`, rt, response, a, v, t0, w, sv, sigma, err_tol, log, method)
 }
 

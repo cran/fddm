@@ -1,119 +1,170 @@
 // Helper functions for the density function dfddm
 
+#include "density_funcs.h" // src/dfddm_helper_functions/density_funcs.h
+
 
 
 void determine_method(const string& n_terms_small,
                       const string& summation_small,
-                      const string& scale,
+                      const string& switch_mech, double& switch_thresh,
                       NumFunc& numf, SumFunc& sumf, DenFunc& denf,
                       double& rt0, const bool& log_prob)
 {
-  char n_terms_small0 = (!n_terms_small.empty()) ? n_terms_small[0] : EMPTYCHAR;
-  char summation_small0 = (!summation_small.empty()) ?
-    summation_small[summation_small.length()-1] : EMPTYCHAR;
-  char scale0 = (!scale.empty()) ? scale[0] : EMPTYCHAR;
-
-  if (log_prob) { // calculate log(probability)
+  if (log_prob) { // calculate log(density)
     rt0 = -std::numeric_limits<double>::infinity();
-    if (n_terms_small0 == 'S' || n_terms_small0 == 's') { // SWSE method
-      if (scale0 == 'b' || scale0 == 'B') { // both
-        denf = &fc_log;
-      } else if (scale0 == 's' || scale0 == 'S'){ // small
+    if (switch_mech == "eff_rt") {
+      denf = &ft_log;
+      if (summation_small == "2017") {
+        sumf = &small_sum_eps_17;
+      } else if (summation_small == "2014") {
+        sumf = &small_sum_eps_14;
+      } else {
+        stop("dfddm error: invalid function parameter 'summation_small': %s.",
+             summation_small);
+      }
+    } else if (switch_mech == "terms_large") {
+      switch_thresh = ceil(switch_thresh); // default = ceil(0.8) = 1
+      denf = &fc_log;
+      if (summation_small == "2017") {
+        sumf = &small_sum_eps_17;
+      } else if (summation_small == "2014") {
+        sumf = &small_sum_eps_14;
+      } else {
+        stop("dfddm error: invalid function parameter 'summation_small': %s.",
+             summation_small);
+      }
+    } else if (switch_mech == "terms") {
+      denf = &fb_log;
+      if (n_terms_small == "Gondan") {
+        numf = &ks_Gon;
+      } else if (n_terms_small == "Navarro") {
+        numf = &ks_Nav;
+      } else if (n_terms_small == "SWSE") {
+        stop("dfddm error: function parameter 'n_terms_small' must be changed from default value if `switch_mech = 'terms'`");
+      } else {
+        stop("dfddm error: invalid function parameter 'n_terms_small': %s.",
+             n_terms_small);
+      }
+      if (summation_small == "2017") {
+        sumf = &small_sum_2017;
+      } else if (summation_small == "2014") {
+        sumf = &small_sum_2014;
+      } else {
+        stop("dfddm error: invalid function parameter 'summation_small': %s.",
+             summation_small);
+      }
+    } else if (switch_mech == "small") {
+      if (n_terms_small == "SWSE") {
         denf = &ff_log;
-      } else {
-        stop("dfddm error: invalid function parameter 'scale': %s.", scale);
-      }
-      numf = NULL;
-      if (summation_small0 == '7') { // 2017
-        sumf = &small_sum_eps_17;
-      } else if (summation_small0 == '4') { // 2014
-        sumf = &small_sum_eps_14;
-      } else {
-        stop("dfddm error: invalid function parameter 'summation_small': %s.",
-             summation_small);
-      }
-    } else {
-      if (scale0 == 'l' || scale0 == 'L') { // large
-        denf = &fl_log;
-        numf = NULL;
-        sumf = NULL;
-      } else {
-        if (scale0 == 'b' || scale0 == 'B') { // both
-          denf = &fb_log;
-        } else if (scale0 == 's' || scale0 == 'S') { // small
-          denf = &fs_log;
+        if (summation_small == "2017") {
+          sumf = &small_sum_eps_17;
+        } else if (summation_small == "2014") {
+          sumf = &small_sum_eps_14;
         } else {
-          stop("dfddm error: invalid function parameter 'scale': %s.", scale);
+          stop("dfddm error: invalid function parameter 'summation_small': %s.",
+              summation_small);
         }
-        if (n_terms_small0 == 'G' || n_terms_small0 == 'g') { // Gondan
+      } else {
+        denf = &fs_log;
+        if (n_terms_small == "Gondan") {
           numf = &ks_Gon;
-        } else if (n_terms_small0 == 'N' || n_terms_small0 == 'n') { // Navarro
+        } else if (n_terms_small == "Navarro") {
           numf = &ks_Nav;
         } else {
           stop("dfddm error: invalid function parameter 'n_terms_small': %s.",
-               n_terms_small);
+             n_terms_small);
         }
-        if (summation_small0 == '7') { // 2017
+        if (summation_small == "2017") {
           sumf = &small_sum_2017;
-        } else if (summation_small0 == '4') { // 2014
+        } else if (summation_small == "2014") {
           sumf = &small_sum_2014;
         } else {
           stop("dfddm error: invalid function parameter 'summation_small': %s.",
-               summation_small);
+              summation_small);
         }
       }
+    } else if (switch_mech == "large") {
+      denf = &fl_log;
+    } else {
+      stop("dfddm error: invalid function parameter 'switch_mech': %s.",
+           switch_mech);
     }
-  } else { // calculate regular probability
+  } else { // calculate regular (non-log) density
     rt0 = 0;
-    if (n_terms_small0 == 'S' || n_terms_small0 == 's') { // SWSE method
-      if (scale0 == 'b' || scale0 == 'B') { // both
-        denf = &fc;
-      } else if (scale0 == 's' || scale0 == 'S'){ // small
-        denf = &ff;
-      } else {
-        stop("dfddm error: invalid function parameter 'scale': %s.", scale);
-      }
-      numf = NULL;
-      if (summation_small0 == '7') { // 2017
+    if (switch_mech == "eff_rt") {
+      denf = &ft;
+      if (summation_small == "2017") {
         sumf = &small_sum_eps_17;
-      } else if (summation_small0 == '4') { // 2014
+      } else if (summation_small == "2014") {
         sumf = &small_sum_eps_14;
       } else {
         stop("dfddm error: invalid function parameter 'summation_small': %s.",
              summation_small);
       }
-    } else {
-      if (scale0 == 'l' || scale0 == 'L') { // large
-        denf = &fl;
-        numf = NULL;
-        sumf = NULL;
+    } else if (switch_mech == "terms_large") {
+      switch_thresh = ceil(switch_thresh); // default = ceil(0.8) = 1
+      denf = &fc;
+      if (summation_small == "2017") {
+        sumf = &small_sum_eps_17;
+      } else if (summation_small == "2014") {
+        sumf = &small_sum_eps_14;
       } else {
-        if (scale0 == 'b' || scale0 == 'B') { // both
-          denf = &fb;
-        } else if (scale0 == 's' || scale0 == 'S') { // small
-          denf = &fs;
+        stop("dfddm error: invalid function parameter 'summation_small': %s.",
+             summation_small);
+      }
+    } else if (switch_mech == "terms") {
+      denf = &fb;
+      if (n_terms_small == "Gondan") {
+        numf = &ks_Gon;
+      } else if (n_terms_small == "Navarro") {
+        numf = &ks_Nav;
+      } else {
+        stop("dfddm error: invalid function parameter 'n_terms_small': %s.",
+             n_terms_small);
+      }
+      if (summation_small == "2017") {
+        sumf = &small_sum_2017;
+      } else if (summation_small == "2014") {
+        sumf = &small_sum_2014;
+      } else {
+        stop("dfddm error: invalid function parameter 'summation_small': %s.",
+             summation_small);
+      }
+    } else if (switch_mech == "small") {
+      if (n_terms_small == "SWSE") {
+        denf = &ff;
+        if (summation_small == "2017") {
+          sumf = &small_sum_eps_17;
+        } else if (summation_small == "2014") {
+          sumf = &small_sum_eps_14;
         } else {
-          stop("dfddm error: invalid function parameter 'scale': %s.", scale);
+          stop("dfddm error: invalid function parameter 'summation_small': %s.",
+              summation_small);
         }
-        if (n_terms_small0 == 'G' || n_terms_small0 == 'g') { // Gondan
+      } else {
+        denf = &fs;
+        if (n_terms_small == "Gondan") {
           numf = &ks_Gon;
-        } else if (n_terms_small0 == 'N' || n_terms_small0 == 'n') { // Navarro
+        } else if (n_terms_small == "Navarro") {
           numf = &ks_Nav;
         } else {
-          numf = &ks_Gon;
           stop("dfddm error: invalid function parameter 'n_terms_small': %s.",
-               n_terms_small);
+             n_terms_small);
         }
-        if (summation_small0 == '7') { // 2017
+        if (summation_small == "2017") {
           sumf = &small_sum_2017;
-        } else if (summation_small0 == '4') { // 2014
+        } else if (summation_small == "2014") {
           sumf = &small_sum_2014;
         } else {
-          sumf = &small_sum_2017;
           stop("dfddm error: invalid function parameter 'summation_small': %s.",
-               summation_small);
+              summation_small);
         }
       }
+    } else if (switch_mech == "large") {
+      denf = &fl;
+    } else {
+      stop("dfddm error: invalid function parameter 'switch_mech': %s.",
+           switch_mech);
     }
   }
 }
@@ -128,7 +179,7 @@ void calculate_pdf(const int& Nrt, const int& Na, const int& Nv, const int& Nt0,
                    const NumericVector& t0, const NumericVector& w,
                    const NumericVector& sv, const NumericVector& sigma,
                    const NumericVector& err, vector<double>& out,
-                   const int& max_terms_large,
+                   const double& switch_thresh,
                    const NumFunc& numf, const SumFunc& sumf,
                    const DenFunc& denf, const double& rt0)
 {
@@ -140,10 +191,10 @@ void calculate_pdf(const int& Nrt, const int& Na, const int& Nv, const int& Nt0,
         if (t > 0 && isfinite(t)) { // sort response and calculate density
           if (out[i] == 1) { // response is "lower" so use unchanged parameters
               out[i] = denf(t, a[i % Na], v[i % Nv], w[i % Nw], sv[i % Nsv],
-                          err[i % Nerr], max_terms_large, numf, sumf);
+                          err[i % Nerr], switch_thresh, numf, sumf);
           } else { // response is "upper" so use alternate parameters
             out[i] = denf(t, a[i % Na], -v[i % Nv], 1 - w[i % Nw], sv[i % Nsv],
-                          err[i % Nerr], max_terms_large, numf, sumf);
+                          err[i % Nerr], switch_thresh, numf, sumf);
           }
         } else { // {NaN, NA} evaluate to FALSE
           if (isnan(t)) {
@@ -163,12 +214,12 @@ void calculate_pdf(const int& Nrt, const int& Na, const int& Nv, const int& Nt0,
               out[i] = denf(t, a[i % Na]/sigma[i % Nsig],
                             v[i % Nv]/sigma[i % Nsig], w[i % Nw],
                             sv[i % Nsv]/sigma[i % Nsig], err[i % Nerr],
-                            max_terms_large, numf, sumf);
+                            switch_thresh, numf, sumf);
           } else { // response is "upper" so use alternate parameters
             out[i] = denf(t, a[i % Na]/sigma[i % Nsig],
                           -v[i % Nv]/sigma[i % Nsig], 1 - w[i % Nw],
                           sv[i % Nsv]/sigma[i % Nsig], err[i % Nerr],
-                          max_terms_large, numf, sumf);
+                          switch_thresh, numf, sumf);
           }
         } else { // {NaN, NA} evaluate to FALSE
           if (isnan(t)) {
