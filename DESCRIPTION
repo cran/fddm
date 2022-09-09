@@ -1,7 +1,7 @@
 Package: fddm
 Type: Package
 Title: Fast Implementation of the Diffusion Decision Model
-Version: 0.5-1
+Version: 0.5-2
 Authors@R: c(person(given="Kendal B.", family="Foster", role=c("aut")),
              person(given="Henrik", family="Singmann", role=c("ctb", "cre"),
              email="singmann@gmail.com", comment=c(ORCID="0000-0002-4842-3657")))
@@ -27,13 +27,13 @@ Suggests: rtdists, RWiener, ggplot2, reshape2, testthat, knitr,
 URL: https://github.com/rtdists/fddm
 BugReports: https://github.com/rtdists/fddm/issues
 SystemRequirements: C++11
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.0
 Encoding: UTF-8
 VignetteBuilder: knitr
 NeedsCompilation: yes
-Packaged: 2022-03-15 13:05:27 UTC; kendal
+Packaged: 2022-09-09 14:01:09 UTC; kendal
 Author: Kendal B. Foster [aut],
   Henrik Singmann [ctb, cre] (<https://orcid.org/0000-0002-4842-3657>)
 Maintainer: Henrik Singmann <singmann@gmail.com>
 Repository: CRAN
-Date/Publication: 2022-03-15 14:50:03 UTC
+Date/Publication: 2022-09-09 19:02:54 UTC

@@ -12,11 +12,10 @@
 
 <meta name="author" content="Kendal Foster and Henrik Singmann" />
 
-<meta name="date" content="2022-03-15" />
+<meta name="date" content="2022-09-09" />
 
 <title>Mathematical Description of Methods</title>
 
-<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -28,6 +27,7 @@
     </style>
 
 
+
 <style type="text/css">
   code {
     white-space: pre;
@@ -37,28 +37,26 @@
   }
 </style>
 <style type="text/css" data-origin="pandoc">
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
+    border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -67,9 +65,9 @@ pre.numberSource code > span > a:first-child::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {   }
+  {  }
 @media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+a.sourceLine::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -126,30 +124,234 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<style type="text/css">
-/* for pandoc --citeproc since 2.11 */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}
-</style>
 
-<link rel="stylesheet" href="data:text/css,%0Abody%20%7B%0Abackground%2Dcolor%3A%20%23ffffff%3B%0Amax%2Dwidth%3A%20800px%3B%0Amargin%2Dleft%3A%20auto%3B%0Amargin%2Dright%3A%20auto%3B%0Amargin%2Dtop%3A%200px%3B%0Amargin%2Dbottom%3A%200px%3B%0Apadding%2Dleft%3A%205%25%3B%0Apadding%2Dright%3A%204%25%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%2030px%3B%0Aoverflow%3A%20visible%3B%0Afont%2Dfamily%3A%20Verdana%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Amax%2Dwidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%20%2E25em%3B%0Amargin%2Dbottom%3A%20%2E25em%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0Amargin%2Dtop%3A%200px%3B%0Amargin%2Dbottom%3A%206px%3B%0A%7D%0A%23TOC%20li%20%7B%0Alist%2Dstyle%3A%20disk%20outside%3B%0Aline%2Dheight%3A%201%2E4%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20li%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0Aline%2Dheight%3A%201%2E2%3B%0Amargin%2Dbottom%3A%200px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ap%2Emethod%20%7B%0Abackground%2Dcolor%3A%20%23fcfcfc%3B%0Amargin%2Dleft%3A%202em%3B%0Amargin%2Dright%3A%202em%3B%0Aborder%2Dstyle%3A%20double%3B%0Aborder%2Dwidth%3A%204px%3B%0Aborder%2Dcolor%3A%20%23b3fffa%3B%0Aborder%2Dradius%3A%205px%3B%0Apadding%3A%200%2E25em%200%2E75em%200%2E25em%201em%3B%0A%7D%0Aspan%2Emath%20%7B%0Afont%2Dsize%3A%201em%3B%0A%7D%0Aspan%2Eeqref%7B%0Afont%2Dsize%3A%200%2E75em%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Ahr%2Esec1%20%7B%0Amargin%2Dtop%3A%20%2D1%2E5em%3B%0Aborder%2Dwidth%3A%202px%3B%0Aborder%2Dcolor%3A%20%23aaaaaa%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20disk%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Aul%20ul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f0f0f0%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2095%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Eindent2%20%7B%0Amargin%2Dleft%3A%202%25%3B%0A%7D%0Adiv%2Eindent3%20%7B%0Amargin%2Dleft%3A%203%25%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Apadding%2Dtop%3A%2015px%3B%0Afont%2Dsize%3A%20175%25%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23dbdbdb%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23e8e8e8%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
+<style type="text/css">
+body {
+background-color: #ffffff;
+max-width: 800px;
+margin-left: auto;
+margin-right: auto;
+margin-top: 0px;
+margin-bottom: 0px;
+padding-left: 5%;
+padding-right: 4%;
+padding-top: 10px;
+padding-bottom: 30px;
+overflow: visible;
+font-family: Verdana;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+max-width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: .25em;
+margin-bottom: .25em;
+}
+#TOC ul ul {
+margin-left: -2em;
+margin-top: 0px;
+margin-bottom: 6px;
+}
+#TOC li {
+list-style: disk outside;
+line-height: 1.4;
+margin-bottom: 5px;
+}
+#TOC li li {
+list-style: circle outside;
+line-height: 1.2;
+margin-bottom: 0px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+p.method {
+background-color: #fcfcfc;
+margin-left: 2em;
+margin-right: 2em;
+border-style: double;
+border-width: 4px;
+border-color: #b3fffa;
+border-radius: 5px;
+padding: 0.25em 0.75em 0.25em 1em;
+}
+span.math {
+font-size: 1em;
+}
+span.eqref{
+font-size: 0.75em;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+hr.sec1 {
+margin-top: -1.5em;
+border-width: 2px;
+border-color: #aaaaaa;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: disk outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+ul ul li {
+list-style: circle outside;
+}
+pre, code {
+background-color: #f0f0f0;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 95%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.indent2 {
+margin-left: 2%;
+}
+div.indent3 {
+margin-left: 3%;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+padding-top: 15px;
+font-size: 175%;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #dbdbdb;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #e8e8e8;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
 
 
 
@@ -163,7 +365,7 @@ div.csl-indent {
 
 <h1 class="title toc-ignore">Mathematical Description of Methods</h1>
 <h4 class="author">Kendal Foster and Henrik Singmann</h4>
-<h4 class="date">March 15, 2022</h4>
+<h4 class="date">September 09, 2022</h4>
 
 
 
@@ -239,8 +441,7 @@ f_s(t | v, \eta, a, w) &amp;= \frac{a}{\sqrt{2 \pi t^3 \left( 1 + \eta^2 t \righ
 <p>The main issue of these families of density functions is that they all contain an infinite sum that must be approximated. Since there is no closed form analytical solution to this infinite sum, we instead calculate only a partial sum by truncating the sequence of terms after a certain point. We cannot actually calculate the true value of the density function, but we can mathematically prove that we can get arbitrarily close to the true value; the proof of this fact is provided in the paper accompanying the <code>fddm</code> package. The nature of this truncation has been the topic of many papers in the literature, but the underlying idea supporting all of the methods is the same: the user specifies an allowable error tolerance, and the algorithm calculates terms of the infinite sum until the result is within the allowed error tolerance of the true value.</p>
 <p>The methods in the literature pre-calculate the number of terms required for the infinite sum to converge within the allowed error tolerance, and this number of terms is referred to as <span class="math inline">\(k_\ell\)</span> and <span class="math inline">\(k_s\)</span> for the large-time and small-time infinite sums, respectively. <span class="citation">Navarro and Fuss (2009)</span> include a method for calculating <span class="math inline">\(k_c\)</span>, the number of required terms for the infinite sum when combining the density functions of the two time scales. In addition to these existing methods, we add a novel method that does not perform this pre-calculation, and we also provide two new combinations of the large-time and small-time density functions. Note that in each method that pre-calculates the number of terms, the response time <span class="math inline">\(t\)</span> is scaled inversely by <span class="math inline">\(a^2\)</span>, that is <span class="math inline">\(t&#39; := \tfrac{t}{a^2}\)</span>. Also note that for the rest of this vignette, the ceiling function will be denoted by <span class="math inline">\(\lceil \cdot \rceil\)</span>.</p>
 <div class="indent2">
-<div id="dens-lt" class="section level2">
-<h2>Large-Time</h2>
+<h2 id="dens-lt">Large-Time</h2>
 <p>The large-time density functions, Equations <span class="math inline eqref"><span class="math inline">\(\eqref{eq:con-l}\)</span></span> and <span class="math inline eqref"><span class="math inline">\(\eqref{eq:var-l}\)</span></span>, have an infinite sum that runs for all of the positive integers. For a given error tolerance <span class="math inline">\(\epsilon\)</span>, <span class="citation">Navarro and Fuss (2009)</span> provide an expression for <span class="math inline">\(k_\ell\)</span>, the number of terms required for the large-time infinite sum to be within <span class="math inline">\(\epsilon\)</span> of the true value of the density function. Thus the infinite sum becomes finite: <span class="math display">\[\begin{equation} \label{eq:kl}
   \sum_{j = 1}^{k_\ell^\text{Nav}} j \sin \left( j w \pi \right) \exp{ \left( -\frac{j^2 \pi^2 t&#39;}{2} \right)}. \nonumber
 \end{equation}\]</span></p>
@@ -251,16 +452,13 @@ f_s(t | v, \eta, a, w) &amp;= \frac{a}{\sqrt{2 \pi t^3 \left( 1 + \eta^2 t \righ
 <p class="method">
 This method is often viewed as the most inefficient of the available options in the literature; however, this method proves to be extremely efficient in particular areas of the parameter space (typically for large <span class="math inline">\(t&#39;\)</span>). To implement this method in <code>dfddm</code>, the user must set the parameter <code>switch_mech = &quot;large&quot;</code> in the function call; in this case, the other parameters are ignored.
 </p>
-</div>
-<div id="dens-st" class="section level2">
-<h2>Small-Time</h2>
+<h2 id="dens-st">Small-Time</h2>
 <p>The small-time approximations, Equations <span class="math inline eqref"><span class="math inline">\(\eqref{eq:con-s}\)</span></span> and <span class="math inline eqref"><span class="math inline">\(\eqref{eq:var-s}\)</span></span>, also contain an infinite sum, but this sum runs over all of the integers – from negative infinity to positive infinity. Given this infinite nature in both directions, it is impossible to rigorously define the number of terms required to achieve the <span class="math inline">\(\epsilon\)</span>-accuracy because we don’t know where to start counting the terms. To solve this issue, we rearrange the terms in the sum into the sequence <span class="math inline">\(\left\{ b_0, b_{-1}, b_1, \dots, b_{-j}, b_j, b_{-(j+1)}, b_{j+1}, \dots \right\}\)</span>; this allows us not only to count the terms in a sensible manner but also to define <span class="math inline">\(k_s\)</span> as the index of the sequence where the truncation should occur. Then we can write the truncated version of the sum: <span class="math display">\[\begin{equation} \label{eq:ks}
   \sum_{j = -\left\lfloor\frac{k_s}{2}\right\rfloor}^{\left\lfloor\frac{k_s}{2}\right\rfloor} (w + 2j) \exp{ \left( -\frac{a^2}{2t} \left( w + 2j \right)^2 \right)}. \nonumber
 \end{equation}\]</span></p>
 <p>To choose the small-time methods when using <code>dfddm</code>, set the optional parameter <code>scale = &quot;small&quot;</code> in the function call. You can also set the optional parameter <code>summation_small = &quot;2017&quot;</code> or <code>summation_small = &quot;2014&quot;</code>, but it is recommended to ignore this parameter so it retains its default value of “2017” that evaluates slightly faster than its counterpart. This parameter controls the style of summation used in the small-time approximation, and more details on the differences between these two styles can be found in the paper accompanying <code>fddm</code>. The final parameter, <code>n_terms_small</code>, will be discussed in the following three subsections.</p>
 <div class="indent3">
-<div id="dens-st-nav" class="section level3">
-<h3>Navarro &amp; Fuss</h3>
+<h3 id="dens-st-nav">Navarro &amp; Fuss</h3>
 <p>Similarly to their large-time solution, <span class="citation">Navarro and Fuss (2009)</span> provide an expression for <span class="math inline">\(k_s\)</span> given an error tolerance <span class="math inline">\(\epsilon\)</span>. They follow a similar idea to their large-time derivation by bounding the error of the truncation with integrals then back-calculating the number of terms required to keep the error less than <span class="math inline">\(\epsilon\)</span>. The resulting approximation yields: <span class="math display">\[\begin{equation} \label{eq:ks-Nav}
   k_s^{\text{Nav}} \left( t&#39;, \epsilon \right) = \left\lceil \max \left\{ 2 + \sqrt{-2t&#39; \log(2 \epsilon \sqrt{2 \pi t&#39;})}, 1 + \sqrt{t&#39;} \right\} \right\rceil.
 \tag{S.1}
@@ -268,9 +466,7 @@ This method is often viewed as the most inefficient of the available options in 
 <p class="method">
 To use this method, set <code>switch_mech = &quot;small&quot;</code> and <code>n_terms_small = &quot;Navarro&quot;</code> in the function call. The parameter <code>summation_small</code> should be ignored so that it retains its default value to obtain the best performance.
 </p>
-</div>
-<div id="dens-st-gon" class="section level3">
-<h3>Gondan, Blurton, Kesselmeier</h3>
+<h3 id="dens-st-gon">Gondan, Blurton, Kesselmeier</h3>
 <p>After <span class="citation">Navarro and Fuss (2009)</span> published their paper, <span class="citation">Gondan, Blurton, and Kesselmeier (2014)</span> introduced another method for calculating the required number of terms in the truncated small-time summation. It is important to note, however, that <span class="citation">Gondan, Blurton, and Kesselmeier (2014)</span> provided the number of required <em>pairs</em> of terms in the <span class="math inline">\(S_{14}\)</span> summation style, and not the number of required <em>individual</em> terms. As we want the number of <em>individual</em> terms, we adapt their formula and define it given a desired precision <span class="math inline">\(\epsilon\)</span>: <span class="math display">\[\begin{equation} \label{eq:ks-Gon}
 \begin{aligned}
   k_s^{\text{Gon}} \left( t&#39;, w, \epsilon \right) &amp;= \left\lceil \max \left\{ \tfrac{1}{2} \left( \sqrt{2t&#39;} - w \right), \tfrac{1}{2} \left( \sqrt{-t&#39; (u_\epsilon - \sqrt{-2 u_\epsilon -2})} - w \right) \right\} \right\rceil,\\
@@ -281,23 +477,17 @@ To use this method, set <code>switch_mech = &quot;small&quot;</code> and <code>n
 <p class="method">
 To use this method, set <code>switch_mech = &quot;small&quot;</code> and <code>n_terms_small = &quot;Gondan&quot;</code> in the function call. The parameter <code>summation_small</code> should be ignored so that it retains its default value to obtain the best performance.
 </p>
-</div>
-<div id="dens-st-swse" class="section level3">
-<h3>Stop When Small Enough (SWSE)</h3>
+<h3 id="dens-st-swse">Stop When Small Enough (SWSE)</h3>
 <p>If we consider the terms of the infinite sum as the sequence defined above, the series alternates in sign <span class="math inline">\((+, -, +, \dots)\)</span>; moreover, the series eventually decreases monotonically (in absolute value) due to the exponential term. Combining and exploiting these two mathematical properties has been the cornerstone of the previous approximations, but we will instead truncate the sum using a method suggested by <span class="citation">Gondan, Blurton, and Kesselmeier (2014)</span>. This method does not pre-calculate the number of terms required to achieve the given error tolerance. Instead, the general idea of this method is to take full advantage of the alternating and decreasing nature of the terms in the infinite sum by applying a handy theorem (commonly known as the alternating series test) to place an upper bound on the truncation error after including so many terms. It has been proven that this upper bound is in fact the absolute value of the next term in the sequence, thus we can truncate the infinite sum once one of its terms is less than the desired error tolerance, <span class="math inline">\(\epsilon\)</span>. Hence we do not consider the number of terms in the sum, rather just that the terms in the summation will eventually be small enough. The validity of this method is proven in the paper that accompanies the <code>fddm</code> package.</p>
 <p class="method">
 To use this method, set <code>swich_mech = &quot;terms_large&quot;</code> and <code>n_terms_small = &quot;SWSE&quot;</code> in the function call. The parameter <code>summation_small</code> should be ignored so that it retains its default value to obtain the best performance.
 </p>
 </div>
-</div>
-</div>
-<div id="dens-ct" class="section level2">
-<h2>Combining Large-Time and Small-Time</h2>
+<h2 id="dens-ct">Combining Large-Time and Small-Time</h2>
 <p>A sensible next approach to approximating the density of the DDM is to use some combination of the large-time and small-time density functions. As their names suggest, each density function approximation has a section of the parameter space where it outperforms the other one. Essentially these methods involve calculating the number of terms required for both the large-time and small-time density functions, then using whichever approximation requires fewer terms. The goal is to use each approximation where it is efficient and avoid the areas of the parameter space where the approximations perform poorly.</p>
 <p>To use this method of evaluating the PDF, set the optional parameter <code>scale = &quot;both&quot;</code> in the function call. These methods include similar options to the small-time approximations from the previous section, and thus it is possible to set the optional parameters in a similar fashion to above. The value of <code>summation_small</code> triggers the same effect as above since it only affects the small-time approximation to the PDF; we recommend ignoring this parameter so it assumes its default value of “2017” that evaluates slightly faster than its counterpart. The final parameter, <code>n_terms_small</code>, will be discussed in the following three subsections. As there is only one option for the large-time approximation, there are no optional parameters to set for this part of the combined time scale approximation.</p>
 <div class="indent3">
-<div id="dens-ct-nav" class="section level3">
-<h3>Navarro Small &amp; Navarro Large</h3>
+<h3 id="dens-ct-nav">Navarro Small &amp; Navarro Large</h3>
 <p><span class="citation">Navarro and Fuss (2009)</span> initially suggested an algorithm wherein both <span class="math inline">\(k_s^\text{Nav}\)</span> and <span class="math inline">\(k_l^\text{Nav}\)</span> were calculated, and whichever one has a smaller value was used. However, one issue with their original method arises when the user inputs a vector of response times. They calculate the maximum value of <span class="math inline">\(k_s^\text{Nav}\)</span> for all of the input response times and then compare that to the maximum value of <span class="math inline">\(k_l^\text{Nav}\)</span> for all of the input response times. They end up with one <span class="math inline">\(k_c^\text{Nav}\)</span> for all of the input response times, and this one value can be higher than normal for a response time due to the maximization of the approximation over all of the response times. This over-accuracy is not necessarily a bad thing, but it does mean that it is possible to get different densities for the same input response time depending on the other response times that have been input. To correct for this, we simply do not maximize <span class="math inline">\(k_s^\text{Nav}\)</span> or <span class="math inline">\(k_l^\text{Nav}\)</span> over all of the input response times and instead calculate one value of <span class="math inline">\(k_c^\text{Nav}\)</span> for each input response time. For more details, see the “Implementation” section in the paper accompanying <code>fddm</code>. <span class="math display">\[\begin{equation} \label{eq:kc-Nav}
   k_c^\text{Nav} \left( t&#39;, w, \epsilon \right) = \min \left\{ k_s^{\text{Nav}}, k_l^{\text{Nav}} \right\}.
 \tag{B.1}
@@ -305,9 +495,7 @@ To use this method, set <code>swich_mech = &quot;terms_large&quot;</code> and <c
 <p class="method">
 To use this method, set <code>switch_mech = &quot;terms&quot;</code> and <code>n_terms_small = &quot;Navarro&quot;</code> in the function call. The parameter <code>summation_small</code> should be ignored so that it retains its default value to obtain the best performance.
 </p>
-</div>
-<div id="dens-ct-gon" class="section level3">
-<h3>Gondan Small &amp; Navarro Large</h3>
+<h3 id="dens-ct-gon">Gondan Small &amp; Navarro Large</h3>
 <p>This combination of methods has not been explored in the literature before, but it works very similarly to the combination above. The only difference is that we use the <span class="citation">Gondan, Blurton, and Kesselmeier (2014)</span> approximation for the small-time instead of the one provided by <span class="citation">Navarro and Fuss (2009)</span>. Since <span class="math inline">\(k_s^\text{Gon} \leq k_s^\text{Nav}\)</span>. <span class="math display">\[\begin{equation} \label{eq:kc-Gon}
   k_c^{\text{Gon}} \left( t&#39;, w, \epsilon \right) = \min \left\{ k_s^{\text{Gon}}, k_l^{\text{Nav}} \right\}.
 \tag{B.2}
@@ -316,9 +504,7 @@ To use this method, set <code>switch_mech = &quot;terms&quot;</code> and <code>n
 To use this method, set <code>switch_mech = &quot;terms&quot;</code> and <code>n_terms_small = &quot;Gondan&quot;</code> in the function call. The parameter <code>summation_small</code> should be ignored so that it retains its default value to obtain the best performance.
 </p>
 <p><a id="default-implementation"></a></p>
-</div>
-<div id="dens-ct-swse" class="section level3">
-<h3>Stop When Small Enough (SWSE) Small &amp; Navarro Large</h3>
+<h3 id="dens-ct-swse">Stop When Small Enough (SWSE) Small &amp; Navarro Large</h3>
 <p>This method uses the SWSE approximation to the small-time density function in conjunction with the Navarro large-time approximation to achieve consistent performance across the parameter space. Since the SWSE approximation to the small-time density function does not explicitly calculate <span class="math inline">\(k_s\)</span>, we only calculate <span class="math inline">\(k_\ell^{\text{Nav}}\)</span> and compare it to the new optional parameter <code>max_terms_large</code>. If <span class="math inline">\(k_\ell^{\text{Nav}}\)</span> <span class="math inline">\(\le\)</span> <code>max_terms_large</code>, then the Navarro large-time approximation is used. On the other hand, if <span class="math inline">\(k_\ell^{\text{Nav}}\)</span> <span class="math inline">\(&gt;\)</span> <code>max_terms_large</code>, then the SWSE small-time approximation is used. The user can set the optional parameter <code>max_terms_large</code> to any non-negative integer to alter the behavior of this method; the default value for this parameter is <span class="math inline">\(1\)</span>. Again, the validity of this method is proven in the paper that accompanies the <code>fddm</code> package. Note that in the <code>fddm</code> paper, the parameter <code>max_terms_large</code> is labelled <span class="math inline">\(\delta\)</span>.</p>
 <p class="method">
 Since this is the default implementation, all three of the optional parameters (<code>switch_mech</code>, <code>n_terms_small</code>, and <code>summation_small</code>) can be ignored. For completeness, set <code>switch_mech = &quot;terms_large&quot;</code> and <code>n_terms_small = &quot;SWSE&quot;</code> in the function call. The parameter <code>summation_small</code> should be ignored so that it retains its default value to obtain the best performance. This method uses a fourth optional parameter, <code>switch_thresh</code>, and we recommend ignoring this parameter so that it retains its default value.
@@ -327,69 +513,66 @@ Since this is the default implementation, all three of the optional parameters (
 </div>
 </div>
 </div>
-</div>
-</div>
 <div id="section" class="section level1 unlisted unnumbered">
-<h1 class="unlisted unnumbered"></h1>
+<h1></h1>
 <div id="r-session-info" class="section level4 unlisted unnumbered">
-<h4 class="unlisted unnumbered">R Session Info</h4>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; R version 4.1.2 (2021-11-01)</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Running under: Ubuntu 18.04.6 LTS</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Matrix products: default</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.7.1</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; LAPACK: /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3.7.1</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; locale:</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] LC_CTYPE=en_GB.UTF-8       LC_NUMERIC=C              </span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [3] LC_TIME=en_GB.UTF-8        LC_COLLATE=C              </span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [5] LC_MONETARY=en_GB.UTF-8    LC_MESSAGES=en_GB.UTF-8   </span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [7] LC_PAPER=en_GB.UTF-8       LC_NAME=C                 </span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [11] LC_MEASUREMENT=en_GB.UTF-8 LC_IDENTIFICATION=C       </span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; attached base packages:</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; other attached packages:</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] ggforce_0.3.3        ggplot2_3.3.5        reshape2_1.4.4      </span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [4] microbenchmark_1.4.9 RWiener_1.3-3        rtdists_0.11-5      </span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [7] fddm_0.5-1          </span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [1] tidyselect_1.1.1 xfun_0.28        bslib_0.3.1      purrr_0.3.4     </span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [5] splines_4.1.2    lattice_0.20-45  colorspace_2.0-2 vctrs_0.3.8     </span></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  [9] generics_0.1.1   expm_0.999-6     htmltools_0.5.2  yaml_2.2.1      </span></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [13] utf8_1.2.2       survival_3.2-13  rlang_0.4.12     jquerylib_0.1.4 </span></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [17] pillar_1.6.4     withr_2.5.0      glue_1.5.0       DBI_1.1.1       </span></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [21] tweenr_1.0.2     lifecycle_1.0.1  plyr_1.8.6       stringr_1.4.0   </span></span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [25] munsell_0.5.0    gtable_0.3.0     mvtnorm_1.1-3    evaluate_0.14   </span></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [29] labeling_0.4.2   knitr_1.36       fastmap_1.1.0    fansi_0.5.0     </span></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [33] evd_2.3-3        highr_0.9        Rcpp_1.0.8.2     scales_1.1.1    </span></span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [37] jsonlite_1.7.2   farver_2.1.0     digest_0.6.28    stringi_1.7.5   </span></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [41] msm_1.6.9        dplyr_1.0.7      polyclip_1.10-0  gsl_2.1-6       </span></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [45] grid_4.1.2       tools_4.1.2      magrittr_2.0.1   sass_0.4.0      </span></span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [49] tibble_3.1.6     crayon_1.4.2     pkgconfig_2.0.3  MASS_7.3-54     </span></span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [53] ellipsis_0.3.2   Matrix_1.3-4     ggnewscale_0.4.5 assertthat_0.2.1</span></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [57] rmarkdown_2.11   R6_2.5.1         compiler_4.1.2</span></span></code></pre></div>
+<h4>R Session Info</h4>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">sessionInfo</span>()</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="co">#&gt; R version 4.2.1 (2022-06-23)</span></a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="co">#&gt; Platform: x86_64-pc-linux-gnu (64-bit)</span></a>
+<a class="sourceLine" id="cb1-4" title="4"><span class="co">#&gt; Running under: Linux Mint 20.3</span></a>
+<a class="sourceLine" id="cb1-5" title="5"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-6" title="6"><span class="co">#&gt; Matrix products: default</span></a>
+<a class="sourceLine" id="cb1-7" title="7"><span class="co">#&gt; BLAS:   /usr/lib/x86_64-linux-gnu/blas/libblas.so.3.9.0</span></a>
+<a class="sourceLine" id="cb1-8" title="8"><span class="co">#&gt; LAPACK: /usr/lib/x86_64-linux-gnu/lapack/liblapack.so.3.9.0</span></a>
+<a class="sourceLine" id="cb1-9" title="9"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-10" title="10"><span class="co">#&gt; locale:</span></a>
+<a class="sourceLine" id="cb1-11" title="11"><span class="co">#&gt;  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span></a>
+<a class="sourceLine" id="cb1-12" title="12"><span class="co">#&gt;  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=C              </span></a>
+<a class="sourceLine" id="cb1-13" title="13"><span class="co">#&gt;  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   </span></a>
+<a class="sourceLine" id="cb1-14" title="14"><span class="co">#&gt;  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 </span></a>
+<a class="sourceLine" id="cb1-15" title="15"><span class="co">#&gt;  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span></a>
+<a class="sourceLine" id="cb1-16" title="16"><span class="co">#&gt; [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span></a>
+<a class="sourceLine" id="cb1-17" title="17"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-18" title="18"><span class="co">#&gt; attached base packages:</span></a>
+<a class="sourceLine" id="cb1-19" title="19"><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></a>
+<a class="sourceLine" id="cb1-20" title="20"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-21" title="21"><span class="co">#&gt; other attached packages:</span></a>
+<a class="sourceLine" id="cb1-22" title="22"><span class="co">#&gt; [1] ggforce_0.3.3        ggplot2_3.3.6        reshape2_1.4.4      </span></a>
+<a class="sourceLine" id="cb1-23" title="23"><span class="co">#&gt; [4] microbenchmark_1.4.9 RWiener_1.3-3        rtdists_0.11-5      </span></a>
+<a class="sourceLine" id="cb1-24" title="24"><span class="co">#&gt; [7] fddm_0.5-2          </span></a>
+<a class="sourceLine" id="cb1-25" title="25"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb1-26" title="26"><span class="co">#&gt; loaded via a namespace (and not attached):</span></a>
+<a class="sourceLine" id="cb1-27" title="27"><span class="co">#&gt;  [1] tidyselect_1.1.2 xfun_0.31        bslib_0.3.1      purrr_0.3.4     </span></a>
+<a class="sourceLine" id="cb1-28" title="28"><span class="co">#&gt;  [5] splines_4.2.1    lattice_0.20-45  colorspace_2.0-3 vctrs_0.4.1     </span></a>
+<a class="sourceLine" id="cb1-29" title="29"><span class="co">#&gt;  [9] expm_0.999-6     htmltools_0.5.2  yaml_2.3.5       utf8_1.2.2      </span></a>
+<a class="sourceLine" id="cb1-30" title="30"><span class="co">#&gt; [13] survival_3.3-1   rlang_1.0.2      jquerylib_0.1.4  pillar_1.7.0    </span></a>
+<a class="sourceLine" id="cb1-31" title="31"><span class="co">#&gt; [17] withr_2.5.0      glue_1.6.2       tweenr_1.0.2     lifecycle_1.0.1 </span></a>
+<a class="sourceLine" id="cb1-32" title="32"><span class="co">#&gt; [21] plyr_1.8.7       stringr_1.4.0    munsell_0.5.0    gtable_0.3.0    </span></a>
+<a class="sourceLine" id="cb1-33" title="33"><span class="co">#&gt; [25] mvtnorm_1.1-3    evaluate_0.15    labeling_0.4.2   knitr_1.39      </span></a>
+<a class="sourceLine" id="cb1-34" title="34"><span class="co">#&gt; [29] fastmap_1.1.0    fansi_1.0.3      evd_2.3-6        highr_0.9       </span></a>
+<a class="sourceLine" id="cb1-35" title="35"><span class="co">#&gt; [33] Rcpp_1.0.8.3     scales_1.2.0     jsonlite_1.8.0   farver_2.1.0    </span></a>
+<a class="sourceLine" id="cb1-36" title="36"><span class="co">#&gt; [37] digest_0.6.29    stringi_1.7.6    msm_1.6.9        gsl_2.1-7.1     </span></a>
+<a class="sourceLine" id="cb1-37" title="37"><span class="co">#&gt; [41] polyclip_1.10-0  grid_4.2.1       cli_3.3.0        tools_4.2.1     </span></a>
+<a class="sourceLine" id="cb1-38" title="38"><span class="co">#&gt; [45] magrittr_2.0.3   sass_0.4.1       tibble_3.1.7     crayon_1.5.1    </span></a>
+<a class="sourceLine" id="cb1-39" title="39"><span class="co">#&gt; [49] pkgconfig_2.0.3  ellipsis_0.3.2   MASS_7.3-58      Matrix_1.4-1    </span></a>
+<a class="sourceLine" id="cb1-40" title="40"><span class="co">#&gt; [53] ggnewscale_0.4.7 rmarkdown_2.14   R6_2.5.1         compiler_4.2.1</span></a></code></pre></div>
 </div>
 </div>
 <div id="references" class="section level1 unnumbered">
-<h1 class="unnumbered">References</h1>
-<div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-blurton2017first" class="csl-entry">
-Blurton, Steven P, Miriam Kesselmeier, and Matthias Gondan. 2017. <span>“The First-Passage Time Distribution for the Diffusion Model with Variable Drift.”</span> <em>Journal of Mathematical Psychology</em> 76: 7–12.
+<h1>References</h1>
+<div id="refs" class="references">
+<div id="ref-blurton2017first">
+<p>Blurton, Steven P, Miriam Kesselmeier, and Matthias Gondan. 2017. “The First-Passage Time Distribution for the Diffusion Model with Variable Drift.” <em>Journal of Mathematical Psychology</em> 76: 7–12.</p>
 </div>
-<div id="ref-feller1968introduction" class="csl-entry">
-Feller, William. 1968. <em>An Introduction to Probability Theory and Its Applications: Volume i</em>. Vol. 1. John Wiley &amp; Sons.
+<div id="ref-feller1968introduction">
+<p>Feller, William. 1968. <em>An Introduction to Probability Theory and Its Applications: Volume I</em>. Vol. 1. John Wiley &amp; Sons.</p>
 </div>
-<div id="ref-gondan2014even" class="csl-entry">
-Gondan, Matthias, Steven P Blurton, and Miriam Kesselmeier. 2014. <span>“Even Faster and Even More Accurate First-Passage Time Densities and Distributions for the Wiener Diffusion Model.”</span> <em>Journal of Mathematical Psychology</em> 60: 20–22.
+<div id="ref-gondan2014even">
+<p>Gondan, Matthias, Steven P Blurton, and Miriam Kesselmeier. 2014. “Even Faster and Even More Accurate First-Passage Time Densities and Distributions for the Wiener Diffusion Model.” <em>Journal of Mathematical Psychology</em> 60: 20–22.</p>
 </div>
-<div id="ref-navarro2009fast" class="csl-entry">
-Navarro, Daniel J, and Ian G Fuss. 2009. <span>“Fast and Accurate Calculations for First-Passage Times in Wiener Diffusion Models.”</span> <em>Journal of Mathematical Psychology</em> 53 (4): 222–30.
+<div id="ref-navarro2009fast">
+<p>Navarro, Daniel J, and Ian G Fuss. 2009. “Fast and Accurate Calculations for First-Passage Times in Wiener Diffusion Models.” <em>Journal of Mathematical Psychology</em> 53 (4): 222–30.</p>
 </div>
 </div>
 </div>
