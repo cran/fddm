@@ -82,7 +82,7 @@ rt_benchmark_vec <- function(RT, resp, V, A, t0 = 1e-4, W = 0.5, SV = 0.0,
           mbm_res[row_idx, 4+i] <- median(mbm[mbm[,1] == fnames[i],2])
         }
         # iterate start value
-        row_idx = row_idx + 1
+        row_idx <- row_idx + 1
         }
       }
     }
@@ -185,7 +185,7 @@ rt_benchmark_ind <- function(RT, resp, V, A, t0 = 1e-4, W = 0.5, SV = 0.0,
             mbm_res[row_idx, 5+i] <- median(mbm[mbm[,1] == fnames[i],2])
           }
           # iterate start value
-          row_idx = row_idx + 1
+          row_idx <- row_idx + 1
           }
         }
       }

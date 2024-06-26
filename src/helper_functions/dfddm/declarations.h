@@ -2,6 +2,9 @@
 // This file must have a .h extension rather than .hpp extension because then
 // R CMD Check will fail
 
+#ifndef PDF_DECS_H
+#define PDF_DECS_H
+
 #include <Rcpp.h>
 // [[Rcpp::plugins(cpp11)]]
 #include <cmath>
@@ -67,51 +70,51 @@ double large_sum_Nav(const double& t, const double& a, const double& w,
 
 
 // Density Functions
-double ff(const double& t, const double& a, const double& v,
+double ff(const double& t, const double& v, const double& a,
           const double& w, const double& sv, const double& err,
           const double& switch_thresh,
           const NumFunc& numf, const SumFunc& sumf);
-double ff_log(const double& t, const double& a, const double& v,
+double ff_log(const double& t, const double& v, const double& a,
               const double& w, const double& sv, const double& err,
               const double& switch_thresh,
               const NumFunc& numf, const SumFunc& sumf);
-double fs(const double& t, const double& a, const double& v,
+double fs(const double& t, const double& v, const double& a,
           const double& w, const double& sv, const double& err,
           const double& switch_thresh,
           const NumFunc& numf, const SumFunc& sumf);
-double fs_log(const double& t, const double& a, const double& v,
+double fs_log(const double& t, const double& v, const double& a,
               const double& w, const double& sv, const double& err,
               const double& switch_thresh,
               const NumFunc& numf, const SumFunc& sumf);
-double fl(const double& t, const double& a, const double& v,
+double fl(const double& t, const double& v, const double& a,
           const double& w, const double& sv, const double& err,
           const double& switch_thresh,
           const NumFunc& numf, const SumFunc& sumf);
-double fl_log(const double& t, const double& a, const double& v,
+double fl_log(const double& t, const double& v, const double& a,
               const double& w, const double& sv, const double& err,
               const double& switch_thresh,
               const NumFunc& numf, const SumFunc& sumf);
-double ft(const double& t, const double& a, const double& v,
+double ft(const double& t, const double& v, const double& a,
           const double& w, const double& sv, const double& err,
           const double& switch_thresh,
           const NumFunc& numf, const SumFunc& sumf);
-double ft_log(const double& t, const double& a, const double& v,
+double ft_log(const double& t, const double& v, const double& a,
               const double& w, const double& sv, const double& err,
               const double& switch_thresh,
               const NumFunc& numf, const SumFunc& sumf);
-double fc(const double& t, const double& a, const double& v,
+double fc(const double& t, const double& v, const double& a,
           const double& w, const double& sv, const double& err,
           const double& switch_thresh,
           const NumFunc& numf, const SumFunc& sumf);
-double fc_log(const double& t, const double& a, const double& v,
+double fc_log(const double& t, const double& v, const double& a,
               const double& w, const double& sv, const double& err,
               const double& switch_thresh,
               const NumFunc& numf, const SumFunc& sumf);
-double fb(const double& t, const double& a, const double& v,
+double fb(const double& t, const double& v, const double& a,
           const double& w, const double& sv, const double& err,
           const double& switch_thresh,
           const NumFunc& numf, const SumFunc& sumf);
-double fb_log(const double& t, const double& a, const double& v,
+double fb_log(const double& t, const double& v, const double& a,
               const double& w, const double& sv, const double& err,
               const double& switch_thresh,
               const NumFunc& numf, const SumFunc& sumf);
@@ -119,30 +122,32 @@ double fb_log(const double& t, const double& a, const double& v,
 
 
 // Helper Functions
+void convert_responses(const SEXP& response, int& Nres, int& Nmax,
+                       vector<double>& out, const double& rt0, bool& valid);
+bool parameter_check(const int& Nrt, int& Nres, const int& Nv, const int& Na,
+                     const int& Nt0, const int& Nw, const int& Nsv,
+                     const int& Nsig, const int& Nerr, int& Nmax,
+                     const NumericVector& rt, const SEXP& response,
+                     const NumericVector& v, const NumericVector& a,
+                     const NumericVector& t0, const NumericVector& w,
+                     const NumericVector& sv, const NumericVector& sigma,
+                     const NumericVector& err,
+                     vector<double>& out, const double& rt0);
 void determine_method(const std::string& n_terms_small,
                       const std::string& summation_small,
                       const std::string& switch_mech, double& switch_thresh,
                       NumFunc& numf, SumFunc& sumf, DenFunc& denf,
                       double& rt0, const bool& log_prob);
-void convert_responses(const SEXP& response, int& Nres, int& Nmax,
-                       vector<double>& out, const double& rt0, bool& valid);
-bool parameter_check(const int& Nrt, int& Nres, const int& Na, const int& Nv,
-                     const int& Nt0, const int& Nw, const int& Nsv,
-                     const int& Nsig, const int& Nerr, int& Nmax,
-                     const NumericVector& rt, const SEXP& response,
-                     const NumericVector& a, const NumericVector& v,
-                     const NumericVector& t0, const NumericVector& w,
-                     const NumericVector& sv, const NumericVector& sigma,
-                     const NumericVector& err,
-                     vector<double>& out, const double& rt0);
-void calculate_pdf(const int& Nrt, const int& Na, const int& Nv, const int& Nt0,
+void calculate_pdf(const int& Nrt, const int& Nv, const int& Na, const int& Nt0,
                    const int& Nw, const int& Nsv, const int& Nsig,
                    const int& Nerr, const int& Nmax,
                    const NumericVector& rt,
-                   const NumericVector& a, const NumericVector& v,
+                   const NumericVector& v, const NumericVector& a,
                    const NumericVector& t0, const NumericVector& w,
                    const NumericVector& sv, const NumericVector& sigma,
                    const NumericVector& err, vector<double>& out,
                    const double& switch_thresh,
                    const NumFunc& numf, const SumFunc& sumf,
                    const DenFunc& denf, const double& rt0);
+
+#endif // PDF_DECS_H

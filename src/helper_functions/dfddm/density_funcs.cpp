@@ -1,7 +1,6 @@
 // Functions to evaluate the DDM PDF for specific criteria
 
-#include "sum_funcs.h" // src/dfddm_helper_functions/sum_funcs.h
-#include "num_funcs.h" // src/dfddm_helper_functions/num_funcs.h
+#include "declarations.h"
 
 
 
@@ -11,7 +10,7 @@
 
 
 // Stop When Small Enough
-double ff(const double& t, const double& a, const double& v,
+double ff(const double& t, const double& v, const double& a,
           const double& w, const double& sv, const double& err,
           const double& switch_thresh, const NumFunc& numf, const SumFunc& sumf)
 { // note: switch_thresh, numf are not used
@@ -31,7 +30,7 @@ double ff(const double& t, const double& a, const double& v,
   return mult * sumf(t, a, w, 0, sum_err);
 }
 
-double ff_log(const double& t, const double& a, const double& v,
+double ff_log(const double& t, const double& v, const double& a,
               const double& w, const double& sv, const double& err,
               const double& switch_thresh,
               const NumFunc& numf, const SumFunc& sumf)
@@ -55,7 +54,7 @@ double ff_log(const double& t, const double& a, const double& v,
 
 
 // Gondan et al and Navarro et al
-double fs(const double& t, const double& a, const double& v,
+double fs(const double& t, const double& v, const double& a,
           const double& w, const double& sv, const double& err,
           const double& switch_thresh, const NumFunc& numf, const SumFunc& sumf)
 { // note: switch_thresh is not used
@@ -77,7 +76,7 @@ double fs(const double& t, const double& a, const double& v,
   return mult_s * a * sumf(t, a, w, ks, 0.0) / (t * SQRT_2PI * sqrt(t));
 }
 
-double fs_log(const double& t, const double& a, const double& v,
+double fs_log(const double& t, const double& v, const double& a,
               const double& w, const double& sv, const double& err,
               const double& switch_thresh,
               const NumFunc& numf, const SumFunc& sumf)
@@ -111,7 +110,7 @@ double fs_log(const double& t, const double& a, const double& v,
 
 
 // Navarro et al
-double fl(const double& t, const double& a, const double& v,
+double fl(const double& t, const double& v, const double& a,
           const double& w, const double& sv, const double& err,
           const double& switch_thresh, const NumFunc& numf, const SumFunc& sumf)
 { // note: switch_thresh, numf, sumf are not used
@@ -133,7 +132,7 @@ double fl(const double& t, const double& a, const double& v,
   return mult_l * PI_CONST * large_sum_Nav(t, a, w, kl, 0.0);
 }
 
-double fl_log(const double& t, const double& a, const double& v,
+double fl_log(const double& t, const double& v, const double& a,
               const double& w, const double& sv, const double& err,
               const double& switch_thresh,
               const NumFunc& numf, const SumFunc& sumf)
@@ -163,7 +162,7 @@ double fl_log(const double& t, const double& a, const double& v,
 //////////                                                            //////////
 
 // switch_mech = "eff_rt"
-double ft(const double& t, const double& a, const double& v,
+double ft(const double& t, const double& v, const double& a,
           const double& w, const double& sv, const double& err,
           const double& switch_thresh, const NumFunc& numf, const SumFunc& sumf)
 { // note: numf is not used
@@ -196,7 +195,7 @@ double ft(const double& t, const double& a, const double& v,
   }
 }
 
-double ft_log(const double& t, const double& a, const double& v,
+double ft_log(const double& t, const double& v, const double& a,
               const double& w, const double& sv, const double& err,
               const double& switch_thresh,
               const NumFunc& numf, const SumFunc& sumf)
@@ -231,7 +230,7 @@ double ft_log(const double& t, const double& a, const double& v,
 }
 
 // switch_mech = "terms_large"
-double fc(const double& t, const double& a, const double& v,
+double fc(const double& t, const double& v, const double& a,
           const double& w, const double& sv, const double& err,
           const double& switch_thresh, const NumFunc& numf, const SumFunc& sumf)
 { // note: numf is not used
@@ -267,7 +266,7 @@ double fc(const double& t, const double& a, const double& v,
   }
 }
 
-double fc_log(const double& t, const double& a, const double& v,
+double fc_log(const double& t, const double& v, const double& a,
               const double& w, const double& sv, const double& err,
               const double& switch_thresh,
               const NumFunc& numf, const SumFunc& sumf)
@@ -306,7 +305,7 @@ double fc_log(const double& t, const double& a, const double& v,
 
 
 // switch_mech = "terms"
-double fb(const double& t, const double& a, const double& v,
+double fb(const double& t, const double& v, const double& a,
           const double& w, const double& sv, const double& err,
           const double& switch_thresh, const NumFunc& numf, const SumFunc& sumf)
 { // note: switch_thresh is not used
@@ -340,7 +339,7 @@ double fb(const double& t, const double& a, const double& v,
   }
 }
 
-double fb_log(const double& t, const double& a, const double& v,
+double fb_log(const double& t, const double& v, const double& a,
               const double& w, const double& sv, const double& err,
               const double& switch_thresh,
               const NumFunc& numf, const SumFunc& sumf)

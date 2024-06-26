@@ -2,6 +2,9 @@
 // This file must have a .h extension rather than .hpp extension because then
 // R CMD Check will fail
 
+#ifndef DIST_DECS_H
+#define DIST_DECS_H
+
 #include <Rcpp.h>
 // [[Rcpp::plugins(cpp11)]]
 #include <cmath>
@@ -12,9 +15,12 @@ using std::log;
 using std::exp;
 using std::erf;
 using std::sqrt;
+using std::max;
 using std::isfinite;
 using std::isnan;
 using std::isnormal;
+using Rcpp::stop;
+using Rcpp::warning;
 using Rcpp::NumericVector;
 
 
@@ -56,13 +62,13 @@ double ncdf_sum(const double& t, const double& a, const double& v,
 
 
 // Density Functions
-double Fs_mills(const double& t, const double& a, const double& v,
+double Fs_mills(const double& t, const double& v, const double& a,
                 const double& w, const double& sv, const double& err);
-double Fs_mills_log(const double& t, const double& a, const double& v,
+double Fs_mills_log(const double& t, const double& v, const double& a,
                     const double& w, const double& sv, const double& err);
-double Fs_ncdf(const double& t, const double& a, const double& v,
+double Fs_ncdf(const double& t, const double& v, const double& a,
                const double& w, const double& sv, const double& err);
-double Fs_ncdf_log(const double& t, const double& a, const double& v,
+double Fs_ncdf_log(const double& t, const double& v, const double& a,
                    const double& w, const double& sv, const double& err);
 
 
@@ -70,25 +76,27 @@ double Fs_ncdf_log(const double& t, const double& a, const double& v,
 // Helper Functions
 void convert_responses(const SEXP& response, int& Nres, int& Nmax,
                        vector<double>& out, const double& rt0, bool& valid);
-bool parameter_check(const int& Nrt, int& Nres, const int& Na, const int& Nv,
+bool parameter_check(const int& Nrt, int& Nres, const int& Nv, const int& Na,
                      const int& Nt0, const int& Nw, const int& Nsv,
                      const int& Nsig, const int& Nerr, int& Nmax,
                      const NumericVector& rt, const SEXP& response,
-                     const NumericVector& a, const NumericVector& v,
+                     const NumericVector& v, const NumericVector& a,
                      const NumericVector& t0, const NumericVector& w,
                      const NumericVector& sv, const NumericVector& sigma,
                      const NumericVector& err,
                      vector<double>& out, const double& rt0);
-void determine_method(const string& method, DisFunc& disf,
+void determine_method(const std::string& method, DisFunc& disf,
                       double& rt0, const bool& log_prob);
 double prob_lower(const double& a, const double& v, const double& w,
                   const double& rt0);
-void calculate_cdf(const int& Nrt, const int& Na, const int& Nv, const int& Nt0,
+void calculate_cdf(const int& Nrt, const int& Nv, const int& Na, const int& Nt0,
                    const int& Nw, const int& Nsv, const int& Nsig,
                    const int& Nerr, const int& Nmax,
                    const NumericVector& rt,
-                   const NumericVector& a, const NumericVector& v,
+                   const NumericVector& v, const NumericVector& a,
                    const NumericVector& t0, const NumericVector& w,
                    const NumericVector& sv, const NumericVector& sigma,
                    const NumericVector& err, vector<double>& out,
                    const double& rt0, const DisFunc& disf);
+
+#endif // DIST_DECS_H

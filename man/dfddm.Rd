@@ -7,8 +7,8 @@
 dfddm(
   rt,
   response,
-  a,
   v,
+  a,
   t0,
   w = 0.5,
   sv = 0,
@@ -30,22 +30,18 @@ non-positve, then its density will evaluate to \eqn{0} if log = FALSE and
 or "upper" threshold. This model parameter can either be a singular value
 or a vector. The value(s) in 'response' can be of the following data
 types:
-  \itemize{
-    \item integers or doubles (\eqn{1}
-      \ifelse{html}{\out{&#8594;}}{\eqn{\to}} "lower", \eqn{2}
-      \ifelse{html}{\out{&#8594;}}{\eqn{\to}} "upper");
-    \item factors (the first level gets mapped to "lower", and the second
-      level gets mapped to "upper"; any additional levels are ignored).
-    \item strings (only the first character is checked, "L"
-      \ifelse{html}{\out{&#8594;}}{\eqn{\to}} "lower" or "U"
-      \ifelse{html}{\out{&#8594;}}{\eqn{\to}} "upper", case insensitive);
-    \item logicals (FALSE \ifelse{html}{\out{&#8594;}}{\eqn{\to}} "lower",
-      TRUE \ifelse{html}{\out{&#8594;}}{\eqn{\to}} "upper");
-  }}
-
-\item{a}{Threshold separation. Amount of information that is considered for
-a decision. Large values indicate a conservative decisional style. Allowed
-range: \eqn{0 <} \code{a}. Typical range: \eqn{0.5 <} \code{a} \eqn{< 2}.}
+\itemize{
+\item integers or doubles (\eqn{1}
+\ifelse{html}{\out{&#8594;}}{\eqn{\to}} "lower", \eqn{2}
+\ifelse{html}{\out{&#8594;}}{\eqn{\to}} "upper");
+\item factors (the first level gets mapped to "lower", and the second
+level gets mapped to "upper"; any additional levels are ignored).
+\item strings (only the first character is checked, "L"
+\ifelse{html}{\out{&#8594;}}{\eqn{\to}} "lower" or "U"
+\ifelse{html}{\out{&#8594;}}{\eqn{\to}} "upper", case insensitive);
+\item logicals (FALSE \ifelse{html}{\out{&#8594;}}{\eqn{\to}} "lower",
+TRUE \ifelse{html}{\out{&#8594;}}{\eqn{\to}} "upper");
+}}
 
 \item{v}{Drift rate. Average slope of the information accumulation process.
 The drift gives information about the speed and direction of the
@@ -55,6 +51,10 @@ the upper threshold, then the sign will be positive; similarly a negative
 value indicates that the received information supports the response linked
 to the lower threshold. Allowed range: \code{v} is a real number. Typical
 range: \eqn{-5 <} \code{v} \eqn{< 5}.}
+
+\item{a}{Threshold separation. Amount of information that is considered for
+a decision. Large values indicate a conservative decisional style. Allowed
+range: \eqn{0 <} \code{a}. Typical range: \eqn{0.5 <} \code{a} \eqn{< 2}.}
 
 \item{t0}{Non-decision time or response time constant (in seconds). Lower
 bound for the duration of all non-decisional processes (encoding and
@@ -143,21 +143,22 @@ See Details for more information. Default is \code{"2017"}.}
 }
 \value{
 A vector containing the densities of the DDM with precision
-  \code{err_tol} whose length matches that of the longest input parameter
-  (usually \code{rt}).
+\code{err_tol} whose length matches that of the longest input parameter
+(usually \code{rt}).
 }
 \description{
 Density function for the Ratcliff diffusion decision model (DDM) with
-following parameters: \code{a} (threshold separation), \code{v} (drift
-rate), \code{t0} (non-decision time/response time constant), \code{w}
+following parameters: \code{v} (drift rate), \code{a} (threshold
+separation), \code{t0} (non-decision time/response time constant), \code{w}
 (relative starting point), \code{sv} (inter-trial variability of drift), and
-\code{sigma} (diffusion coefficient of underlying Wiener process).
+\code{sigma} (diffusion coefficient of underlying Wiener process). If you
+are looking to fit the DDM, see \code{\link[=ddm]{ddm()}}.
 }
 \details{
 All of the model inputs and parameters (\code{rt}, \code{response},
-\code{a}, \code{v}, \code{t0}, \code{w}, \code{sv}, \code{sigma}) can be
+\code{v}, \code{a}, \code{t0}, \code{w}, \code{sv}, \code{sigma}) can be
 input as a single value or as a vector of values. If input as a vector of
-values, then the standard \code{R} recycling rules apply to ensure all 
+values, then the standard \code{R} recycling rules apply to ensure all
 inputs are of the same length.
 
 The default settings of \code{switch_mech = "eff_rt"},
@@ -176,7 +177,7 @@ function. To use the density function with a variable drift rate, set the
 parameter \code{sv} to some non-negative value, i.e., \code{sv} \eqn{> 0}.
 
 \code{sigma} - The default value of this parameter is \code{1} because it
-only scales the parameters \code{a}, \code{v}, and \code{sv}, as shown
+only scales the parameters \code{v}, \code{a}, and \code{sv}, as shown
 above. However, other formulations of the DDM may set \code{sigma = 0.1}
 (see Ratcliff (1978), the fourth reference), so care must be taken when
 comparing the results of different formulations.
@@ -200,8 +201,8 @@ are used (i.e., on the scale of \eqn{1e-300}).
 written in two forms: a "large-time" variant, and a "small-time" variant
 (Navarro and Fuss, 2009). These two forms are more
 efficient at calculating the density for large and small response times,
-respectively. The parameter \code{switch_mech} determines how \code{dfddm}  
-decides which of these two variants is used. 
+respectively. The parameter \code{switch_mech} determines how \code{dfddm}
+decides which of these two variants is used.
 \code{switch_mech = "small"} uses
 only the "small-time" variant, and \code{switch_mech = "large"} uses only
 the "large-time" variant. The "large-time" variant is unstable for small
@@ -325,17 +326,20 @@ dfddm(rt = c(1.2, 0.9, 1.1, 1.4, 0.8, 1.3), response = resp_log,
 }
 \references{
 Navarro, D. J., & Fuss, I. G. (2009). Fast and accurate
-  calculations for first-passage times in Wiener diffusion models. Journal
-  of Mathematical Psychology, 53(4), 222-230.
+calculations for first-passage times in Wiener diffusion models. Journal
+of Mathematical Psychology, 53(4), 222-230.
 
-  Gondan, M., Blurton, S. P., & Kesselmeier, M. (2014). Even faster and even
-  more accurate first-passage time densities and distributions for the
-  Wiener diffusion model. Journal of Mathematical Psychology, 60, 20-22.
+Gondan, M., Blurton, S. P., & Kesselmeier, M. (2014). Even faster and even
+more accurate first-passage time densities and distributions for the
+Wiener diffusion model. Journal of Mathematical Psychology, 60, 20-22.
 
-  Blurton, S. P., Kesselmeier, M., & Gondan, M. (2017). The first-passage
-  time distribution for the diffusion model with variable drift. Journal of
-  Mathematical Psychology, 76, 7-12.
+Blurton, S. P., Kesselmeier, M., & Gondan, M. (2017). The first-passage
+time distribution for the diffusion model with variable drift. Journal of
+Mathematical Psychology, 76, 7-12.
 
-  Ratcliff, R. (1978). A theory of memory retrieval. Psychological review,
-  85(2), 59.
+Ratcliff, R. (1978). A theory of memory retrieval. Psychological review,
+85(2), 59.
+}
+\seealso{
+\code{\link[=ddm]{ddm()}}
 }

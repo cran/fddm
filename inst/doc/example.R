@@ -1,6 +1,6 @@
 ## ----echo=FALSE---------------------------------------------------------------
 req_suggested_packages <- c("reshape2", "ggplot2")
-pcheck <- lapply(req_suggested_packages, requireNamespace, 
+pcheck <- lapply(req_suggested_packages, requireNamespace,
                  quietly = TRUE)
 if (any(!unlist(pcheck))) {
    message("Required package(s) for this vignette are not available/installed and code will not be executed.")
@@ -20,6 +20,59 @@ library("fddm")
 data(med_dec, package = "fddm")
 med_dec <- med_dec[which(med_dec[["rt"]] >= 0), ]
 
+## ----prep-simp-data, eval=TRUE--------------------------------------------------------------------
+onep <- med_dec[med_dec[["id"]] == "2" & med_dec[["group"]] == "experienced", ]
+str(onep)
+
+## ----set-contrasts, eval=TRUE---------------------------------------------------------------------
+opc <- options(contrasts = c("contr.sum", "contr.poly"))
+
+## ----show-ddm-fit, eval=TRUE----------------------------------------------------------------------
+fit0 <- ddm(drift = rt + response ~ classification*difficulty,
+            boundary = ~ 1,
+            ndt = ~ 1,
+            bias = 0.5,
+            sv = 0,
+            data = onep)
+summary(fit0)
+
+## ----reset-contrasts, eval=TRUE-------------------------------------------------------------------
+options(opc) # reset contrasts
+
+## ----check-ANOVA, eval=FALSE, include=FALSE-------------------------------------------------------
+#  # check variances of groups
+#  var(onep[["rt"]][onep[["classification"]] == "non-blast" &
+#                   onep[["difficulty"]] == "easy"])
+#  var(onep[["rt"]][onep[["classification"]] == "blast" &
+#                   onep[["difficulty"]] == "easy"])
+#  var(onep[["rt"]][onep[["classification"]] == "non-blast" &
+#                   onep[["difficulty"]] == "hard"])
+#  var(onep[["rt"]][onep[["classification"]] == "blast" &
+#                   onep[["difficulty"]] == "hard"])
+#  
+#  library("ggplot2")
+#  ggplot(onep) +
+#    aes(x = classification, y = rt) +
+#    geom_boxplot()
+#  
+#  ggplot(onep) +
+#    aes(x = difficulty, y = rt) +
+#    geom_boxplot()
+
+## ----ANOVA-table, eval=TRUE-----------------------------------------------------------------------
+emmeans::joint_tests(fit0)
+
+emmeans::joint_tests(fit0, by = "classification")
+
+## ----ANOVA-means, eval=TRUE-----------------------------------------------------------------------
+em1 <- emmeans::emmeans(fit0, "difficulty", by = "classification")
+em1
+
+## ----ANOVA-pairs, eval=TRUE-----------------------------------------------------------------------
+pairs(em1)
+
+update(pairs(em1), by = NULL, adjust = "holm")
+
 ## ----log-likelihood, eval=TRUE--------------------------------------------------------------------
 ll_fun <- function(pars, rt, resp, truth, err_tol) {
   v <- numeric(length(rt))
@@ -35,8 +88,7 @@ ll_fun <- function(pars, rt, resp, truth, err_tol) {
   return( ifelse(any(!is.finite(dens)), 1e6, -sum(dens)) )
 }
 
-## ----prep-simp-data, eval=TRUE--------------------------------------------------------------------
-onep <- med_dec[ med_dec[["id"]] == "2" & med_dec[["group"]] == "experienced", ]
+## ----modify-simp-data, eval=TRUE------------------------------------------------------------------
 onep[["resp"]] <- ifelse(onep[["response"]] == "blast", "upper", "lower")
 onep[["truth"]] <- ifelse(onep[["classification"]] == "blast", "upper", "lower")
 str(onep)
@@ -73,9 +125,9 @@ rt_fit <- function(data, id_idx = NULL, rt_idx = NULL, response_idx = NULL,
                      stringsAsFactors = FALSE)
 
     if (!is.null(id_idx)) { # relabel identification tags
-      for (i in 1:length(id_idx)) {
+      for (i in seq_along(id_idx)) {
         idi <- unique(data[,id_idx[i]])
-        for (j in 1:length(idi)) {
+        for (j in seq_along(idi)) {
           df[["id"]][data[,id_idx[i]] == idi[j]] <- paste(
             df[["id"]][data[,id_idx[i]] == idi[j]], idi[j], sep = " ")
         }
@@ -146,8 +198,6 @@ rt_fit <- function(data, id_idx = NULL, rt_idx = NULL, response_idx = NULL,
 }
 
 ## ----fitting-run, eval=TRUE, warning=FALSE--------------------------------------------------------
-data(med_dec, package = "fddm")
-med_dec <- med_dec[which(med_dec[["rt"]] >= 0),]
 fit <- rt_fit(med_dec, id_idx = c(2,1), rt_idx = 8, response_idx = 7,
               truth_idx = 5, response_upper = "blast")
 fit
@@ -159,7 +209,7 @@ library("ggplot2")
 fitp <- data.frame(fit[, c(1, 4, 5)]) # make a copy to manipulate for plotting
 colnames(fitp)[-1] <- c("vu", "vl")
 
-for (i in 1:length(unique(fitp[["ID"]]))) {
+for (i in seq_along(unique(fitp[["ID"]]))) {
   first <- substr(fitp[["ID"]][i], 1, 1)
   if (first == "n") {
     fitp[["ID"]][i] <- "novice"

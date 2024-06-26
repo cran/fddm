@@ -1,5 +1,7 @@
 // Functions to approximate the infinite sum in the distribution function
 
+#include "declarations.h"
+
 
 
 double mills_sum(const double& t, const double& a, const double& v,
