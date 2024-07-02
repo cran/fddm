@@ -12,7 +12,7 @@
 
 <meta name="author" content="Kendal Foster and Henrik Singmann" />
 
-<meta name="date" content="2024-06-25" />
+<meta name="date" content="2024-07-01" />
 
 <title>Validity of Methods in dfddm</title>
 
@@ -407,7 +407,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <h1 class="title toc-ignore">Validity of Methods in <code>dfddm</code></h1>
 <h4 class="author">Kendal Foster and Henrik Singmann</h4>
-<h4 class="date">June 25, 2024</h4>
+<h4 class="date">July 01, 2024</h4>
 
 
 
@@ -716,7 +716,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb3-25"><a href="#cb3-25" aria-hidden="true"></a>    <span class="kw">expect_true</span>(<span class="kw">all</span>(rtdists[[<span class="st">&quot;res&quot;</span>]] <span class="op">&gt;=</span><span class="st"> </span><span class="dv">0</span>))</span>
 <span id="cb3-26"><a href="#cb3-26" aria-hidden="true"></a>  }</span>
 <span id="cb3-27"><a href="#cb3-27" aria-hidden="true"></a>})</span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true"></a><span class="co">#&gt; Test passed 🥇</span></span></code></pre></div>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true"></a><span class="co">#&gt; Test passed 🎊</span></span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a><span class="co"># Test accuracy within 2*eps (allows for convergence from above and below)</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a><span class="kw">test_that</span>(<span class="st">&quot;Consistency among internal methods&quot;</span>, {</span>
@@ -741,7 +741,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb4-22"><a href="#cb4-22" aria-hidden="true"></a><span class="st">                    </span><span class="fl">1e-6</span>)</span>
 <span id="cb4-23"><a href="#cb4-23" aria-hidden="true"></a>  <span class="kw">expect_true</span>(<span class="kw">all</span>(Navarro_l[rt<span class="op">/</span>a<span class="op">/</span>a <span class="op">&gt;=</span><span class="st"> </span><span class="fl">0.009</span>, <span class="st">&quot;dif&quot;</span>] <span class="op">&lt;</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>eps)) <span class="co"># see KE 1</span></span>
 <span id="cb4-24"><a href="#cb4-24" aria-hidden="true"></a>})</span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true"></a><span class="co">#&gt; Test passed 🥇</span></span></code></pre></div>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true"></a><span class="co">#&gt; Test passed 🎊</span></span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="kw">test_that</span>(<span class="st">&quot;Accuracy relative to established packages&quot;</span>, {</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a>  <span class="cf">if</span> (<span class="kw">require</span>(<span class="st">&quot;RWiener&quot;</span>)) {</span>
@@ -757,7 +757,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb5-13"><a href="#cb5-13" aria-hidden="true"></a><span class="st">                    </span><span class="fl">1e-6</span>)</span>
 <span id="cb5-14"><a href="#cb5-14" aria-hidden="true"></a>  <span class="kw">expect_true</span>(<span class="kw">all</span>(Gondan_R[sv <span class="op">&lt;</span><span class="st"> </span>SV_THRESH, <span class="st">&quot;dif&quot;</span>] <span class="op">&lt;=</span><span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>eps)) <span class="co"># see KE 2</span></span>
 <span id="cb5-15"><a href="#cb5-15" aria-hidden="true"></a>})</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true"></a><span class="co">#&gt; Test passed 😀</span></span></code></pre></div>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true"></a><span class="co">#&gt; Test passed 🎊</span></span></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a><span class="co"># Test consistency in fddm log vs non-log (see KE 3)</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a><span class="kw">test_that</span>(<span class="st">&quot;Log-Consistency among internal methods&quot;</span>, {</span>
@@ -792,7 +792,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb6-32"><a href="#cb6-32" aria-hidden="true"></a>  <span class="kw">expect_equal</span>(Navarro_l[Navarro_l[[<span class="st">&quot;res&quot;</span>]] <span class="op">&gt;</span><span class="st"> </span>eps<span class="op">*</span>eps, <span class="st">&quot;log_res&quot;</span>],</span>
 <span id="cb6-33"><a href="#cb6-33" aria-hidden="true"></a>               <span class="kw">log</span>(Navarro_l[Navarro_l[[<span class="st">&quot;res&quot;</span>]] <span class="op">&gt;</span><span class="st"> </span>eps<span class="op">*</span>eps, <span class="st">&quot;res&quot;</span>]))</span>
 <span id="cb6-34"><a href="#cb6-34" aria-hidden="true"></a>})</span>
-<span id="cb6-35"><a href="#cb6-35" aria-hidden="true"></a><span class="co">#&gt; Test passed 😸</span></span></code></pre></div>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true"></a><span class="co">#&gt; Test passed 🥇</span></span></code></pre></div>
 </div>
 <div id="den-ke" class="section level2">
 <h2>Known Errors (KE)</h2>
@@ -1158,7 +1158,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <span id="cb16-21"><a href="#cb16-21" aria-hidden="true"></a><span class="co">#&gt; </span></span>
 <span id="cb16-22"><a href="#cb16-22" aria-hidden="true"></a><span class="co">#&gt; other attached packages:</span></span>
 <span id="cb16-23"><a href="#cb16-23" aria-hidden="true"></a><span class="co">#&gt; [1] testthat_3.2.1.1      ggforce_0.4.2         ggplot2_3.5.1         reshape2_1.4.4       </span></span>
-<span id="cb16-24"><a href="#cb16-24" aria-hidden="true"></a><span class="co">#&gt; [5] microbenchmark_1.4.10 RWiener_1.3-3         rtdists_0.11-5        fddm_1.0-1           </span></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true"></a><span class="co">#&gt; [5] microbenchmark_1.4.10 RWiener_1.3-3         rtdists_0.11-5        fddm_1.0-2           </span></span>
 <span id="cb16-25"><a href="#cb16-25" aria-hidden="true"></a><span class="co">#&gt; </span></span>
 <span id="cb16-26"><a href="#cb16-26" aria-hidden="true"></a><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
 <span id="cb16-27"><a href="#cb16-27" aria-hidden="true"></a><span class="co">#&gt;  [1] gtable_0.3.5       xfun_0.45          bslib_0.7.0        lattice_0.22-6     vctrs_0.6.5       </span></span>

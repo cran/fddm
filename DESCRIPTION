@@ -1,7 +1,7 @@
 Package: fddm
 Type: Package
 Title: Fast Implementation of the Diffusion Decision Model
-Version: 1.0-1
+Version: 1.0-2
 Authors@R: c(person(given="Kendal B.", family="Foster", role=c("aut")),
              person(given="Henrik", family="Singmann", role=c("ctb", "cre"),
              email="singmann@gmail.com", comment=c(ORCID="0000-0002-4842-3657")),
@@ -34,10 +34,10 @@ RoxygenNote: 7.3.1
 Encoding: UTF-8
 VignetteBuilder: knitr
 NeedsCompilation: yes
-Packaged: 2024-06-25 21:31:25 UTC; kendal
+Packaged: 2024-07-01 13:22:08 UTC; kendal
 Author: Kendal B. Foster [aut],
   Henrik Singmann [ctb, cre] (<https://orcid.org/0000-0002-4842-3657>),
   Achim Zeileis [ctb] (methods partially taken from betareg)
 Maintainer: Henrik Singmann <singmann@gmail.com>
 Repository: CRAN
-Date/Publication: 2024-06-26 10:00:02 UTC
+Date/Publication: 2024-07-02 16:00:07 UTC
